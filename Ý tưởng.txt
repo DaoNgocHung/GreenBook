@@ -1,0 +1,57 @@
+﻿
+================================== GREEN BOOK ============================================
+
+
+- Ý nghĩa tên: là sách xanh bảo vệ môi trường, nhỏ gọn.
+- So sánh ưu, nhược điểm của các app sách khác.
+
+
+-------------------------------- Tiểu Luận Chuyên Ngành --------------------------------
+
+			************ Cơ sở dữ liệu ****************
+- Bảng thống kê.
+- Table Book có thêm thuộc tính Bình luận, Đánh giá bằng sao và số lượng đã bán được 
+	(có nên thêm doanh số bán theo tháng để có BXH sách bán chạy theo tháng ????).
+- Đồng bộ database firebase với database của máy (local) ( ĐANG GẶP VẤN ĐỀ )
+- Table Lịch sử mua sách cho từng tài khoản.
+- Thêm thuộc tính permission trong bảng account
+- Table Sách Giảm Giá: ID, Tên sách, Giá tiền trước khi giảm, phần trăm giảm, ... 
+	( CÓ thể bỏ Table này và thêm thuộc tính phần trăm giảm vào Table Sách, nếu thuộc tính phần trăm giảm
+	  khác 0 thì sách đó sẽ thuộc dạng sách giảm giá)
+- Table Quảng cáo gồm các thuộc tính: id, image, description, id_book, ....
+
+			************ Ý tưởng Giao Diện ****************
+- Thiết kế giống CH Play, GoViet.
+- Dùng multi Recyclerview cho màn hình BÁN SÁCH.
+- Màn hình activity cho admin thống kê về sách.
+- Navigation có thể thêm button Thông Báo
+- Trang đăng nhập có checkbox lưu thông tin đăng nhập cho lần sau ( dùng SharePreference )
+
+			************ Ý tưởng hoạt động ****************
+- Form Đăng ký: kiểm tra tài khoản đã tồn tại hay chưa.
+- Có 2 dạng: online và offline
+  + Kiểm tra xem máy có kết nối với wifi, 3g, 4g hay không.
+  + Offline không thể load được trang bán sách ( trang bán sách sẽ thông báo " Không có kết nối Internet").
+  + CSDL cho offline.
+- Kiểm tra khi sách load lên trang chủ, nếu tài khoản đã mua rồi thì sẽ không hiển thị nữa.
+- Có tính năng thêm, sửa, xóa auto quảng cáo
+- Về bình luận: 
+  + Xét quyền của tài khoản. 
+  + Nếu là admin thì cho xóa bình luận của bản thân và cả của member.
+  + Nếu là member thù xét id của người đăng bình luận mới có thể xóa được ( nghĩa là chỉ xóa được bl của mình)
+- Sẽ có progressbar load trong khi bấm mua sách.
+- Dựa vào dữ liệu để đưa ra những giới thiệu phù hợp cho từng tài khoản cá nhân.
+- Có ẩn/hiện mật khẩu
+
+
+
+
+-------------------------------- Dự định update -------------------------------------
+- Có 2 cách hiển thị giao diện sách trong xem tất cả: dạng list và dạng lưới
+- Share MXH.
+- Đổi mật khẩu ( Mã OTP gửi qua Mail --> Table TaiKhoan phải có thuộc tính Email).
+- Đăng nhập: chọn 1 trong 3 ( Facebook, Google, tài khoản app).
+- Có thể đánh dấu sách yêu thích.
+- Có thể nhần vào avatar của ng khác trong bình luận để xem thông tin về họ ( avatar nên dùng circle imageview).
+- Áp dụng coi quảng cáo tích điểm
+- Mã Pin cho app

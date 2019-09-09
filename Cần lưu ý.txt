@@ -1,0 +1,4 @@
+﻿-Expand layout
+-ViewHolder
+-RecycleView
+-RatingBar

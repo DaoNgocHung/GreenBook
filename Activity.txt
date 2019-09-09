@@ -1,0 +1,10 @@
+﻿Màn hình Splash:
+- SplashScreenActivity
+- activity_splash_screen.xml
++ adapter: IntroViewPagerAdapter
++ model: IntroItem
+
+Màn hình Intro:
+- IntroActivity
+- activity_intro.xml
+- layout_intro_screen.xml
