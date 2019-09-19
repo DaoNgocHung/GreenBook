@@ -57,6 +57,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(LoginActivity.this,SignUpActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
 
@@ -69,6 +70,9 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 else {
                     // code kiểm tra đăng nhập
+                    Intent intent = new Intent(LoginActivity.this,MainActivity.class);
+                    startActivity(intent);
+                    finish();
                 }
             }
         });

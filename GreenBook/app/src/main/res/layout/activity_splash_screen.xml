@@ -25,19 +25,16 @@
             app:layout_constraintVertical_bias="0.377"
             app:srcCompat="@drawable/ic_logo_app" />
 
-        <TextView
-            android:id="@+id/txtSplashScreenTitle"
+        <ImageView
+            android:id="@+id/imgSplashTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:fontFamily="cursive"
-            android:text="Green Book, Green Life!"
-            android:textColor="@color/colorLimeGreen"
-            android:textSize="30dp"
+            android:scaleType="fitXY"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imgSplashLogo" />
+            app:layout_constraintTop_toBottomOf="@+id/imgSplashLogo"
+            app:srcCompat="@drawable/pic_title_splashgreen" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

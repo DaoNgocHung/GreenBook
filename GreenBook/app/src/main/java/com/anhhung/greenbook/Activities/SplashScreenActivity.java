@@ -15,8 +15,7 @@ import com.anhhung.greenbook.R;
 
 public class SplashScreenActivity extends AppCompatActivity {
 
-    private ImageView imgSplashLogo;
-    private TextView txtSplashScreenTitle;
+    private ImageView imgSplashLogo, imgSplashTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,11 +26,11 @@ public class SplashScreenActivity extends AppCompatActivity {
 
     private void addControls() {
         imgSplashLogo = findViewById(R.id.imgSplashLogo);
-        txtSplashScreenTitle = findViewById(R.id.txtSplashScreenTitle);
+        imgSplashTitle = findViewById(R.id.imgSplashTitle);
         Animation myAnimation = AnimationUtils.loadAnimation(this,R.anim.splash_transition);
 
         imgSplashLogo.setAnimation(myAnimation);
-        txtSplashScreenTitle.setAnimation(myAnimation);
+        imgSplashTitle.setAnimation(myAnimation);
 
         final Intent intent = new Intent(this, IntroActivity.class);
 

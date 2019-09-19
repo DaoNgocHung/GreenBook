@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/drawer_dashboard" android:title="Dashboard" android:icon="@drawable/ic_dashboard_drawer"/>
-    <item android:id="@+id/drawer_notification" android:title="Notification" android:icon="@drawable/ic_notification_drawer"/>
-    <item android:id="@+id/drawer_events" android:title="Events" android:icon="@drawable/ic_events_drawer"/>
-    <item android:id="@+id/drawer_settings" android:title="Settings" android:icon="@drawable/ic_settings_drawer"/>
-    <item android:id="@+id/drawer_info" android:title="About" android:icon="@drawable/ic_info_drawer"/>
-    <item android:id="@+id/drawer_logout" android:title="Log Out" android:icon="@drawable/ic_logout_drawer"/>
-</menu>

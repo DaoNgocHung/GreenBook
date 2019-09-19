@@ -43,8 +43,8 @@ public class IntroActivity extends AppCompatActivity {
 
         //when this activity is about to be lauch we need to check if its opened before or not
         if(restorePrefData()){
-            Intent loginActivity = new Intent(getApplicationContext(), LoginActivity.class);
-            startActivity(loginActivity);
+            Intent intent = new Intent(getApplicationContext(), WelcomeActivity.class);
+            startActivity(intent);
             finish();
         }
         setContentView(R.layout.activity_intro);
