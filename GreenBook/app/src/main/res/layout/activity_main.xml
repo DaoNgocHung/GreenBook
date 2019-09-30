@@ -23,7 +23,7 @@
             app:title="Home"
             app:titleTextColor="@color/colorLimeGreen"
             android:background="@color/colorWhite"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark">
+            android:theme="@style/ThemeOverlay.AppCompat.ActionBar">
         </androidx.appcompat.widget.Toolbar>
 
         <FrameLayout
