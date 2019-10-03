@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1048706648594",
+    "firebase_url": "https://greenbookfirestore.firebaseio.com",
+    "project_id": "greenbookfirestore",
+    "storage_bucket": "greenbookfirestore.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1048706648594:android:6bc09cf39ef9e567eea6cb",
+        "android_client_info": {
+          "package_name": "com.anhhung.greenbook"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1048706648594-nh9cgphnhfqemi7akq14lroamp91o0sf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.anhhung.greenbook",
+            "certificate_hash": "44207129c0b9db151fb559dd47629fa7d1f89edc"
+          }
+        },
+        {
+          "client_id": "1048706648594-4f3vdtcg1vpm4mccu33em1s205fmpbgc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAS47XPdEiAWWpy4c79x-zTTa96tj8rLbw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1048706648594-4f3vdtcg1vpm4mccu33em1s205fmpbgc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -61,11 +61,20 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        txtLoginForgot.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(LoginActivity.this,ForgotPassActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
         btnLoginLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(edtLoginUsername.getText() == null || edtLoginPass.getText() == null
-                        || (edtLoginPass.getText() == null &&  edtLoginUsername.getText() == null)){
+                if(edtLoginUsername.getText().toString().equals("") || edtLoginPass.getText().toString().equals("")
+                        || (edtLoginPass.getText().equals("") &&  edtLoginUsername.getText().equals(""))){
                     Toast.makeText(LoginActivity.this,"Please enter full information",Toast.LENGTH_LONG).show();
                 }
                 else {
