@@ -1,6 +1,7 @@
 package com.anhhung.greenbook.Fragments;
 
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 
@@ -9,7 +10,9 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
+import com.anhhung.greenbook.Activities.InfoBookActivity;
 import com.anhhung.greenbook.Adapters.SliderAdvertiseAdapter;
 import com.anhhung.greenbook.R;
 import com.smarteist.autoimageslider.IndicatorAnimations;
@@ -24,6 +27,7 @@ import com.smarteist.autoimageslider.SliderViewAdapter;
 public class HomeFragment extends Fragment {
 
     private SliderView sliderViewFragment;
+    Button btnTest;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -41,6 +45,16 @@ public class HomeFragment extends Fragment {
         final SliderAdvertiseAdapter adapter = new SliderAdvertiseAdapter(getActivity());
         adapter.setCount(3);
         sliderViewFragment.setSliderAdapter(adapter);
+
+        //Test
+        btnTest = view.findViewById(R.id.btnTest);
+        btnTest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), InfoBookActivity.class);
+                startActivity(intent);
+            }
+        });
 
         addEvents();
 
