@@ -11,7 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher_logo_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activities.ForgotPassActivity"></activity>
+        <activity android:name=".Activities.InfoBookActivity"></activity>
+        <activity android:name=".Activities.ForgotPassActivity" />
         <activity android:name=".Activities.IntroActivity" />
         <activity android:name=".Activities.ThankActivity" />
         <activity android:name=".Activities.SignUpActivity" />
