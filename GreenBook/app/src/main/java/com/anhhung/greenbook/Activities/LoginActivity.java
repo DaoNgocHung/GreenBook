@@ -20,6 +20,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.smarteist.autoimageslider.Transformations.TossTransformation;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -110,13 +111,6 @@ public class LoginActivity extends AppCompatActivity {
         }
         else return false;
     }
-
-    private void openLoadingDialog() {
-        loadingDialog = new Dialog(LoginActivity.this, R.style.CustomDialog);
-        loadingDialog.setContentView(R.layout.loading_dialog);
-        loadingDialog.setCanceledOnTouchOutside(false);
-        loadingDialog.show();
-    }
     private void loginEmailPassword() {
         //authenticate user
         auth.signInWithEmailAndPassword(edtLoginUsername.getText().toString(), edtLoginPass.getText().toString())
@@ -127,9 +121,15 @@ public class LoginActivity extends AppCompatActivity {
                         if (!task.isSuccessful()) {
                             Toast.makeText(LoginActivity.this, getString(R.string.auth_failed), Toast.LENGTH_LONG).show();
                         } else {
-                            Intent intent = new Intent(LoginActivity.this, ThankActivity.class);
-                            startActivity(intent);
-                            finish();
+                            if(auth.getCurrentUser().isEmailVerified() == true){
+                                Intent intent = new Intent(LoginActivity.this, ThankActivity.class);
+                                startActivity(intent);
+                                finish();
+                            }
+                            else {
+                                Toast.makeText(LoginActivity.this, "You are new user. Please check your email for verification before login!", Toast.LENGTH_SHORT).show();
+                            }
+
                         }
                     }
                 });

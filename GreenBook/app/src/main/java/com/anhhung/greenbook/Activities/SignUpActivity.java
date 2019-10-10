@@ -20,6 +20,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.regex.Pattern;
+
 public class SignUpActivity extends AppCompatActivity {
 
     private EditText edtSignUpUsername, edtSignUpPass, edtSignUpConfirmPass, edtSignUpEmail;
@@ -99,7 +101,7 @@ public class SignUpActivity extends AppCompatActivity {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if (task.isSuccessful()) {
-                                                Toast.makeText(SignUpActivity.this, "Registered successfully. Please check your email for verification",
+                                                Toast.makeText(SignUpActivity.this, "Registered successfully.",
                                                         Toast.LENGTH_LONG).show();
                                                 startActivity(new Intent(SignUpActivity.this, LoginActivity.class));
                                                 finish();
@@ -111,7 +113,6 @@ public class SignUpActivity extends AppCompatActivity {
                                         }
                                     });
                         }
-
                     }
                 });
     }
@@ -146,6 +147,12 @@ public class SignUpActivity extends AppCompatActivity {
             edtSignUpEmail.requestFocus();
             errorSignUp = true;
         }
+        else if(checkEmailCorrect(edtSignUpEmail.getText().toString()) == false){
+            Toast.makeText(SignUpActivity.this,"Invalid mail address, enter again!",Toast.LENGTH_LONG).show();
+            edtSignUpEmail.requestFocus();
+            edtSignUpEmail.setText("");
+            errorSignUp = true;
+        }
         else if (edtSignUpPass.getText().toString().length() < 6) {
             Toast.makeText(getApplicationContext(), "Password too short, enter minimum 6 characters!", Toast.LENGTH_SHORT).show();
             edtSignUpPass.setText("");
@@ -165,6 +172,15 @@ public class SignUpActivity extends AppCompatActivity {
             return false;
         }
         return true;
+    }
+
+    private boolean checkEmailCorrect(String mail) {
+        return Pattern.compile("^(([\\w-]+\\.)+[\\w-]+|([a-zA-Z]{1}|[\\w-]{2,}))@"
+                + "((([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\.([0-1]?"
+                + "[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\."
+                + "([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\.([0-1]?"
+                + "[0-9]{1,2}|25[0-5]|2[0-4][0-9])){1}|"
+                + "([a-zA-Z]+[\\w-]+\\.)+[a-zA-Z]{2,4})$").matcher(mail).matches();
     }
 
     private void addControls() {
