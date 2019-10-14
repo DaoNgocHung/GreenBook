@@ -21,9 +21,9 @@
             android:orientation="vertical"
             android:id="@+id/actionToolbar"
             app:title="Home"
-            app:titleTextColor="@color/colorLimeGreen"
-            android:background="@color/colorWhite"
-            android:theme="@style/ThemeOverlay.AppCompat.ActionBar">
+            app:titleTextColor="@color/colorWhite"
+            android:background="@color/colorLimeGreen"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
         </androidx.appcompat.widget.Toolbar>
 
         <FrameLayout

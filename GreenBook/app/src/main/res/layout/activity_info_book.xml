@@ -25,10 +25,12 @@
                 android:id="@+id/imgInFoBookCover"
                 android:layout_width="150dp"
                 android:layout_height="199dp"
+                android:scaleType="fitXY"
                 android:padding="7dp"
                 android:src="@drawable/background_welcome"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.061"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.0" />
@@ -37,25 +39,79 @@
                 android:id="@+id/txtInfoNameBook"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="One Piece "
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="124dp"
+                android:layout_marginBottom="196dp"
+                android:text="One Piece One Piece Tap 90"
                 android:textColor="@color/colorLimeGreen"
-                android:textSize="25dp"
+                android:textSize="20dp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toEndOf="@+id/imgInFoBookCover" />
+
+            <TextView
+                android:id="@+id/txtInfoBookDownloaded"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:text="Downloaded: 123456"
+                app:layout_constraintStart_toEndOf="@+id/imgInFoBookCover"
+                app:layout_constraintTop_toBottomOf="@+id/txtInfoNameBook" />
+
+            <RatingBar
+                android:id="@+id/rateInfoBook"
+                style="@android:style/Widget.Holo.RatingBar.Small"
+                android:layout_width="84dp"
+                android:layout_height="16dp"
+                android:layout_marginStart="6dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintStart_toEndOf="@+id/imgInFoBookCover"
+                app:layout_constraintTop_toBottomOf="@+id/txtInfoBookDownloaded" />
 
             <ImageButton
                 android:id="@+id/imgbtnInfoBookFavor"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="16dp"
                 android:background="@drawable/button_circle_social"
+                android:scaleType="fitXY"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txtInfoNameBook"
                 app:srcCompat="@drawable/ic_not_favor" />
+
+            <TextView
+                android:id="@+id/txtInfoBookPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:text="Price: 20"
+                app:layout_constraintStart_toEndOf="@+id/imgInFoBookCover"
+                app:layout_constraintTop_toBottomOf="@+id/rateInfoBook" />
+
+            <Button
+                android:id="@+id/btnInfoBookBuy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:layout_marginTop="8dp"
+                android:text="Buy"
+                app:layout_constraintStart_toEndOf="@+id/imgInFoBookCover"
+                app:layout_constraintTop_toBottomOf="@+id/txtInfoBookPrice" />
+
+            <Button
+                android:id="@+id/btnInfoBookRead"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:layout_marginTop="8dp"
+                android:text="Read"
+                app:layout_constraintStart_toEndOf="@+id/imgInFoBookCover"
+                app:layout_constraintTop_toBottomOf="@+id/txtInfoBookPrice" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
