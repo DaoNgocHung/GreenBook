@@ -16,7 +16,7 @@
     <string name="btn_sign_out">Sign Out</string>
     <string name="lbl_forgot_password">Forgot password?</string>
     <string name="forgot_password_msg">We just need your registered Email Id to sent you password reset instructions.</string>
-    <string name="facebook_application_id" translatable="false">1468461306642336</string>
-    <string name="facebook_login_protocol_scheme" translatable="false">fb1468461306642336</string>
+    <string name="facebook_application_id" translatable="false">564249541046259</string>
+    <string name="facebook_login_protocol_scheme" translatable="false">fb564249541046259</string>
 </resources>
 
