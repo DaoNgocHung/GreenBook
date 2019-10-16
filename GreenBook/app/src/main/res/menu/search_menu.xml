@@ -3,7 +3,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/mnuSeach"
-        android:icon="@drawable/ic_menu_search"
         android:iconTint="@color/colorLimeGreen"
         android:title="Search"
         app:actionViewClass="android.widget.SearchView"

@@ -1,12 +1,10 @@
 package com.anhhung.greenbook.Adapters;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.anhhung.greenbook.R;
@@ -45,9 +43,6 @@ public class SliderAdvertiseAdapter extends SliderViewAdapter<SliderAdvertiseAda
 
         switch (position) {
             case 0:
-                viewHolder.textViewDescription.setText("This is slider item " + position);
-                viewHolder.textViewDescription.setTextSize(16);
-                viewHolder.textViewDescription.setTextColor(Color.WHITE);
                 viewHolder.imageGifContainer.setVisibility(View.GONE);
                 Glide.with(viewHolder.itemView)
                         .load(R.drawable.background_welcome)
@@ -55,9 +50,6 @@ public class SliderAdvertiseAdapter extends SliderViewAdapter<SliderAdvertiseAda
                         .into(viewHolder.imageViewBackground);
                 break;
             case 1:
-                viewHolder.textViewDescription.setText("This is slider item " + position);
-                viewHolder.textViewDescription.setTextSize(16);
-                viewHolder.textViewDescription.setTextColor(Color.WHITE);
                 viewHolder.imageGifContainer.setVisibility(View.GONE);
                 Glide.with(viewHolder.itemView)
                         .load(R.drawable.background_welcome)
@@ -65,9 +57,6 @@ public class SliderAdvertiseAdapter extends SliderViewAdapter<SliderAdvertiseAda
                         .into(viewHolder.imageViewBackground);
                 break;
             case 2:
-                viewHolder.textViewDescription.setText("This is slider item " + position);
-                viewHolder.textViewDescription.setTextSize(16);
-                viewHolder.textViewDescription.setTextColor(Color.WHITE);
                 viewHolder.imageGifContainer.setVisibility(View.GONE);
                 Glide.with(viewHolder.itemView)
                         .load(R.drawable.background_welcome)
@@ -75,8 +64,6 @@ public class SliderAdvertiseAdapter extends SliderViewAdapter<SliderAdvertiseAda
                         .into(viewHolder.imageViewBackground);
                 break;
             default:
-                viewHolder.textViewDescription.setTextSize(16);
-                viewHolder.textViewDescription.setTextColor(Color.WHITE);
                 viewHolder.imageGifContainer.setVisibility(View.VISIBLE);
                 Glide.with(viewHolder.itemView)
                         .load(R.drawable.background_welcome)
@@ -103,13 +90,11 @@ public class SliderAdvertiseAdapter extends SliderViewAdapter<SliderAdvertiseAda
         View itemView;
         ImageView imageViewBackground;
         ImageView imageGifContainer;
-        TextView textViewDescription;
 
         public SliderAdapterVH(View itemView) {
             super(itemView);
             imageViewBackground = itemView.findViewById(R.id.iv_auto_image_slider);
             imageGifContainer = itemView.findViewById(R.id.iv_gif_container);
-            textViewDescription = itemView.findViewById(R.id.tv_auto_image_slider);
             this.itemView = itemView;
         }
     }
