@@ -49,7 +49,7 @@ public class LoginActivity extends AppCompatActivity {
     Dialog loadingDialog;
     private boolean errorLogin = false;
     CallbackManager mCallbackManager;
-    private String TAG = "";
+    private String TAG = "LOG: ";
     LoginButton loginButton;
     GoogleSignInOptions gso;
     private GoogleSignInClient mGoogleSignInClient;
@@ -127,13 +127,11 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onCancel() {
                 Log.d(TAG, "facebook:onCancel");
-                // ...
             }
 
             @Override
             public void onError(FacebookException error) {
                 Log.d(TAG, "facebook:onError", error);
-                // ...
             }
         });
         auth = FirebaseAuth.getInstance();
@@ -182,7 +180,6 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         // Pass the activity result back to the Facebook SDK
         mCallbackManager.onActivityResult(requestCode, resultCode, data);
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
@@ -195,7 +192,6 @@ public class LoginActivity extends AppCompatActivity {
             } catch (ApiException e) {
                 // Google Sign In failed, update UI appropriately
                 Log.w(TAG, "Google sign in failed", e);
-                // ...
             }
         }
     }
@@ -225,8 +221,6 @@ public class LoginActivity extends AppCompatActivity {
                                     Toast.LENGTH_SHORT).show();
                             //updateUI(null);
                         }
-
-                        // ...
                     }
                 });
     }
@@ -251,8 +245,6 @@ public class LoginActivity extends AppCompatActivity {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
                         }
-
-                        // ...
                     }
                 });
     }
@@ -270,7 +262,6 @@ public class LoginActivity extends AppCompatActivity {
         loginButton = findViewById(R.id.buttonFacebookLogin);
         mCallbackManager = CallbackManager.Factory.create();
         loginButton.setReadPermissions("email", "public_profile");
-
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()

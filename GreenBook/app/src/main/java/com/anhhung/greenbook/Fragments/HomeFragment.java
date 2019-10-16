@@ -6,6 +6,8 @@ import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +15,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.anhhung.greenbook.Activities.InfoBookActivity;
+import com.anhhung.greenbook.Adapters.MyDataBookAdapter;
 import com.anhhung.greenbook.Adapters.SliderAdvertiseAdapter;
+import com.anhhung.greenbook.Models.BooksModel;
+import com.anhhung.greenbook.Models.SectionDataModel;
 import com.anhhung.greenbook.R;
 import com.smarteist.autoimageslider.IndicatorAnimations;
 import com.smarteist.autoimageslider.IndicatorView.draw.controller.DrawController;
@@ -21,11 +26,13 @@ import com.smarteist.autoimageslider.SliderAnimations;
 import com.smarteist.autoimageslider.SliderView;
 import com.smarteist.autoimageslider.SliderViewAdapter;
 
+import java.util.ArrayList;
+
 /**
  * A simple {@link Fragment} subclass.
  */
 public class HomeFragment extends Fragment {
-
+    ArrayList<SectionDataModel> allSampleData;
     private SliderView sliderViewFragment;
     Button btnTest;
 
@@ -45,21 +52,42 @@ public class HomeFragment extends Fragment {
         final SliderAdvertiseAdapter adapter = new SliderAdvertiseAdapter(getActivity());
         adapter.setCount(3);
         sliderViewFragment.setSliderAdapter(adapter);
-
-        //Test
-        btnTest = view.findViewById(R.id.btnTest);
-        btnTest.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), InfoBookActivity.class);
-                startActivity(intent);
-            }
-        });
+        //addControls
+        addControls(view);
+        //addEvents
 
         addEvents();
 
         // Inflate the layout for this fragment
         return view;
+    }
+
+    private void addControls(View view) {
+        allSampleData = new ArrayList<SectionDataModel>();
+        createDummyData();
+        RecyclerView myRecyclerView = view.findViewById(R.id.home_recycler_view);
+        myRecyclerView.setHasFixedSize(true);
+        MyDataBookAdapter adapter = new MyDataBookAdapter(getActivity(), allSampleData);
+        myRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+        myRecyclerView.setAdapter(adapter);
+    }
+    public void createDummyData() {
+        for (int i = 1; i <= 5; i++) {
+
+            SectionDataModel dm = new SectionDataModel();
+
+            dm.setHeaderTitle("Section " + i);
+
+            ArrayList<BooksModel> bookItem = new ArrayList<BooksModel>();
+            for (int j = 0; j <= 5; j++) {
+                bookItem.add(new BooksModel("Item " + j));
+            }
+
+            dm.setAllItemsInSection(bookItem);
+
+            allSampleData.add(dm);
+
+        }
     }
 
     private void addEvents() {
