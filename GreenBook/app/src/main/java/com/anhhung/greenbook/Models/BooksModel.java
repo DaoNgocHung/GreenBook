@@ -10,8 +10,7 @@ public class BooksModel {
     private String danhMuc;
     private int giamGia;
     private String gioiThieuSach;
-    private boolean ktMua;
-    private String noiDung;
+    private String noiDung;   //change to epub
 
     public BooksModel(String tenSach) {
         this.tenSach = tenSach;
@@ -21,14 +20,13 @@ public class BooksModel {
     private String ngayUpload;
     private String ngonNgu;
     private long soNguoiMua;
-    private long soTRang;
+    private long soTrang;
     private String tacGia;
-    private boolean yeuThich;
 
     public BooksModel(String idSach, String tenSach, float danhGia, Image biaSach,
-                      String danhMuc, int giamGia, String gioiThieuSach, boolean ktMua,
-                      String noiDung, String NXB, String ngayUpload, String ngonNgu,
-                      long soNguoiMua, long soTRang, String tacGia, boolean yeuThich) {
+                      String danhMuc, int giamGia, String gioiThieuSach, String noiDung,
+                      String NXB, String ngayUpload, String ngonNgu,
+                      long soNguoiMua, long soTrang, String tacGia) {
         this.idSach = idSach;
         this.tenSach = tenSach;
         this.danhGia = danhGia;
@@ -36,15 +34,13 @@ public class BooksModel {
         this.danhMuc = danhMuc;
         this.giamGia = giamGia;
         this.gioiThieuSach = gioiThieuSach;
-        this.ktMua = ktMua;
         this.noiDung = noiDung;
         this.NXB = NXB;
         this.ngayUpload = ngayUpload;
         this.ngonNgu = ngonNgu;
         this.soNguoiMua = soNguoiMua;
-        this.soTRang = soTRang;
+        this.soTrang = soTrang;
         this.tacGia = tacGia;
-        this.yeuThich = yeuThich;
     }
 
     public BooksModel() {
@@ -106,14 +102,6 @@ public class BooksModel {
         this.gioiThieuSach = gioiThieuSach;
     }
 
-    public boolean isKtMua() {
-        return ktMua;
-    }
-
-    public void setKtMua(boolean ktMua) {
-        this.ktMua = ktMua;
-    }
-
     public String getNoiDung() {
         return noiDung;
     }
@@ -154,12 +142,12 @@ public class BooksModel {
         this.soNguoiMua = soNguoiMua;
     }
 
-    public long getSoTRang() {
-        return soTRang;
+    public long getSoTrang() {
+        return soTrang;
     }
 
-    public void setSoTRang(long soTRang) {
-        this.soTRang = soTRang;
+    public void setSoTrang(long soTrang) {
+        this.soTrang = soTrang;
     }
 
     public String getTacGia() {
@@ -168,13 +156,5 @@ public class BooksModel {
 
     public void setTacGia(String tacGia) {
         this.tacGia = tacGia;
-    }
-
-    public boolean isYeuThich() {
-        return yeuThich;
-    }
-
-    public void setYeuThich(boolean yeuThich) {
-        this.yeuThich = yeuThich;
     }
 }
