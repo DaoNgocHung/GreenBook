@@ -4,4 +4,6 @@
     <color name="colorTransparent">#00000000</color>
     <color name="colorLimeGreen">#0C910C</color>
     <color name="colorGray">#c0c0c0</color>
+    <color name="colorWhiteSmoke">#F5F5F5</color>
+    <color name="colorGhostWhite">#F8F8FF</color>
 </resources>

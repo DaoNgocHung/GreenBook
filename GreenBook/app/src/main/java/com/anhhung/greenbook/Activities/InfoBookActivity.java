@@ -1,6 +1,7 @@
 package com.anhhung.greenbook.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 
 import android.os.Bundle;
@@ -26,6 +27,7 @@ public class InfoBookActivity extends AppCompatActivity {
     private TextView txtInfoNameBook;
     private ImageView imgInFoBookCover;
     private ImageButton imgbtnInfoBookFavor;
+    private Toolbar actionToolbarInfoBook;
 
     private boolean isFavor = false;  //Biến Test cho Favor
 
@@ -64,6 +66,12 @@ public class InfoBookActivity extends AppCompatActivity {
                 }
             }
         });
+
+        //Button Back on toolbar
+        actionToolbarInfoBook.setTitle("");
+        setSupportActionBar(actionToolbarInfoBook);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
 
     private void addControls() {
@@ -73,5 +81,12 @@ public class InfoBookActivity extends AppCompatActivity {
         txtInfoNameBook = findViewById(R.id.txtInfoNameBook);
         imgInFoBookCover = findViewById(R.id.imgInFoBookCover);
         imgbtnInfoBookFavor = findViewById(R.id.imgbtnInfoBookFavor);
+        actionToolbarInfoBook = findViewById(R.id.actionToolbarInfoBook);
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 }

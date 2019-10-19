@@ -7,7 +7,19 @@
     android:background="@color/colorWhite"
     tools:context=".Activities.InfoBookActivity">
 
+    <androidx.appcompat.widget.Toolbar
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/actionToolbarInfoBook"
+        app:titleTextColor="@color/colorWhite"
+        android:background="@color/colorLimeGreen"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+    </androidx.appcompat.widget.Toolbar>
+
     <com.google.android.material.appbar.AppBarLayout
+        android:layout_marginTop="5dp"
         android:id="@+id/appBarLayoutInfoBook"
         android:layout_width="match_parent"
         android:layout_height="225dp"
@@ -23,8 +35,8 @@
 
             <ImageView
                 android:id="@+id/imgInFoBookCover"
-                android:layout_width="150dp"
-                android:layout_height="199dp"
+                android:layout_width="140dp"
+                android:layout_height="180dp"
                 android:scaleType="fitXY"
                 android:padding="7dp"
                 android:src="@drawable/background_welcome"
@@ -97,9 +109,11 @@
                 android:id="@+id/btnInfoBookBuy"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@drawable/button_style_1"
                 android:layout_marginStart="6dp"
                 android:layout_marginTop="8dp"
                 android:text="Buy"
+                android:textColor="@color/colorWhite"
                 app:layout_constraintStart_toEndOf="@+id/imgInFoBookCover"
                 app:layout_constraintTop_toBottomOf="@+id/txtInfoBookPrice" />
 
@@ -107,9 +121,11 @@
                 android:id="@+id/btnInfoBookRead"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@drawable/button_style_1"
                 android:layout_marginStart="6dp"
                 android:layout_marginTop="8dp"
                 android:text="Read"
+                android:textColor="@color/colorWhite"
                 app:layout_constraintStart_toEndOf="@+id/imgInFoBookCover"
                 app:layout_constraintTop_toBottomOf="@+id/txtInfoBookPrice" />
 

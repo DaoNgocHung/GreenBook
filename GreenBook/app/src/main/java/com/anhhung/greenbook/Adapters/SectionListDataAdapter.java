@@ -1,6 +1,7 @@
 package com.anhhung.greenbook.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.anhhung.greenbook.Activities.InfoBookActivity;
 import com.anhhung.greenbook.Models.BooksModel;
 import com.anhhung.greenbook.R;
 
@@ -57,6 +59,9 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
                 public void onClick(View v) {
 
                     Toast.makeText(v.getContext(), tvTitle.getText(), Toast.LENGTH_SHORT).show();
+
+                    Intent intent = new Intent(v.getContext(), InfoBookActivity.class);
+                    mContext.startActivity(intent);
 
                 }
             });

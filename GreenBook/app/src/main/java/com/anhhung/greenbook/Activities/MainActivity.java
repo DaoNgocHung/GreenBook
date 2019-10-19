@@ -60,7 +60,6 @@ public class MainActivity extends AppCompatActivity {
         profileFragment  = new ProfileFragment();
 
         //Navigation Drawer
-        actionToolbar = findViewById(R.id.actionToolbar);
         setSupportActionBar(actionToolbar);
         navigationDrawerView = findViewById(R.id.navigationDrawerView);
         drawerLayout = findViewById(R.id.drawerLayout);
