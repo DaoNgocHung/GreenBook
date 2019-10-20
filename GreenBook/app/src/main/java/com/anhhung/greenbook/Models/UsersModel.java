@@ -69,4 +69,36 @@ public class UsersModel {
     public void setSoDT(String soDT) {
         this.soDT = soDT;
     }
+
+    public String getHoTen() {
+        return hoTen;
+    }
+
+    public void setHoTen(String hoTen) {
+        this.hoTen = hoTen;
+    }
+
+    public Date getNgayThangNS() {
+        return ngayThangNS;
+    }
+
+    public void setNgayThangNS(Date ngayThangNS) {
+        this.ngayThangNS = ngayThangNS;
+    }
+
+    public Double getTien() {
+        return tien;
+    }
+
+    public void setTien(Double tien) {
+        this.tien = tien;
+    }
+
+    public int getSoSachDaMua() {
+        return soSachDaMua;
+    }
+
+    public void setSoSachDaMua(int soSachDaMua) {
+        this.soSachDaMua = soSachDaMua;
+    }
 }
