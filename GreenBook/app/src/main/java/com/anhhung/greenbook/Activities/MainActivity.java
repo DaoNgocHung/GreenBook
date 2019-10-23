@@ -12,20 +12,38 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.app.SearchManager;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.SearchView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.anhhung.greenbook.Fragments.HomeFragment;
 import com.anhhung.greenbook.Fragments.LibraryFragment;
 import com.anhhung.greenbook.Fragments.ProfileFragment;
+import com.anhhung.greenbook.Models.UsersModel;
 import com.anhhung.greenbook.R;
+import com.anhhung.greenbook.Support.DownloadImageTask;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -36,10 +54,19 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private NavigationView navigationDrawerView;
-
+    View view;
+    private TextView txtNameAccount, txtMoneyAccount;
     private HomeFragment homeFragment;
     private LibraryFragment libraryFragment;
     private ProfileFragment profileFragment;
+
+    Intent intent;
+    private String emailUser;
+    private UsersModel user;
+
+    FirebaseFirestore db;
+
+    String TAG = "MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,10 +74,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         addControls();
         setFragment(homeFragment);
+        loadUser();
         addEvents();
     }
 
     private void addControls() {
+        intent = getIntent();
+        //emailUser = intent.getStringExtra("email");
+        emailUser = intent.getStringExtra("email");
+        db = FirebaseFirestore.getInstance();
+
         navBottomFramelayout = findViewById(R.id.navBottomFramelayout);
         navigationBottom = findViewById(R.id.navigationBottom);
         actionToolbar = findViewById(R.id.actionToolbar);
@@ -68,7 +101,41 @@ public class MainActivity extends AppCompatActivity {
         actionBarDrawerToggle.getDrawerArrowDrawable().setColor(getResources().getColor(R.color.colorWhite));
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
+        view =  navigationDrawerView.getHeaderView(0);
+        txtNameAccount = view.findViewById(R.id.txtNameAccount);
+        txtMoneyAccount = view.findViewById(R.id.txtMoneyAccount);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    private void loadUser() {
+        db.collection("UserModel")
+                .whereEqualTo("email", emailUser)
+                .limit(1)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                user = document.toObject(UsersModel.class);
+                                txtNameAccount.setText(user.getHoTen());
+                                txtMoneyAccount.setText(user.getTien().toString());
+                                new DownloadImageTask((ImageView) findViewById(R.id.imgDrawerProfile))
+                                        .execute(user.getHinhDaiDien());
+                                Log.d(TAG, user.getHoTen());
+                                Log.d(TAG, document.getId() + " => " + document.getData());
+                            }
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+
+
+//        ImageView imgDrawerProfile = view.findViewById(R.id.imgDrawerProfile);
+//        imgDrawerProfile.setImageResource();
+
+
     }
 
     private void addEvents() {

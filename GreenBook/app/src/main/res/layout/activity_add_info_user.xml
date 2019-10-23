@@ -19,14 +19,14 @@
         app:layout_constraintTop_toBottomOf="@+id/textView14"
         app:srcCompat="@drawable/chopper" />
 
-    <EditText
-        android:id="@+id/edtAddInfoName"
+    <TextView
+        android:id="@+id/txtAddInfoName"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
+        android:text="Name"
+        android:textSize="18dp"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/edittext_style_1"
-        android:hint="Enter Name"
+        android:layout_marginTop="24dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textView12"
         app:layout_constraintTop_toBottomOf="@+id/imgAddInfoAvatar" />
@@ -51,7 +51,7 @@
         android:text="Gender:"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edtAddInfoName" />
+        app:layout_constraintTop_toBottomOf="@+id/txtAddInfoName" />
 
     <TextView
         android:id="@+id/textView14"
@@ -71,7 +71,7 @@
         android:layout_marginTop="16dp"
         android:orientation="horizontal"
         app:layout_constraintStart_toEndOf="@+id/textView13"
-        app:layout_constraintTop_toBottomOf="@+id/edtAddInfoName">
+        app:layout_constraintTop_toBottomOf="@+id/txtAddInfoName">
 
         <RadioButton
             android:id="@+id/rdAddInfoMale"

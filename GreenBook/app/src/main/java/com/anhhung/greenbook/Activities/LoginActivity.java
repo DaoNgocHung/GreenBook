@@ -164,7 +164,8 @@ public class LoginActivity extends AppCompatActivity {
                             Toast.makeText(LoginActivity.this, getString(R.string.auth_failed), Toast.LENGTH_LONG).show();
                         } else {
                             if(auth.getCurrentUser().isEmailVerified() == true){
-                                Intent intent = new Intent(LoginActivity.this, ThankActivity.class);
+                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                intent.putExtra("email", edtLoginUsername.getText().toString().trim());
                                 startActivity(intent);
                                 finish();
                             }

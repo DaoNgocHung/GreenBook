@@ -103,7 +103,12 @@ public class SignUpActivity extends AppCompatActivity {
                                             if (task.isSuccessful()) {
                                                 Toast.makeText(SignUpActivity.this, "Registered successfully.",
                                                         Toast.LENGTH_LONG).show();
-                                                startActivity(new Intent(SignUpActivity.this, LoginActivity.class));
+                                                Intent intent = new Intent(SignUpActivity.this, AddInfoUserActivity.class);
+                                                intent.putExtra("userName", edtSignUpUsername.getText().toString());
+                                                intent.putExtra("email",edtSignUpEmail.getText().toString());
+                                                intent.putExtra("password",edtSignUpPass.getText().toString());
+                                                startActivity(intent);
+
                                                 finish();
                                             } else {
                                                 Toast.makeText(SignUpActivity.this, task.getException().getMessage(),

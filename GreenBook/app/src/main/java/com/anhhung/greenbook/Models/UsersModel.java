@@ -1,24 +1,31 @@
 package com.anhhung.greenbook.Models;
 
 import android.media.Image;
+import android.net.Uri;
 import android.widget.ImageView;
 
+import com.google.firebase.Timestamp;
+
+import java.sql.Time;
 import java.util.Date;
 
 public class UsersModel {
     private String idUser;
     private String hoTen;
-    private String gioiTinh;
-    private Date ngayThangNS;
-    private Image hinhDaiDien;
+    private boolean gioiTinh;
+    private Timestamp ngayThangNS;
+    private String hinhDaiDien;
     private String email;
     private String soDT;
     private Double tien;
-    private int soSachDaMua;
+    private long soSachDaMua;
 
-    public UsersModel(String idUser, String hoTen, String gioiTinh,
-                      Date ngayThangNS, Image hinhDaiDien, String email,
-                      String soDT, Double tien, int soSachDaMua) {
+    public UsersModel() {
+    }
+
+    public UsersModel(String idUser, String hoTen, boolean gioiTinh,
+                      Timestamp ngayThangNS, String hinhDaiDien, String email,
+                      String soDT, Double tien, long soSachDaMua) {
         this.idUser = idUser;
         this.hoTen = hoTen;
         this.gioiTinh = gioiTinh;
@@ -30,6 +37,7 @@ public class UsersModel {
         this.soSachDaMua = soSachDaMua;
     }
 
+
     public String getIdUser() {
         return idUser;
     }
@@ -38,19 +46,19 @@ public class UsersModel {
         this.idUser = idUser;
     }
 
-    public String getGioiTinh() {
+    public boolean getGioiTinh() {
         return gioiTinh;
     }
 
-    public void setGioiTinh(String gioiTinh) {
+    public void setGioiTinh(boolean gioiTinh) {
         this.gioiTinh = gioiTinh;
     }
 
-    public Image getHinhDaiDien() {
+    public String getHinhDaiDien() {
         return hinhDaiDien;
     }
 
-    public void setHinhDaiDien(Image hinhDaiDien) {
+    public void setHinhDaiDien(String hinhDaiDien) {
         this.hinhDaiDien = hinhDaiDien;
     }
 
@@ -78,11 +86,11 @@ public class UsersModel {
         this.hoTen = hoTen;
     }
 
-    public Date getNgayThangNS() {
+    public Timestamp getNgayThangNS() {
         return ngayThangNS;
     }
 
-    public void setNgayThangNS(Date ngayThangNS) {
+    public void setNgayThangNS(Timestamp ngayThangNS) {
         this.ngayThangNS = ngayThangNS;
     }
 
@@ -94,11 +102,11 @@ public class UsersModel {
         this.tien = tien;
     }
 
-    public int getSoSachDaMua() {
+    public long getSoSachDaMua() {
         return soSachDaMua;
     }
 
-    public void setSoSachDaMua(int soSachDaMua) {
+    public void setSoSachDaMua(long soSachDaMua) {
         this.soSachDaMua = soSachDaMua;
     }
 }

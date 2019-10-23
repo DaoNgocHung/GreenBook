@@ -11,7 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher_logo_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activities.AddInfoUserActivity"></activity>
+        <activity android:name=".Activities.YourFavoriteCategory"></activity>
+        <activity android:name=".Activities.AddInfoUserActivity" />
         <activity android:name=".Activities.InfoBookActivity" />
         <activity android:name=".Activities.ForgotPassActivity" />
         <activity android:name=".Activities.IntroActivity" />

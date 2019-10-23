@@ -14,18 +14,23 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.anhhung.greenbook.Models.UsersModel;
 import com.anhhung.greenbook.R;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
+import java.util.Calendar;
+import java.util.Random;
+
 public class AddInfoUserActivity extends AppCompatActivity {
 
-    private TextView txtAddInfoChangeBirth, txtAddInfoBirth;
-    private EditText edtAddInfoName, edtAddInfoPhone;
+    private TextView txtAddInfoChangeBirth, txtAddInfoBirth, txtAddInfoName;
+    private EditText  edtAddInfoPhone;
     private RadioButton rdAddInfoMale, rdAddInfoFemale;
     private Button btnAddInfoSave;
     private ImageView imgAddInfoAvatar;
@@ -34,10 +39,14 @@ public class AddInfoUserActivity extends AppCompatActivity {
     private FirebaseStorage firebaseStorage;
     private StorageReference avatarStorageReference;
 
+    Intent intent;
+
     private Uri imgUri;
+    private Uri urlImage;
 
 
     private boolean isError = false;
+    private boolean isSelectImage = false;  // kiểm tra người dùng  có chọn hình chưa
 
     private final int CHOOSE_IMAGE_REQUEST = 1;
 
@@ -55,12 +64,19 @@ public class AddInfoUserActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if(checkInfo() == true){
                     // Input data
-                    String name = edtAddInfoName.getText().toString().trim();
                     String phone = edtAddInfoPhone.getText().toString().trim();
-                    String birthDay = txtAddInfoBirth.getText().toString().trim();
+                    String birthDay = txtAddInfoBirth.getText().toString();
+                    String userName = txtAddInfoName.getText().toString();
+                    String email = intent.getStringExtra("email");
+                    String password = intent.getStringExtra("password");
+                    int rd = new Random().nextInt(100000);
                     boolean gender;
-                    if(rdAddInfoMale.isChecked() == true) gender = true;
-                    else gender = false;
+                    if(rdAddInfoMale.isChecked() == true) {
+                        gender = true;
+                    }
+                    else {
+                        gender = false;
+                    }
                     StorageReference imageName = avatarStorageReference.child("image" + imgUri.getLastPathSegment());
                     //Upload image to Storage
                     imageName.putFile(imgUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -69,8 +85,23 @@ public class AddInfoUserActivity extends AppCompatActivity {
                             Toast.makeText(AddInfoUserActivity.this,"Completed",Toast.LENGTH_SHORT).show();
                         }
                     });
+                    if(isSelectImage == true){
+                        imageName = avatarStorageReference.child("image" + imgUri.getLastPathSegment());
+                        imageName.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                urlImage = uri;
+                            }
+                        });
+                    }
                     // Function call to Upload data
                     //uploadData(name, phone, birthDay, gender, );
+                    UsersModel usersModel = new UsersModel(String.valueOf(rd),userName,gender, Timestamp.now(), urlImage.toString(),
+                            email,phone,0.0, 0);
+                    db.collection("UserModel").document(String.valueOf(rd)).set(usersModel);
+                    Intent intentMain = new Intent(AddInfoUserActivity.this,MainActivity.class);
+                    intentMain.putExtra("email", email);
+                    startActivity(intent);
                 }
             }
         });
@@ -78,6 +109,7 @@ public class AddInfoUserActivity extends AppCompatActivity {
         imgAddInfoAvatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                isSelectImage = true;
                 Intent intent = new Intent();
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -99,9 +131,13 @@ public class AddInfoUserActivity extends AppCompatActivity {
     }
 
     private void addControls() {
+
+        intent = getIntent();
+
         txtAddInfoBirth = findViewById(R.id.txtAddInfoBirth);
         txtAddInfoChangeBirth = findViewById(R.id.txtAddInfoChangeBirth);
-        edtAddInfoName = findViewById(R.id.edtAddInfoName);
+        txtAddInfoName = findViewById(R.id.txtAddInfoName);
+        txtAddInfoName.setText(intent.getStringExtra("userName"));
         edtAddInfoPhone = findViewById(R.id.edtAddInfoPhone);
         rdAddInfoMale = findViewById(R.id.rdAddInfoMale);
         rdAddInfoMale.setChecked(true);
@@ -116,11 +152,6 @@ public class AddInfoUserActivity extends AppCompatActivity {
     }
 
     private boolean checkInfo() {
-        if(edtAddInfoName.getText().equals("")) {
-            Toast.makeText(AddInfoUserActivity.this,"Enter your name", Toast.LENGTH_SHORT).show();
-            edtAddInfoName.requestFocus();
-            isError = true;
-        }
         if(edtAddInfoPhone.getText().equals("")) {
             Toast.makeText(AddInfoUserActivity.this, "Enter your phone", Toast.LENGTH_SHORT).show();
             edtAddInfoPhone.requestFocus();
@@ -128,10 +159,11 @@ public class AddInfoUserActivity extends AppCompatActivity {
         }
         if(checkNumber(edtAddInfoPhone.getText().toString().trim())==false){
             Toast.makeText(AddInfoUserActivity.this,"Phone syntax error",Toast.LENGTH_SHORT).show();
+            edtAddInfoPhone.requestFocus();
             isError = true;
         }
 
-        if(imgAddInfoAvatar.getResources() == null){
+        if(isSelectImage == false){
             Toast.makeText(AddInfoUserActivity.this,"Select your image", Toast.LENGTH_SHORT).show();
             isError = true;
         }
