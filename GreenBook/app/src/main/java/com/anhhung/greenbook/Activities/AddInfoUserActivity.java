@@ -1,5 +1,6 @@
 package com.anhhung.greenbook.Activities;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -16,7 +17,11 @@ import android.widget.Toast;
 
 import com.anhhung.greenbook.Models.UsersModel;
 import com.anhhung.greenbook.R;
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
@@ -44,7 +49,7 @@ public class AddInfoUserActivity extends AppCompatActivity {
     private Uri imgUri;
     private Uri urlImage;
 
-
+    private UploadTask uploadTask;
     private boolean isError = false;
     private boolean isSelectImage = false;  // kiểm tra người dùng  có chọn hình chưa
 
@@ -60,48 +65,70 @@ public class AddInfoUserActivity extends AppCompatActivity {
 
     private void addEvents() {
         btnAddInfoSave.setOnClickListener(new View.OnClickListener() {
+            String phone, birthDay, userName, email, password;
+            int rd;
+            boolean gender;
             @Override
             public void onClick(View view) {
                 if(checkInfo() == true){
                     // Input data
-                    String phone = edtAddInfoPhone.getText().toString().trim();
-                    String birthDay = txtAddInfoBirth.getText().toString();
-                    String userName = txtAddInfoName.getText().toString();
-                    String email = intent.getStringExtra("email");
-                    String password = intent.getStringExtra("password");
-                    int rd = new Random().nextInt(100000);
-                    boolean gender;
+                    phone = edtAddInfoPhone.getText().toString().trim();
+                    birthDay = txtAddInfoBirth.getText().toString();
+                    userName = txtAddInfoName.getText().toString();
+                    email = intent.getStringExtra("email");
+                    password = intent.getStringExtra("password");
+                    rd = new Random().nextInt(100000);
                     if(rdAddInfoMale.isChecked() == true) {
                         gender = true;
                     }
                     else {
                         gender = false;
                     }
-                    StorageReference imageName = avatarStorageReference.child("image" + imgUri.getLastPathSegment());
+                    avatarStorageReference = avatarStorageReference.child("image" + imgUri.getLastPathSegment());
                     //Upload image to Storage
-                    imageName.putFile(imgUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    uploadTask = avatarStorageReference.putFile(imgUri);
+                    // Register observers to listen for when the download is done or if it fails
+                    uploadTask.addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            Toast.makeText(AddInfoUserActivity.this,"Upload Fail",Toast.LENGTH_SHORT).show();
+                        }
+                    }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             Toast.makeText(AddInfoUserActivity.this,"Completed",Toast.LENGTH_SHORT).show();
+                            if(isSelectImage == true){
+                                Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                                    @Override
+                                    public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                                        if (!task.isSuccessful()) {
+                                            throw task.getException();
+                                        }
+                                        return avatarStorageReference.getDownloadUrl();
+                                    }
+                                }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Uri> task) {
+                                        if (task.isSuccessful()) {
+                                            Uri downloadUri = task.getResult();
+                                            // Function call to Upload data
+                                            //uploadData(name, phone, birthDay, gender, );
+                                            UsersModel usersModel = new UsersModel(String.valueOf(rd),userName, gender, Timestamp.now(), downloadUri.toString(),
+                                                    email,phone,0.0, 0);
+                                            db.collection("UserModel").document(String.valueOf(rd)).set(usersModel);
+                                            Intent intentMain = new Intent(AddInfoUserActivity.this,MainActivity.class);
+                                            intentMain.putExtra("email", email);
+                                            startActivity(intentMain);
+                                        } else {
+                                            Toast.makeText(AddInfoUserActivity.this,"Get Image URL Fail.", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
+
+                            }
+                            // ...
                         }
                     });
-                    if(isSelectImage == true){
-                        imageName = avatarStorageReference.child("image" + imgUri.getLastPathSegment());
-                        imageName.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                            @Override
-                            public void onSuccess(Uri uri) {
-                                urlImage = uri;
-                            }
-                        });
-                    }
-                    // Function call to Upload data
-                    //uploadData(name, phone, birthDay, gender, );
-                    UsersModel usersModel = new UsersModel(String.valueOf(rd),userName,gender, Timestamp.now(), urlImage.toString(),
-                            email,phone,0.0, 0);
-                    db.collection("UserModel").document(String.valueOf(rd)).set(usersModel);
-                    Intent intentMain = new Intent(AddInfoUserActivity.this,MainActivity.class);
-                    intentMain.putExtra("email", email);
-                    startActivity(intent);
                 }
             }
         });
@@ -117,8 +144,6 @@ public class AddInfoUserActivity extends AppCompatActivity {
             }
         });
     }
-
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
