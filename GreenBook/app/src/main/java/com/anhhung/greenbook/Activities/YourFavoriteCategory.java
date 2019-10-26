@@ -20,6 +20,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
 
+import com.anhhung.greenbook.R;
+
 public class YourFavoriteCategory extends AppCompatActivity {
 
     private FirebaseFirestore db;

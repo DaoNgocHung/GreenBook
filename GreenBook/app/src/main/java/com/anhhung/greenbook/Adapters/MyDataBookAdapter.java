@@ -37,10 +37,10 @@ public class MyDataBookAdapter extends RecyclerView.Adapter<MyDataBookAdapter.It
         final String sectionName = dataList.get(i).getHeaderTitle();
 
         ArrayList singleSectionItems = dataList.get(i).getAllBooksInSection();
-
+        ArrayList singleSectionImages = dataList.get(i).getImgList();
         itemRowHolder.itemTitle.setText(sectionName);
 
-        SectionListDataAdapter itemListDataAdapter = new SectionListDataAdapter(mContext, singleSectionItems);
+        SectionListDataAdapter itemListDataAdapter = new SectionListDataAdapter(mContext, singleSectionItems, singleSectionImages );
 
         itemRowHolder.recycler_view_list.setHasFixedSize(true);
         itemRowHolder.recycler_view_list.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));

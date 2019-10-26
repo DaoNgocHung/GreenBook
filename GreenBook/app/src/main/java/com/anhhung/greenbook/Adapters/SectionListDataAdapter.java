@@ -2,6 +2,7 @@ package com.anhhung.greenbook.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,16 +15,21 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.anhhung.greenbook.Activities.InfoBookActivity;
 import com.anhhung.greenbook.Models.BooksModel;
 import com.anhhung.greenbook.R;
+import com.bumptech.glide.Glide;
+import com.google.firebase.storage.StorageReference;
 
+import java.net.URL;
 import java.util.ArrayList;
 
 public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListDataAdapter.SingleItemRowHolder>{
     private ArrayList<BooksModel> itemsList;
     private Context mContext;
+    private ArrayList<String> imgList;
 
-    public SectionListDataAdapter(Context context, ArrayList<BooksModel> itemsList) {
+    public SectionListDataAdapter(Context context, ArrayList<BooksModel> itemsList, ArrayList<String> imgList) {
         this.itemsList = itemsList;
         this.mContext = context;
+        this.imgList = imgList;
     }
 
     @Override
@@ -37,8 +43,10 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
     public void onBindViewHolder(SingleItemRowHolder holder, int i) {
         BooksModel singleBook = itemsList.get(i);
         holder.tvTitle.setText(singleBook.getTenSach());
+        Glide.with(holder.itemView)
+                .load(imgList.get(i))
+                .into(holder.itemImage);
     }
-
     @Override
     public int getItemCount() {
         return (null != itemsList ? itemsList.size() : 0);

@@ -2,11 +2,13 @@ package com.anhhung.greenbook.Models;
 
 import android.media.Image;
 
+import com.google.firebase.Timestamp;
+
 public class BooksModel {
     private String idSach;
     private String tenSach;
     private float danhGia;
-    private Image biaSach;
+    private String biaSach;
     private String danhMuc;
     private int giamGia;
     private String gioiThieuSach;
@@ -17,14 +19,14 @@ public class BooksModel {
     }
 
     private String NXB;
-    private String ngayUpload;
+    private Timestamp ngayUpload;
     private String ngonNgu;
     private long soNguoiMua;
     private String tacGia;
 
-    public BooksModel(String idSach, String tenSach, float danhGia, Image biaSach,
+    public BooksModel(String idSach, String tenSach, float danhGia, String biaSach,
                       String danhMuc, int giamGia, String gioiThieuSach, String noiDung,
-                      String NXB, String ngayUpload, String ngonNgu,
+                      String NXB, Timestamp ngayUpload, String ngonNgu,
                       long soNguoiMua, String tacGia) {
         this.idSach = idSach;
         this.tenSach = tenSach;
@@ -68,11 +70,11 @@ public class BooksModel {
         this.danhGia = danhGia;
     }
 
-    public Image getBiaSach() {
+    public String getBiaSach() {
         return biaSach;
     }
 
-    public void setBiaSach(Image biaSach) {
+    public void setBiaSach(String biaSach) {
         this.biaSach = biaSach;
     }
 
@@ -116,11 +118,11 @@ public class BooksModel {
         this.NXB = NXB;
     }
 
-    public String getNgayUpload() {
+    public Timestamp getNgayUpload() {
         return ngayUpload;
     }
 
-    public void setNgayUpload(String ngayUpload) {
+    public void setNgayUpload(Timestamp ngayUpload) {
         this.ngayUpload = ngayUpload;
     }
 
