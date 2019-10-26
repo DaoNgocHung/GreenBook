@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
+import com.anhhung.greenbook.R;
+
 public class YourFavoriteCategory extends AppCompatActivity {
 
     @Override
