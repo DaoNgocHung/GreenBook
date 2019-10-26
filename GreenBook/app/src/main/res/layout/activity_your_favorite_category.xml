@@ -6,4 +6,28 @@
     android:layout_height="match_parent"
     tools:context=".Activities.YourFavoriteCategory">
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rViewCategory"
+        android:layout_width="0dp"
+        android:layout_height="657dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+    <Button
+        android:background="@drawable/button_style_1"
+        android:id="@+id/btnCategoryFinish"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:textColor="@color/colorWhite"
+        android:text="Finish"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rViewCategory"
+        app:layout_constraintVertical_bias="0.875" />
 </androidx.constraintlayout.widget.ConstraintLayout>

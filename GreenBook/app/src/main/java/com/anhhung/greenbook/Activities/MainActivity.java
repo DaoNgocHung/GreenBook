@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
                                 txtNameAccount.setText(user.getHoTen());
                                 txtMoneyAccount.setText(user.getTien().toString());
                                 new DownloadImageTask((ImageView) findViewById(R.id.imgDrawerProfile))
-                                        .execute(user.getHinhDaiDien());
+                                        .execute(user.getHinhDaiDien().toString());
                                 Log.d(TAG, user.getHoTen());
                                 Log.d(TAG, document.getId() + " => " + document.getData());
                             }

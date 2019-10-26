@@ -23,7 +23,7 @@ import java.util.List;
  */
 public class CommentBookFragment extends Fragment {
 
-    private RecyclerView recyclerViewComment;
+    private RecyclerView rViewComment;
     private CommentBookAdapter commentBookAdapter;
     List<CommentItem> commentItems;
 
@@ -55,12 +55,12 @@ public class CommentBookFragment extends Fragment {
         //you may get your data from an api/ firebase or sqlite database ...
         fakeData();
         commentBookAdapter = new CommentBookAdapter(getActivity(),commentItems);
-        recyclerViewComment.setAdapter(commentBookAdapter);
-        recyclerViewComment.setLayoutManager(new LinearLayoutManager(getActivity()));
+        rViewComment.setAdapter(commentBookAdapter);
+        rViewComment.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
 
     private void addControls(View view) {
-        recyclerViewComment = view.findViewById(R.id.recyclerViewComment);
+        rViewComment = view.findViewById(R.id.rViewComment);
         commentItems = new ArrayList<>();
 
     }
