@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.anhhung.greenbook.Models.CategoriesModel;
 import com.anhhung.greenbook.R;
+import com.bumptech.glide.Glide;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
@@ -23,6 +24,9 @@ public class CategoryAdapter extends FirestoreRecyclerAdapter<CategoriesModel, C
     @Override
     protected void onBindViewHolder(@NonNull CategoryHolder holder, int position, @NonNull CategoriesModel model) {
         holder.txtNameCategory.setText(model.getTenDanhMuc());
+        Glide.with(holder.itemView)
+                .load(model.getAnhBia())
+                .into(holder.imgBackgroundCategory);
     }
 
     @NonNull
@@ -33,7 +37,6 @@ public class CategoryAdapter extends FirestoreRecyclerAdapter<CategoriesModel, C
     }
 
     class CategoryHolder extends RecyclerView.ViewHolder {
-
         TextView txtNameCategory;
         ImageView imgBackgroundCategory;
 

@@ -5,17 +5,21 @@ import java.util.Map;
 public class CategoriesModel {
     private String tenDanhMuc;
     private int anhBia;
-    Map<String,BooksModel> booksModelMap;
+    private Map<String,BooksModel> SachCollection;
 
-    public CategoriesModel(String tenDanhMuc, int anhBia, Map<String, BooksModel> booksModelMap) {
+    public CategoriesModel(String tenDanhMuc, int anhBia, Map<String, BooksModel> SachCollection) {
         this.tenDanhMuc = tenDanhMuc;
         this.anhBia = anhBia;
-        this.booksModelMap = booksModelMap;
+        this.SachCollection = SachCollection;
     }
 
     public CategoriesModel(String tenDanhMuc, int anhBia) {
         this.tenDanhMuc = tenDanhMuc;
         this.anhBia = anhBia;
+    }
+
+    public CategoriesModel (String tenDanhMuc) {
+        this.tenDanhMuc = tenDanhMuc;
     }
 
     public String getTenDanhMuc() {
@@ -35,10 +39,10 @@ public class CategoriesModel {
     }
 
     public Map<String, BooksModel> getBooksModelMap() {
-        return booksModelMap;
+        return SachCollection;
     }
 
     public void setBooksModelMap(Map<String, BooksModel> booksModelMap) {
-        this.booksModelMap = booksModelMap;
+        this.SachCollection = booksModelMap;
     }
 }

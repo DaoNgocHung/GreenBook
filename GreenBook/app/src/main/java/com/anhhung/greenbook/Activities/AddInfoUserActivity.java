@@ -116,9 +116,9 @@ public class AddInfoUserActivity extends AppCompatActivity {
                                             UsersModel usersModel = new UsersModel(String.valueOf(rd),userName, gender, Timestamp.now(), downloadUri.toString(),
                                                     email,phone,0.0, 0);
                                             db.collection("UserModel").document(String.valueOf(rd)).set(usersModel);
-                                            Intent intentMain = new Intent(AddInfoUserActivity.this,MainActivity.class);
-                                            intentMain.putExtra("email", email);
-                                            startActivity(intentMain);
+                                            Intent intentCategory = new Intent(AddInfoUserActivity.this,YourFavoriteCategory.class);
+                                            intentCategory.putExtra("email", email);
+                                            startActivity(intentCategory);
                                         } else {
                                             Toast.makeText(AddInfoUserActivity.this,"Get Image URL Fail.", Toast.LENGTH_SHORT).show();
                                         }
