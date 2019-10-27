@@ -22,6 +22,7 @@ import com.anhhung.greenbook.Activities.InfoBookActivity;
 import com.anhhung.greenbook.Adapters.MyDataBookAdapter;
 import com.anhhung.greenbook.Adapters.SliderAdvertiseAdapter;
 import com.anhhung.greenbook.Models.BooksModel;
+import com.anhhung.greenbook.Models.CategoriesModel;
 import com.anhhung.greenbook.Models.SectionDataModel;
 import com.anhhung.greenbook.Models.UsersModel;
 import com.anhhung.greenbook.R;
@@ -37,6 +38,7 @@ import com.smarteist.autoimageslider.SliderView;
 import com.smarteist.autoimageslider.SliderViewAdapter;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -50,7 +52,11 @@ public class HomeFragment extends Fragment {
     private FirebaseFirestore db;
     RecyclerView myRecyclerView;
     List<BooksModel> booksModels = new ArrayList<>();
-
+    List<CategoriesModel> categoriesModels = new ArrayList<>();
+    MyCallback myCallback;
+    MyCallbackCategories myCallbackCategories;
+    String tenDM = "";
+    int count = 0;
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -80,48 +86,69 @@ public class HomeFragment extends Fragment {
     private void addControls(View view) {
         db = FirebaseFirestore.getInstance();
         allSampleData = new ArrayList<>();
-        getAllDocumentsInDanhMucCollection();
         myRecyclerView = view.findViewById(R.id.home_recycler_view);
         myRecyclerView.setHasFixedSize(true);
+        readData2(new MyCallbackCategories() {
+            @Override
+            public void onCallback(final List<CategoriesModel> categoriesModels) {
+                readData(new MyCallback() {
+                    @Override
+                    public void onCallback(List<BooksModel> booksModels) {
+                        createDummyData(categoriesModels, booksModels, myRecyclerView);
+                    }
+                });
+
+            }
+        });
 
 
     }
-    public void createDummyData(List<BooksModel> booksModels, RecyclerView myRecyclerView) {
-        for (int i = 0; i < 1; i++) {
+    public void createDummyData(List<CategoriesModel> categoriesModels,List<BooksModel> booksModels, RecyclerView myRecyclerView) {
+        for (int i = 0; i < categoriesModels.size(); i++) {
 
             SectionDataModel dm = new SectionDataModel();
-
-            dm.setHeaderTitle(booksModels.get(i).getDanhMuc());
+            tenDM =categoriesModels.get(i).getTenDanhMuc();
+            dm.setHeaderTitle(tenDM);
             ArrayList<String> imgList = new ArrayList<>();
-            ArrayList<BooksModel> bookItem = new ArrayList<BooksModel>();
+            ArrayList<BooksModel> bookItem = new ArrayList<>();
             for (int j = 0; j< booksModels.size(); j++) {
-                bookItem.add(booksModels.get(j));
-                imgList.add(booksModels.get(j).getBiaSach());
+                if(!tenDM.equals(booksModels.get(j).getDanhMuc())){
+                    continue;
+                }
+                else {
+                    bookItem.add(booksModels.get(j));
+                    imgList.add(booksModels.get(j).getBiaSach());
+                }
             }
-
             dm.setAllItemsInSection(bookItem);
             dm.setImgList(imgList);
             allSampleData.add(dm);
-            MyDataBookAdapter adapter = new MyDataBookAdapter(getActivity(), allSampleData);
-            myRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
-            myRecyclerView.setAdapter(adapter);
         }
+        MyDataBookAdapter adapter = new MyDataBookAdapter(getActivity(), allSampleData);
+        myRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+        myRecyclerView.setAdapter(adapter);
     }
-    private void getAllDocumentsInDanhMucCollection(){
+    public interface MyCallback {
+        void onCallback(List<BooksModel> booksModels);
+    }
+    public interface MyCallbackCategories {
+        void onCallback(List<CategoriesModel> categoriesModels);
+    }
+    private void getAllCategoriesName(){
         try{
-            db.collection("DanhMucCollection").document("dmForeignLanguage").collection("SachColection")
+            db.collection("DanhMucCollection")
                     .get()
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                             if (task.isSuccessful()) {
                                 for (QueryDocumentSnapshot document : task.getResult()) {
-                                    BooksModel booksModel;
-                                    booksModel = document.toObject(BooksModel.class);
+                                    CategoriesModel categoriesModel;
+                                    categoriesModel = document.toObject(CategoriesModel.class);
                                     Log.d(TAG, document.getId() + " => " + document.getData());
-                                    booksModels.add(booksModel);
+                                    categoriesModels.add(categoriesModel);
                                 }
-                                createDummyData(booksModels, myRecyclerView);
+                                myCallbackCategories.onCallback(categoriesModels);
                             } else {
                                 Log.d(TAG, "Error getting documents: ", task.getException());
                             }
@@ -130,8 +157,45 @@ public class HomeFragment extends Fragment {
         }catch (Exception e){
             Log.d("ERR", e.toString());
         }
+    }
+    private void getAllDocumentsInDanhMucCollection(){
+        for(int i = 0; i <categoriesModels.size(); i++){
+            try{
+                db.collection("DanhMucCollection").document(categoriesModels.get(i).getId()).collection("SachColection")
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                        BooksModel booksModel;
+                                        booksModel = document.toObject(BooksModel.class);
+                                        Log.d(TAG, document.getId() + " => " + document.getData());
+                                        booksModels.add(booksModel);
+                                    }
+                                    count++;
+                                    if(count - 1 == categoriesModels.size()-1){
+                                        myCallback.onCallback(booksModels);
+                                    }
+                                } else {
+                                    Log.d(TAG, "Error getting documents: ", task.getException());
+                                }
+                            }
+                        });
+            }catch (Exception e){
+                Log.d("ERR", e.toString());
+            }
+        }
 
+    }
 
+    public void readData2(MyCallbackCategories myCallbackCategories) {
+        this.myCallbackCategories = myCallbackCategories;
+        getAllCategoriesName();
+    }
+    public void readData(MyCallback myCallback) {
+        this.myCallback = myCallback;
+        getAllDocumentsInDanhMucCollection();
     }
     private void addEvents() {
         //Auto Advertisement

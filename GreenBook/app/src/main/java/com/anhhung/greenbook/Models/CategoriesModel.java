@@ -1,21 +1,38 @@
 package com.anhhung.greenbook.Models;
 
-import java.util.Map;
+        import java.util.List;
+        import java.util.Map;
 
 public class CategoriesModel {
     private String tenDanhMuc;
-    private int anhBia;
-    private Map<String,BooksModel> SachCollection;
+    private String anhBia;
+    private String id;
+    List<BooksModel> booksModels;
 
-    public CategoriesModel(String tenDanhMuc, int anhBia, Map<String, BooksModel> SachCollection) {
+    public CategoriesModel(String tenDanhMuc, String anhBia, String id, List<BooksModel> booksModels) {
         this.tenDanhMuc = tenDanhMuc;
         this.anhBia = anhBia;
-        this.SachCollection = SachCollection;
+        this.id = id;
+        this.booksModels = booksModels;
     }
 
-    public CategoriesModel(String tenDanhMuc, int anhBia) {
-        this.tenDanhMuc = tenDanhMuc;
-        this.anhBia = anhBia;
+    public CategoriesModel() {
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public List<BooksModel> getBooksModels() {
+        return booksModels;
+    }
+
+    public void setBooksModels(List<BooksModel> booksModels) {
+        this.booksModels = booksModels;
     }
 
     public CategoriesModel (String tenDanhMuc) {
@@ -30,19 +47,12 @@ public class CategoriesModel {
         this.tenDanhMuc = tenDanhMuc;
     }
 
-    public int getAnhBia() {
+    public String getAnhBia() {
         return anhBia;
     }
 
-    public void setAnhBia(int anhBia) {
+    public void setAnhBia(String anhBia) {
         this.anhBia = anhBia;
     }
 
-    public Map<String, BooksModel> getBooksModelMap() {
-        return SachCollection;
-    }
-
-    public void setBooksModelMap(Map<String, BooksModel> booksModelMap) {
-        this.SachCollection = booksModelMap;
-    }
 }
