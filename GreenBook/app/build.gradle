@@ -5,7 +5,7 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.anhhung.greenbook"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 28
         multiDexEnabled true
         versionCode 1
@@ -55,5 +55,11 @@ dependencies {
 
     //Picasso
     implementation 'com.squareup.picasso:picasso:2.5.2'
+
+    //Foli Reader
+    implementation "com.folioreader:folioreader:0.5.4"
+    configurations.matching { it.name == '_internal_aapt2_binary' }.all { config ->
+        config.resolutionStrategy.eachDependency { details -> details.useVersion("3.3.2-5309881") } }
+    implementation 'androidx.multidex:multidex:2.0.1'
 
 }
