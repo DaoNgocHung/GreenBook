@@ -3,6 +3,7 @@ package com.anhhung.greenbook.Adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.media.Image;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,12 +11,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.anhhung.greenbook.Activities.InfoBookActivity;
 import com.anhhung.greenbook.Models.BooksModel;
 import com.anhhung.greenbook.R;
 import com.bumptech.glide.Glide;
+import com.folioreader.FolioReader;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.net.URL;
@@ -25,6 +32,11 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
     private ArrayList<BooksModel> itemsList;
     private Context mContext;
     private ArrayList<String> imgList;
+    private String noiDung;
+    FolioReader folioReader = FolioReader.get();
+    FirebaseStorage storage = FirebaseStorage.getInstance();
+    StorageReference storageRef = storage.getReference();
+    StorageReference httpsReference;
 
     public SectionListDataAdapter(Context context, ArrayList<BooksModel> itemsList, ArrayList<String> imgList) {
         this.itemsList = itemsList;
@@ -42,11 +54,28 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
     @Override
     public void onBindViewHolder(SingleItemRowHolder holder, int i) {
         BooksModel singleBook = itemsList.get(i);
+        noiDung = itemsList.get(i).getNoiDung();
         holder.tvTitle.setText(singleBook.getTenSach());
         Glide.with(holder.itemView)
                 .load(imgList.get(i))
                 .into(holder.itemImage);
     }
+    public void downloadEpub(String noiDung){
+        httpsReference = storage.getReferenceFromUrl(noiDung);
+        String URL = httpsReference.getPath();
+        storageRef.child(URL).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                folioReader.openBook("file:///android_asset/epub/loi_song_toi_gian_cua_nguoi_nhat_sasaki_fumio.epub");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+            }
+        });
+    }
+
     @Override
     public int getItemCount() {
         return (null != itemsList ? itemsList.size() : 0);
@@ -67,7 +96,8 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
                 public void onClick(View v) {
 
                     Toast.makeText(v.getContext(), tvTitle.getText(), Toast.LENGTH_SHORT).show();
-
+                    downloadEpub(noiDung);
+                    Toast.makeText(v.getContext(), httpsReference.getPath(), Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(v.getContext(), InfoBookActivity.class);
                     mContext.startActivity(intent);
 
