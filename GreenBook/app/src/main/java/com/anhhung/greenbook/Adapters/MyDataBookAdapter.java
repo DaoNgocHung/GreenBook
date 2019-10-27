@@ -11,6 +11,7 @@ import android.widget.Toast;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.anhhung.greenbook.Models.BooksModel;
 import com.anhhung.greenbook.Models.SectionDataModel;
 import com.anhhung.greenbook.R;
 
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 public class MyDataBookAdapter extends RecyclerView.Adapter<MyDataBookAdapter.ItemRowHolder> {
     private ArrayList<SectionDataModel> dataList;
     private Context mContext;
+    private BooksModel booksModel = new BooksModel();
 
     public MyDataBookAdapter(Context context, ArrayList<SectionDataModel> dataList) {
         this.dataList = dataList;

@@ -35,33 +35,37 @@
 
             <ImageView
                 android:id="@+id/imgInFoBookCover"
-                android:layout_width="140dp"
-                android:layout_height="180dp"
-                android:scaleType="fitXY"
+                android:layout_width="141dp"
+                android:layout_height="202dp"
+                android:layout_marginTop="1dp"
+                android:cropToPadding="false"
                 android:padding="7dp"
+                android:scaleType="fitXY"
                 android:src="@drawable/background_welcome"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.061"
+                app:layout_constraintHorizontal_bias="0.025"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0" />
+                app:layout_constraintVertical_bias="0.272" />
 
             <TextView
                 android:id="@+id/txtInfoNameBook"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="246dp"
+                android:layout_height="67dp"
                 android:layout_marginStart="8dp"
+                android:layout_marginTop="13dp"
                 android:layout_marginEnd="124dp"
-                android:layout_marginBottom="196dp"
+                android:foregroundGravity="center_vertical"
+                android:gravity="center_vertical"
                 android:text="One Piece One Piece Tap 90"
                 android:textColor="@color/colorLimeGreen"
                 android:textSize="20dp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toEndOf="@+id/imgInFoBookCover" />
+                app:layout_constraintStart_toEndOf="@+id/imgInFoBookCover"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/txtInfoBookDownloaded"
@@ -76,10 +80,13 @@
             <RatingBar
                 android:id="@+id/rateInfoBook"
                 style="@android:style/Widget.Holo.RatingBar.Small"
-                android:layout_width="84dp"
-                android:layout_height="16dp"
+                android:layout_width="83dp"
+                android:layout_height="20dp"
                 android:layout_marginStart="6dp"
                 android:layout_marginTop="8dp"
+                android:max="5"
+                android:progressTint="#FFEB3B"
+                android:rating="0.0"
                 app:layout_constraintStart_toEndOf="@+id/imgInFoBookCover"
                 app:layout_constraintTop_toBottomOf="@+id/txtInfoBookDownloaded" />
 
@@ -107,11 +114,11 @@
 
             <Button
                 android:id="@+id/btnInfoBookBuy"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="62dp"
+                android:layout_height="32dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="12dp"
                 android:background="@drawable/button_style_1"
-                android:layout_marginStart="6dp"
-                android:layout_marginTop="8dp"
                 android:text="Buy"
                 android:textColor="@color/colorWhite"
                 app:layout_constraintStart_toEndOf="@+id/imgInFoBookCover"
@@ -119,11 +126,11 @@
 
             <Button
                 android:id="@+id/btnInfoBookRead"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="62dp"
+                android:layout_height="32dp"
+                android:layout_marginStart="88dp"
+                android:layout_marginTop="12dp"
                 android:background="@drawable/button_style_1"
-                android:layout_marginStart="6dp"
-                android:layout_marginTop="8dp"
                 android:text="Read"
                 android:textColor="@color/colorWhite"
                 app:layout_constraintStart_toEndOf="@+id/imgInFoBookCover"
