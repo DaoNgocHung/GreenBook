@@ -3,10 +3,12 @@ package com.anhhung.greenbook.Activities;
 import android.content.Intent;
 import android.os.Bundle;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,15 +18,19 @@ import com.anhhung.greenbook.Models.CategoriesModel;
 import com.anhhung.greenbook.R;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
 
 import com.anhhung.greenbook.R;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 public class YourFavoriteCategory extends AppCompatActivity {
 
-    private FirebaseFirestore db;
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CategoryAdapter adapter;
 
     private RecyclerView rViewCategory;
@@ -45,16 +51,37 @@ public class YourFavoriteCategory extends AppCompatActivity {
     }
 
     private void loadData() {
-        Query query = db.collection("DMCollection");
+        Query query = db.collection("DanhMucCollection");
         FirestoreRecyclerOptions<CategoriesModel> options = new FirestoreRecyclerOptions.Builder<CategoriesModel>()
                                         .setQuery(query, CategoriesModel.class)
                                         .build();
         adapter = new CategoryAdapter(options);
 
+        Log.d("WARN",adapter.toString());
+
         rViewCategory.setHasFixedSize(true);
         rViewCategory.setLayoutManager(new LinearLayoutManager(YourFavoriteCategory.this));
         rViewCategory.setAdapter(adapter);
 
+//        try{
+//            db.collection("DanhMucCollection")
+//                    .get()
+//                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                        @Override
+//                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                            if (task.isSuccessful()) {
+//                                for (QueryDocumentSnapshot document : task.getResult()) {
+//
+//                                    Log.d(TAG, document.getId() + " => " + document.getData());
+//                                }
+//                            } else {
+//                                Log.d(TAG, "Error getting documents: ", task.getException());
+//                            }
+//                        }
+//                    });
+//        }catch (Exception e){
+//            Log.d("ERR", e.toString());
+//        }
     }
 
     private void addEvents() {
@@ -81,7 +108,6 @@ public class YourFavoriteCategory extends AppCompatActivity {
     }
 
     private void addControls() {
-        db = FirebaseFirestore.getInstance();
         rViewCategory = findViewById(R.id.rViewCategory);
         btnCategoryFinish = findViewById(R.id.btnCategoryFinish);
         intent = getIntent();

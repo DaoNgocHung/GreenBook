@@ -4,18 +4,14 @@ import java.util.Map;
 
 public class CategoriesModel {
     private String tenDanhMuc;
-    private int anhBia;
-    private Map<String,BooksModel> SachCollection;
+    private String anhBia;
 
-    public CategoriesModel(String tenDanhMuc, int anhBia, Map<String, BooksModel> SachCollection) {
+    public CategoriesModel(String tenDanhMuc, String anhBia) {
         this.tenDanhMuc = tenDanhMuc;
         this.anhBia = anhBia;
-        this.SachCollection = SachCollection;
     }
 
-    public CategoriesModel(String tenDanhMuc, int anhBia) {
-        this.tenDanhMuc = tenDanhMuc;
-        this.anhBia = anhBia;
+    public CategoriesModel() {
     }
 
     public CategoriesModel (String tenDanhMuc) {
@@ -30,19 +26,12 @@ public class CategoriesModel {
         this.tenDanhMuc = tenDanhMuc;
     }
 
-    public int getAnhBia() {
+    public String getAnhBia() {
         return anhBia;
     }
 
-    public void setAnhBia(int anhBia) {
+    public void setAnhBia(String anhBia) {
         this.anhBia = anhBia;
     }
 
-    public Map<String, BooksModel> getBooksModelMap() {
-        return SachCollection;
-    }
-
-    public void setBooksModelMap(Map<String, BooksModel> booksModelMap) {
-        this.SachCollection = booksModelMap;
-    }
 }

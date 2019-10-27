@@ -164,6 +164,7 @@ public class LoginActivity extends AppCompatActivity {
                             Toast.makeText(LoginActivity.this, getString(R.string.auth_failed), Toast.LENGTH_LONG).show();
                         } else {
                             if(auth.getCurrentUser().isEmailVerified() == true){
+                                openLoadingDialog();
                                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                 intent.putExtra("email", edtLoginUsername.getText().toString().trim());
                                 startActivity(intent);
@@ -268,6 +269,13 @@ public class LoginActivity extends AppCompatActivity {
                 .requestEmail()
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+    }
+
+    private void openLoadingDialog() {
+        loadingDialog = new Dialog(LoginActivity.this, R.style.CustomDialog);
+        loadingDialog.setContentView(R.layout.loading_dialog);
+        loadingDialog.setCanceledOnTouchOutside(false);
+        loadingDialog.show();
     }
 
 }

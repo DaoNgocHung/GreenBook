@@ -9,17 +9,26 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.anhhung.greenbook.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 
 public class WelcomeActivity extends AppCompatActivity {
 
     private Button btnWelcomeSignIn;
     private TextView txtWelcomeSignUp;
+    FirebaseUser firebaseUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        if(firebaseUser != null){
+            Intent intentMain = new Intent(WelcomeActivity.this,MainActivity.class);
+            startActivity(intentMain);
+            finish();
+        }
         addControls();
         addEvents();
     }
