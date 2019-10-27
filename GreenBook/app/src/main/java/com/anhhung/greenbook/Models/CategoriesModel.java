@@ -1,15 +1,23 @@
 package com.anhhung.greenbook.Models;
 
-        import java.util.List;
-        import java.util.Map;
 
 public class CategoriesModel {
     private String tenDanhMuc;
     private String anhBia;
+    private String id;
 
-    public CategoriesModel(String tenDanhMuc, String anhBia) {
+    public CategoriesModel(String tenDanhMuc, String anhBia, String id) {
         this.tenDanhMuc = tenDanhMuc;
         this.anhBia = anhBia;
+        this.id = id;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public CategoriesModel() {
