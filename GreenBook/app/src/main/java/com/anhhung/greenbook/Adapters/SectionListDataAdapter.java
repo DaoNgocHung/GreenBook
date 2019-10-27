@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.Image;
 import android.net.Uri;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,11 +33,11 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
     private ArrayList<BooksModel> itemsList;
     private Context mContext;
     private ArrayList<String> imgList;
-    private String noiDung;
     FolioReader folioReader = FolioReader.get();
     FirebaseStorage storage = FirebaseStorage.getInstance();
     StorageReference storageRef = storage.getReference();
     StorageReference httpsReference;
+    BooksModel singleBook;
 
     public SectionListDataAdapter(Context context, ArrayList<BooksModel> itemsList, ArrayList<String> imgList) {
         this.itemsList = itemsList;
@@ -53,8 +54,7 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
 
     @Override
     public void onBindViewHolder(SingleItemRowHolder holder, int i) {
-        BooksModel singleBook = itemsList.get(i);
-        noiDung = itemsList.get(i).getNoiDung();
+        singleBook = itemsList.get(i);
         holder.tvTitle.setText(singleBook.getTenSach());
         Glide.with(holder.itemView)
                 .load(imgList.get(i))
@@ -94,11 +94,19 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    //downloadEpub(noiDung);
+                    int i = getAdapterPosition();
+                    singleBook = itemsList.get(i);
                     Toast.makeText(v.getContext(), tvTitle.getText(), Toast.LENGTH_SHORT).show();
-                    downloadEpub(noiDung);
-                    Toast.makeText(v.getContext(), httpsReference.getPath(), Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(v.getContext(), InfoBookActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("anhBia",singleBook.getBiaSach());
+                    bundle.putString("tenSach",singleBook.getTenSach());
+                    bundle.putLong("soNguoiMua", singleBook.getSoNguoiMua());
+                    bundle.putFloat("danhGia", singleBook.getDanhGia());
+                    bundle.putString("noiDung",singleBook.getNoiDung());
+                    bundle.putString("gioiThieu", singleBook.getGioiThieuSach());
+                    intent.putExtras(bundle);
                     mContext.startActivity(intent);
 
                 }

@@ -128,11 +128,14 @@ public class MainActivity extends AppCompatActivity {
                                 user = document.toObject(UsersModel.class);
                                 txtNameAccount.setText(user.getHoTen());
                                 txtMoneyAccount.setText(user.getTien().toString());
-                                Glide.with(MainActivity.this)
-                                        .load(user.getHinhDaiDien())
-                                        .into(imgDrawerProfile);
-                                Log.d(TAG, user.getHoTen());
-                                Log.d(TAG, document.getId() + " => " + document.getData());
+                                if(user.getHinhDaiDien() != null){
+                                    Glide.with(MainActivity.this)
+                                            .load(user.getHinhDaiDien())
+                                            .into(imgDrawerProfile);
+                                    Log.d(TAG, user.getHoTen());
+                                    Log.d(TAG, document.getId() + " => " + document.getData());
+                                }
+
                             }
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
