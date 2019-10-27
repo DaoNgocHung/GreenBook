@@ -13,6 +13,7 @@ public class BooksModel {
     private int giamGia;
     private String gioiThieuSach;
     private String noiDung;   //change to epub
+    private double giaTien;
 
     public BooksModel(String tenSach) {
         this.tenSach = tenSach;
@@ -27,7 +28,7 @@ public class BooksModel {
     public BooksModel(String idSach, String tenSach, float danhGia, String biaSach,
                       String danhMuc, int giamGia, String gioiThieuSach, String noiDung,
                       String NXB, Timestamp ngayUpload, String ngonNgu,
-                      long soNguoiMua, String tacGia) {
+                      long soNguoiMua, String tacGia, double giaTien) {
         this.idSach = idSach;
         this.tenSach = tenSach;
         this.danhGia = danhGia;
@@ -41,6 +42,7 @@ public class BooksModel {
         this.ngonNgu = ngonNgu;
         this.soNguoiMua = soNguoiMua;
         this.tacGia = tacGia;
+        this.giaTien = giaTien;
     }
 
     public BooksModel() {
@@ -148,5 +150,13 @@ public class BooksModel {
 
     public void setTacGia(String tacGia) {
         this.tacGia = tacGia;
+    }
+
+    public double getGiaTien() {
+        return giaTien;
+    }
+
+    public void setGiaTien(double giaTien) {
+        this.giaTien = giaTien;
     }
 }
