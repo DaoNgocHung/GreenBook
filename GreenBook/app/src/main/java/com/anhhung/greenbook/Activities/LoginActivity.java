@@ -41,7 +41,7 @@ import com.smarteist.autoimageslider.Transformations.TossTransformation;
 public class LoginActivity extends AppCompatActivity {
 
     private Button btnLoginLogin;
-    private ImageButton imgbtnLoginFacebook, imgbtnLoginTwitter, imgbtnLoginGoogle;
+    private ImageButton imgbtnLoginGoogle;
     private EditText edtLoginUsername, edtLoginPass;
     private CheckBox chkLoginRemember;
     private TextView txtLoginForgot, txtLoginSignUp;
@@ -54,6 +54,7 @@ public class LoginActivity extends AppCompatActivity {
     GoogleSignInOptions gso;
     private GoogleSignInClient mGoogleSignInClient;
     private static final int RC_SIGN_IN = 9001;
+    private String userEmail = "";
 
 
     @Override
@@ -70,20 +71,6 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Toast.makeText(LoginActivity.this,"Login with Google", Toast.LENGTH_LONG).show();
                 signInGoogle();
-            }
-        });
-
-        imgbtnLoginTwitter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(LoginActivity.this,"Login with Twitter", Toast.LENGTH_LONG).show();
-            }
-        });
-
-        imgbtnLoginFacebook.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(LoginActivity.this,"Login with Facebook", Toast.LENGTH_LONG).show();
             }
         });
 
@@ -110,6 +97,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if(check_Registration_Information() == true){
                     loginEmailPassword();
+                    openLoadingDialog();
                 }
                 else {
                     errorLogin = false;
@@ -154,19 +142,19 @@ public class LoginActivity extends AppCompatActivity {
         else return false;
     }
     private void loginEmailPassword() {
+        userEmail = edtLoginUsername.getText().toString();
         //authenticate user
-        auth.signInWithEmailAndPassword(edtLoginUsername.getText().toString(), edtLoginPass.getText().toString())
+        auth.signInWithEmailAndPassword(userEmail, edtLoginPass.getText().toString())
                 .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        //loadingDialog.cancel();
+                        loadingDialog.cancel();
                         if (!task.isSuccessful()) {
                             Toast.makeText(LoginActivity.this, getString(R.string.auth_failed), Toast.LENGTH_LONG).show();
                         } else {
                             if(auth.getCurrentUser().isEmailVerified() == true){
-                                openLoadingDialog();
                                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                intent.putExtra("email", edtLoginUsername.getText().toString().trim());
+                                intent.putExtra("email", userEmail.trim());
                                 startActivity(intent);
                                 finish();
                             }
@@ -252,9 +240,7 @@ public class LoginActivity extends AppCompatActivity {
     }
     private void addControls() {
         btnLoginLogin = findViewById(R.id.btnLoginLogin);
-        imgbtnLoginFacebook = findViewById(R.id.imgbtnLoginFaceBook);
         imgbtnLoginGoogle = findViewById(R.id.imgbtnLoginGoogle);
-        imgbtnLoginTwitter = findViewById(R.id.imgbtnLoginTwitter);
         edtLoginUsername = findViewById(R.id.edtLoginUsername);
         edtLoginPass = findViewById(R.id.edtLoginPass);
         chkLoginRemember = findViewById(R.id.chkLoginRemember);

@@ -63,25 +63,6 @@ public class YourFavoriteCategory extends AppCompatActivity {
         rViewCategory.setLayoutManager(new LinearLayoutManager(YourFavoriteCategory.this));
         rViewCategory.setAdapter(adapter);
 
-//        try{
-//            db.collection("DanhMucCollection")
-//                    .get()
-//                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                        @Override
-//                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                            if (task.isSuccessful()) {
-//                                for (QueryDocumentSnapshot document : task.getResult()) {
-//
-//                                    Log.d(TAG, document.getId() + " => " + document.getData());
-//                                }
-//                            } else {
-//                                Log.d(TAG, "Error getting documents: ", task.getException());
-//                            }
-//                        }
-//                    });
-//        }catch (Exception e){
-//            Log.d("ERR", e.toString());
-//        }
     }
 
     private void addEvents() {

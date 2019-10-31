@@ -24,11 +24,11 @@ public class WelcomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        if(firebaseUser != null){
-            Intent intentMain = new Intent(WelcomeActivity.this,MainActivity.class);
-            startActivity(intentMain);
-            finish();
-        }
+//        if(firebaseUser != null){
+//            Intent intentMain = new Intent(WelcomeActivity.this,MainActivity.class);
+//            startActivity(intentMain);
+//            finish();
+//        }
         addControls();
         addEvents();
     }

@@ -48,7 +48,6 @@ public class HomeFragment extends Fragment {
     private static final String TAG = "WARN";
     ArrayList<SectionDataModel> allSampleData;
     private SliderView sliderViewFragment;
-    Button btnTest;
     private FirebaseFirestore db;
     RecyclerView myRecyclerView;
     List<BooksModel> booksModels = new ArrayList<>();
@@ -100,8 +99,6 @@ public class HomeFragment extends Fragment {
 
             }
         });
-
-
     }
     public void createDummyData(List<CategoriesModel> categoriesModels,List<BooksModel> booksModels, RecyclerView myRecyclerView) {
         for (int i = 0; i < categoriesModels.size(); i++) {
@@ -118,6 +115,9 @@ public class HomeFragment extends Fragment {
                 else {
                     bookItem.add(booksModels.get(j));
                     imgList.add(booksModels.get(j).getBiaSach());
+                    //TOTEST - Giam so lan chay vong lap
+                    //booksModels.remove(j);
+                    //j=j-1;
                 }
             }
             dm.setAllItemsInSection(bookItem);
@@ -158,7 +158,7 @@ public class HomeFragment extends Fragment {
             Log.d("ERR", e.toString());
         }
     }
-    private void getAllDocumentsInDanhMucCollection(){
+    public void getAllDocumentsInDanhMucCollection(){
         for(int i = 0; i <categoriesModels.size(); i++){
             try{
                 db.collection("DanhMucCollection").document(categoriesModels.get(i).getId()).collection("SachColection")
@@ -176,6 +176,7 @@ public class HomeFragment extends Fragment {
                                     count++;
                                     if(count - 1 == categoriesModels.size()-1){
                                         myCallback.onCallback(booksModels);
+                                        count = 0;
                                     }
                                 } else {
                                     Log.d(TAG, "Error getting documents: ", task.getException());
@@ -204,7 +205,7 @@ public class HomeFragment extends Fragment {
         sliderViewFragment.setAutoCycleDirection(SliderView.AUTO_CYCLE_DIRECTION_BACK_AND_FORTH);
         sliderViewFragment.setIndicatorSelectedColor(Color.WHITE);
         sliderViewFragment.setIndicatorUnselectedColor(Color.GRAY);
-        sliderViewFragment.setScrollTimeInSec(5);   //set scroll delay in seconds :
+        sliderViewFragment.setScrollTimeInSec(7);   //set scroll delay in seconds :
         sliderViewFragment.startAutoCycle();
 
         sliderViewFragment.setOnIndicatorClickListener(new DrawController.ClickListener() {

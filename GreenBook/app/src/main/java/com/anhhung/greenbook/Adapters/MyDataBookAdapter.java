@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,7 +50,7 @@ public class MyDataBookAdapter extends RecyclerView.Adapter<MyDataBookAdapter.It
         itemRowHolder.recycler_view_list.setAdapter(itemListDataAdapter);
         itemRowHolder.recycler_view_list.setNestedScrollingEnabled(false);
 
-        itemRowHolder.btnMore.setOnClickListener(new View.OnClickListener() {
+        itemRowHolder.imgbtnMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -69,13 +70,13 @@ public class MyDataBookAdapter extends RecyclerView.Adapter<MyDataBookAdapter.It
 
         private TextView itemTitle;
         private RecyclerView recycler_view_list;
-        private Button btnMore;
+        private ImageButton imgbtnMore;
 
         private ItemRowHolder(View view) {
             super(view);
-            this.itemTitle = (TextView) view.findViewById(R.id.itemTitle);
-            this.recycler_view_list = (RecyclerView) view.findViewById(R.id.recycler_view_list);
-            this.btnMore= (Button) view.findViewById(R.id.btnMore);
+            this.itemTitle = view.findViewById(R.id.itemTitle);
+            this.recycler_view_list = view.findViewById(R.id.recycler_view_list);
+            this.imgbtnMore= view.findViewById(R.id.imgbtnMore);
         }
 
     }

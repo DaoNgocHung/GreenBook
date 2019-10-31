@@ -10,17 +10,14 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,21 +27,15 @@ import com.anhhung.greenbook.Fragments.LibraryFragment;
 import com.anhhung.greenbook.Fragments.ProfileFragment;
 import com.anhhung.greenbook.Models.UsersModel;
 import com.anhhung.greenbook.R;
-import com.anhhung.greenbook.Support.DownloadImageTask;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
-import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-
-import java.util.Date;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -86,7 +77,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void addControls() {
         intent = getIntent();
-        //emailUser = intent.getStringExtra("email");
         emailUser = intent.getStringExtra("email");
         db = FirebaseFirestore.getInstance();
 
@@ -110,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
         view =  navigationDrawerView.getHeaderView(0);
         txtNameAccount = view.findViewById(R.id.txtNameAccount);
         txtMoneyAccount = view.findViewById(R.id.txtMoneyAccount);
-        imgDrawerProfile = findViewById(R.id.imgDrawerProfile);
+        imgDrawerProfile = view.findViewById(R.id.imgDrawerProfile);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 

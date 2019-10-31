@@ -89,8 +89,8 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
         private SingleItemRowHolder(View view) {
             super(view);
 
-            this.tvTitle = (TextView) view.findViewById(R.id.tvTitle);
-            this.itemImage = (ImageView) view.findViewById(R.id.itemImage);
+            this.tvTitle = view.findViewById(R.id.tvTitle);
+            this.itemImage = view.findViewById(R.id.itemImage);
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -106,9 +106,14 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
                     bundle.putFloat("danhGia", singleBook.getDanhGia());
                     bundle.putString("noiDung",singleBook.getNoiDung());
                     bundle.putString("gioiThieu", singleBook.getGioiThieuSach());
+                    bundle.putDouble("giaTien",singleBook.getGiaTien());
+                    bundle.putString("NXB", singleBook.getNXB());
+                    bundle.putString("danhMuc",singleBook.getDanhMuc());
+                    bundle.putString("tacGia",singleBook.getTacGia());
+                    bundle.putString("ngonNgu",singleBook.getNgonNgu());
+                    bundle.putLong("soNguoiMua",singleBook.getSoNguoiMua());
                     intent.putExtras(bundle);
                     mContext.startActivity(intent);
-
                 }
             });
 

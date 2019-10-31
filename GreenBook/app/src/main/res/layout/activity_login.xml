@@ -96,28 +96,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="92dp"
-        android:layout_marginTop="12dp"
         android:text="Don't have an account?"
 
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imgbtnLoginFaceBook"
-        app:layout_constraintVertical_bias="0.259" />
+        app:layout_constraintTop_toBottomOf="@+id/googleSignInButton2" />
 
     <TextView
         android:id="@+id/txtLoginSignUp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
-        android:layout_marginTop="12dp"
         android:text="Sign up"
         android:textColor="@color/colorLimeGreen"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.065"
         app:layout_constraintStart_toEndOf="@+id/textView11"
-        app:layout_constraintTop_toBottomOf="@+id/imgbtnLoginFaceBook"
-        app:layout_constraintVertical_bias="0.259" />
+        app:layout_constraintTop_toBottomOf="@+id/googleSignInButton2" />
 
     <TextView
         android:id="@+id/textView"
@@ -130,62 +126,40 @@
         app:layout_constraintTop_toBottomOf="@+id/btnLoginLogin" />
 
     <ImageButton
-        android:id="@+id/imgbtnLoginFaceBook"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/button_circle_social"
-        android:scaleType="fitXY"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
-        app:srcCompat="@drawable/ic_logo_facebook" />
-
-    <ImageButton
-        android:id="@+id/imgbtnLoginTwitter"
-        android:layout_width="47dp"
-        android:layout_height="47dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/button_circle_social"
-        android:scaleType="fitXY"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.046"
-        app:layout_constraintStart_toEndOf="@+id/imgbtnLoginFaceBook"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
-        app:srcCompat="@drawable/ic_logo_twitter" />
-
-    <ImageButton
         android:id="@+id/imgbtnLoginGoogle"
         android:layout_width="45dp"
         android:layout_height="45dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginStart="28dp"
         android:background="@drawable/button_circle_social"
         android:scaleType="fitXY"
-        app:layout_constraintEnd_toStartOf="@+id/imgbtnLoginFaceBook"
-        app:layout_constraintHorizontal_bias="0.909"
+        app:layout_constraintBottom_toTopOf="@+id/edtLoginUsername"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
+        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_logo_google" />
+
     <com.facebook.login.widget.LoginButton
         android:id="@+id/buttonFacebookLogin"
-        android:layout_width="wrap_content"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="4dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <com.shobhitpuri.custombuttons.GoogleSignInButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/googleSignInButton2"
+        android:layout_width="300dp"
+        android:layout_height="35dp"
         android:layout_centerInParent="true"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="56dp"
+        android:gravity="center"
         android:text="@string/google_sign_up"
+        android:textAlignment="center"
         app:isDarkTheme="true"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/buttonFacebookLogin" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

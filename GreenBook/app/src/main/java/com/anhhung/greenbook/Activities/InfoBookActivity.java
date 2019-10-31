@@ -6,6 +6,8 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -23,6 +25,8 @@ import com.bumptech.glide.Glide;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.tabs.TabLayout;
 
+import java.sql.Timestamp;
+
 import io.opencensus.stats.Aggregation;
 
 public class InfoBookActivity extends AppCompatActivity {
@@ -30,7 +34,7 @@ public class InfoBookActivity extends AppCompatActivity {
     private TabLayout tabLayoutInfoBook;
     private AppBarLayout appBarLayoutInfoBook;
     private ViewPager viewPagerInfoBook;
-    private TextView txtInfoNameBook, txtInfoBookDownload;
+    private TextView txtInfoNameBook, txtInfoBookDownload,txtInfoBookPrice;
     private ImageView imgInFoBookCover;
     private ImageButton imgbtnInfoBookFavor;
     private Toolbar actionToolbarInfoBook;
@@ -52,7 +56,8 @@ public class InfoBookActivity extends AppCompatActivity {
         InfoBookViewPagerAdapter adapter = new InfoBookViewPagerAdapter(getSupportFragmentManager());
         //Add Fragment
         SummaryBookFragment summaryBookFragment = newInstance(booksModel.getGioiThieuSach());
-        adapter.AddFragment(new InfoBookFragment(),"Info");
+        InfoBookFragment infoBookFragment = newInstance(booksModel.getNXB(),booksModel.getTacGia(), booksModel.getDanhMuc(), booksModel.getNgonNgu());
+        adapter.AddFragment(infoBookFragment,"Info");
         adapter.AddFragment(summaryBookFragment, "Summary");
         adapter.AddFragment(new CommentBookFragment(), "Comment");
         //adapter Setup
@@ -90,6 +95,7 @@ public class InfoBookActivity extends AppCompatActivity {
         viewPagerInfoBook = findViewById(R.id.viewPagerInfoBook);
         txtInfoNameBook = findViewById(R.id.txtInfoNameBook);
         txtInfoBookDownload = findViewById(R.id.txtInfoBookDownloaded);
+        txtInfoBookPrice = findViewById(R.id.txtInfoBookPrice);
         imgInFoBookCover = findViewById(R.id.imgInFoBookCover);
         imgbtnInfoBookFavor = findViewById(R.id.imgbtnInfoBookFavor);
         actionToolbarInfoBook = findViewById(R.id.actionToolbarInfoBook);
@@ -99,6 +105,7 @@ public class InfoBookActivity extends AppCompatActivity {
                 .into(imgInFoBookCover);
         txtInfoNameBook.setText(booksModel.getTenSach());
         txtInfoBookDownload.setText("Downloaded: "+booksModel.getSoNguoiMua());
+        txtInfoBookPrice.setText("Price: " + booksModel.getGiaTien());
         ratingBar.setRating(booksModel.getDanhGia());
 
 
@@ -113,6 +120,13 @@ public class InfoBookActivity extends AppCompatActivity {
             booksModel.setDanhGia(bundle.getFloat("danhGia",0));
             booksModel.setNoiDung(bundle.getString("noiDung"," "));
             booksModel.setGioiThieuSach(bundle.getString("gioiThieu", " "));
+            booksModel.setGiaTien(bundle.getDouble("giaTien", 0));
+            booksModel.setDanhMuc(bundle.getString("danhMuc",""));
+            //booksModel.setNgayUpload(bundle.get("ngayUpload",""));
+            booksModel.setTacGia(bundle.getString("tacGia",""));
+            booksModel.setNXB(bundle.getString("NXB",""));
+            booksModel.setNgonNgu(bundle.getString("ngonNgu",""));
+            booksModel.setSoNguoiMua(bundle.getLong("soNguoiMua",0));
         }
     }
     @Override
@@ -120,6 +134,7 @@ public class InfoBookActivity extends AppCompatActivity {
         onBackPressed();
         return true;
     }
+
     public static SummaryBookFragment newInstance(String gioiThieu) {
         SummaryBookFragment f = new SummaryBookFragment();
         // Supply index input as an argument.
@@ -127,5 +142,34 @@ public class InfoBookActivity extends AppCompatActivity {
         args.putString("gioiThieu", gioiThieu);
         f.setArguments(args);
         return f;
+    }
+
+    // Thiếu Timestamp ngayUpload,
+    public static InfoBookFragment newInstance(String NXB, String tacGia, String danhMuc, String ngonNgu){
+        InfoBookFragment f = new InfoBookFragment();
+        Bundle args = new Bundle();
+        args.putString("NXB",NXB);
+        args.putString("tacGia", tacGia);
+        args.putString("danhMuc",danhMuc);
+        args.putString("ngonNgu",ngonNgu);
+        f.setArguments(args);
+        return f;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.book_menu,menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if(id == R.id.mnuShare){
+            Toast.makeText(InfoBookActivity.this,"SHARE",Toast.LENGTH_SHORT).show();
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
