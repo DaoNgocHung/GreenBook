@@ -2,7 +2,6 @@ package com.anhhung.greenbook.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,11 +14,15 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.anhhung.greenbook.Models.BooksModel;
+import com.anhhung.greenbook.Models.UsersModel;
 import com.anhhung.greenbook.R;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -30,13 +33,20 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.smarteist.autoimageslider.Transformations.TossTransformation;
+import org.json.JSONException;
+import org.json.JSONObject;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -55,7 +65,7 @@ public class LoginActivity extends AppCompatActivity {
     private GoogleSignInClient mGoogleSignInClient;
     private static final int RC_SIGN_IN = 9001;
     private String userEmail = "";
-
+    private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -191,10 +201,50 @@ public class LoginActivity extends AppCompatActivity {
         FirebaseUser currentUser = auth.getCurrentUser();
         //updateUI(currentUser);
     }
+
+    private void getFbInfo() {
+        GraphRequest request = GraphRequest.newMeRequest(
+                AccessToken.getCurrentAccessToken(),
+                new GraphRequest.GraphJSONObjectCallback() {
+                    @Override
+                    public void onCompleted(
+                            JSONObject object,
+                            GraphResponse response) {
+                        try {
+                            Log.d(TAG, "fb json object: " + object);
+                            Log.d(TAG, "fb graph response: " + response);
+                            UsersModel usersModel = new UsersModel();
+                            if (object.has("email")) {
+                                usersModel.setEmail(object.getString("email"));
+                                if (checkUserExist(object.getString("email"))== true){
+                                    usersModel.setHoTen(object.getString("first_name") + object.getString("last_name"));
+                                    usersModel.setHinhDaiDien("http://graph.facebook.com/" + object.getString("id") + "/picture?type=large");
+                                    usersModel.setNgayThangNS(doiNgay(object.getString("birthday")));
+                                    usersModel.setGioiTinh(true);
+                                    usersModel.setSoDT("");
+                                    usersModel.setSoSachDaMua(0);
+                                    usersModel.setTien(0.0);
+                                    db.collection("UserModel").document().set(usersModel);
+                                }
+                            }
+                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                            intent.putExtra("email", usersModel.getEmail().trim());
+                            startActivity(intent);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+        Bundle parameters = new Bundle();
+        parameters.putString("fields","id,first_name,last_name,email,gender,birthday");
+        request.setParameters(parameters);
+        request.executeAsync();
+    }
+
     private void handleFacebookAccessToken(AccessToken token) {
         Log.d(TAG, "handleFacebookAccessToken:" + token);
 
-        AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
+        final AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
         auth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -202,17 +252,31 @@ public class LoginActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
-                            FirebaseUser user = auth.getCurrentUser();
+                            getFbInfo();
                             //updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
                             Toast.makeText(LoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
-                            //updateUI(null);
                         }
                     }
                 });
+    }
+    //Chuyen doi ngay thang nam sinh tu Facebook
+    public Timestamp doiNgay(String d){
+        Timestamp timeStampDate = null;
+        try{
+            DateFormat formatter;
+            formatter = new SimpleDateFormat("dd/MM/yyyy");
+            Date date = (Date) formatter.parse(d);
+            timeStampDate = new Timestamp(date);
+
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return timeStampDate;
     }
     //Sign in with google
     private void signInGoogle() {
@@ -249,14 +313,22 @@ public class LoginActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         loginButton = findViewById(R.id.buttonFacebookLogin);
         mCallbackManager = CallbackManager.Factory.create();
-        loginButton.setReadPermissions("email", "public_profile");
+        loginButton.setReadPermissions("email", "public_profile", "user_birthday");
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+        db = FirebaseFirestore.getInstance();
     }
-
+    public boolean checkUserExist(String email){
+        if (db.collection("UserCollection")
+                .whereEqualTo("email", email)
+                .get() != null){
+            return false;
+        }
+        return true;
+    }
     private void openLoadingDialog() {
         loadingDialog = new Dialog(LoginActivity.this, R.style.CustomDialog);
         loadingDialog.setContentView(R.layout.loading_dialog);

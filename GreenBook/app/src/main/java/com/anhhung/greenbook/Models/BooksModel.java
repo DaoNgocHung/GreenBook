@@ -5,7 +5,6 @@ import android.media.Image;
 import com.google.firebase.Timestamp;
 
 public class BooksModel {
-    private String idSach;
     private String tenSach;
     private float danhGia;
     private String biaSach;
@@ -29,7 +28,6 @@ public class BooksModel {
                       String danhMuc, int giamGia, String gioiThieuSach, String noiDung,
                       String NXB, Timestamp ngayUpload, String ngonNgu,
                       long soNguoiMua, String tacGia, double giaTien) {
-        this.idSach = idSach;
         this.tenSach = tenSach;
         this.danhGia = danhGia;
         this.biaSach = biaSach;
@@ -46,14 +44,6 @@ public class BooksModel {
     }
 
     public BooksModel() {
-    }
-
-    public String getIdSach() {
-        return idSach;
-    }
-
-    public void setIdSach(String idSach) {
-        this.idSach = idSach;
     }
 
     public String getTenSach() {

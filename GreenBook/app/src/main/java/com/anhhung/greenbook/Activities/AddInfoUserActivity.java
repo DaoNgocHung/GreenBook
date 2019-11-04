@@ -113,9 +113,9 @@ public class AddInfoUserActivity extends AppCompatActivity {
                                             Uri downloadUri = task.getResult();
                                             // Function call to Upload data
                                             //uploadData(name, phone, birthDay, gender, );
-                                            UsersModel usersModel = new UsersModel(String.valueOf(rd),userName, gender, Timestamp.now(), downloadUri.toString(),
+                                            UsersModel usersModel = new UsersModel(userName, gender, Timestamp.now(), downloadUri.toString(),
                                                     email,phone,0.0, 0);
-                                            db.collection("UserModel").document(String.valueOf(rd)).set(usersModel);
+                                            db.collection("UserModel").document().set(usersModel);
                                             Intent intentCategory = new Intent(AddInfoUserActivity.this,YourFavoriteCategory.class);
                                             intentCategory.putExtra("email", email);
                                             startActivity(intentCategory);

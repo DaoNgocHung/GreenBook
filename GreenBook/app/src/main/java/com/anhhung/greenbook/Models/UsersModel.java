@@ -10,7 +10,6 @@ import java.sql.Time;
 import java.util.Date;
 
 public class UsersModel {
-    private String idUser;
     private String hoTen;
     private boolean gioiTinh;
     private Timestamp ngayThangNS;
@@ -23,10 +22,9 @@ public class UsersModel {
     public UsersModel() {
     }
 
-    public UsersModel(String idUser, String hoTen, boolean gioiTinh,
-                      Timestamp ngayThangNS, String hinhDaiDien, String email,
-                      String soDT, Double tien, long soSachDaMua) {
-        this.idUser = idUser;
+    public UsersModel(String hoTen, boolean gioiTinh,
+                       Timestamp ngayThangNS, String hinhDaiDien, String email,
+                       String soDT, Double tien, long soSachDaMua) {
         this.hoTen = hoTen;
         this.gioiTinh = gioiTinh;
         this.ngayThangNS = ngayThangNS;
@@ -36,14 +34,16 @@ public class UsersModel {
         this.tien = tien;
         this.soSachDaMua = soSachDaMua;
     }
-
-
-    public String getIdUser() {
-        return idUser;
-    }
-
-    public void setIdUser(String idUser) {
-        this.idUser = idUser;
+    public UsersModel(String hoTen,
+                      Timestamp ngayThangNS, String hinhDaiDien, String email,
+                      String soDT, Double tien, long soSachDaMua) {
+        this.hoTen = hoTen;
+        this.ngayThangNS = ngayThangNS;
+        this.hinhDaiDien = hinhDaiDien;
+        this.email = email;
+        this.soDT = soDT;
+        this.tien = tien;
+        this.soSachDaMua = soSachDaMua;
     }
 
     public boolean getGioiTinh() {
