@@ -36,29 +36,21 @@ public class MyDataBookAdapter extends RecyclerView.Adapter<MyDataBookAdapter.It
 
     @Override
     public void onBindViewHolder(ItemRowHolder itemRowHolder, int i) {
-
         final String sectionName = dataList.get(i).getHeaderTitle();
-
         ArrayList singleSectionItems = dataList.get(i).getAllBooksInSection();
         ArrayList singleSectionImages = dataList.get(i).getImgList();
         itemRowHolder.itemTitle.setText(sectionName);
-
         SectionListDataAdapter itemListDataAdapter = new SectionListDataAdapter(mContext, singleSectionItems, singleSectionImages );
-
         itemRowHolder.recycler_view_list.setHasFixedSize(true);
         itemRowHolder.recycler_view_list.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
         itemRowHolder.recycler_view_list.setAdapter(itemListDataAdapter);
         itemRowHolder.recycler_view_list.setNestedScrollingEnabled(false);
-
         itemRowHolder.imgbtnMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Toast.makeText(v.getContext(), "Click event on more, "+ sectionName , Toast.LENGTH_SHORT).show();
-
             }
         });
-
     }
 
     @Override

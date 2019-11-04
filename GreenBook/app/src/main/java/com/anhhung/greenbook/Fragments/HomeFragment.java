@@ -104,7 +104,6 @@ public class HomeFragment extends Fragment {
 
     public void createDummyData(List<CategoriesModel> categoriesModels, List<BooksModel> booksModels, RecyclerView myRecyclerView) {
         for (int i = 0; i < categoriesModels.size(); i++) {
-
             SectionDataModel dm = new SectionDataModel();
             tenDM = categoriesModels.get(i).getTenDanhMuc();
             dm.setHeaderTitle(tenDM);

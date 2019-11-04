@@ -33,6 +33,7 @@ import java.util.List;
  * A simple {@link Fragment} subclass.
  */
 public class InfoBookFragment extends Fragment {
+    MyCallback myCallback;
 
     TextView txtInfoNXB, txtInfoAuthor, txtInfoCate, txtInfoDate, txtInfoLanguage;
     RecyclerView rViewBookOffer;
@@ -43,7 +44,7 @@ public class InfoBookFragment extends Fragment {
     List<BooksModel> booksModels = new ArrayList<>();
 
     CategoriesModel category;
-    ArrayList<SectionDataModel> sectionDataModel;
+    ArrayList<SectionDataModel> sectionDataModel = new ArrayList<SectionDataModel>();
 
 
     @Override
@@ -64,8 +65,6 @@ public class InfoBookFragment extends Fragment {
         txtInfoCate.setText(danhMuc);
         txtInfoLanguage.setText(ngonNgu);
 
-        createData(danhMuc, rViewBookOffer);
-
         // Inflate the layout for this fragment
         return view;
     }
@@ -80,47 +79,40 @@ public class InfoBookFragment extends Fragment {
         rViewBookOffer = view.findViewById(R.id.rViewBookOffer);
 
         db = FirebaseFirestore.getInstance();
+        readData(new MyCallback() {
+            @Override
+            public void onCallback(List<BooksModel> booksModels) {
+                createData("",rViewBookOffer, booksModels);
+            }
+        });
 
     }
 
-    private void createData(String nameCate, RecyclerView rViewBookOffer) {
+    private void createData(String nameCate, RecyclerView rViewBookOffer, List<BooksModel> booksModels) {
         SectionDataModel dm = new SectionDataModel();
         dm.setHeaderTitle("Offer");
         ArrayList<String> imgList = new ArrayList<>();
         ArrayList<BooksModel> bookItem = new ArrayList<>();
-        db.collection("DanhMucCollection").document("dmForeignLanguage").collection("SachColection")
-                //.whereEqualTo("danhMuc", nameCate)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                BooksModel booksModel;
-                                booksModel = document.toObject(BooksModel.class);
-                                Log.d("TEST - InfoBookFragment", document.getId() + " => " + document.getData());
-                                booksModels.add(booksModel);
-                            }
-                        } else {
-                            Log.d("InfoBookFragment", "Error getting documents: ", task.getException());
-                        }
-                    }
-                });
         for(int i = 0; i < booksModels.size(); i++){
             bookItem.add(booksModels.get(i));
             imgList.add(booksModels.get(i).getBiaSach());
-            dm.setAllItemsInSection(bookItem);
-            dm.setImgList(imgList);
-            sectionDataModel.add(dm);
-            Log.d("Notice - InfoFragment","i" );
         }
-
+        dm.setAllItemsInSection(bookItem);
+        dm.setImgList(imgList);
+        sectionDataModel.add(dm);
         MyDataBookAdapter adapter = new MyDataBookAdapter(getActivity(), sectionDataModel);
         rViewBookOffer.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         rViewBookOffer.setAdapter(adapter);
     }
 
+    public interface MyCallback {
+        void onCallback(List<BooksModel> booksModels);
+    }
 
+    public void readData(MyCallback myCallback) {
+        this.myCallback = myCallback;
+        getAllDocumentsInDanhMucCollectionInfoBookFrag();
+    }
     public String getIDCategory(String cate) {
         String nameCategory;
         db.collection("DanhMucCollection")
@@ -143,5 +135,29 @@ public class InfoBookFragment extends Fragment {
                 });
         nameCategory = category.getId();
         return nameCategory;
+    }
+    private void getAllDocumentsInDanhMucCollectionInfoBookFrag(){
+        try{
+            db.collection("DanhMucCollection").document("dmForeignLanguage").collection("SachColection")
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    BooksModel booksModel = document.toObject(BooksModel.class);
+                                    Log.d("TEST - InfoBookFragment", document.getId() + " => " + document.getData());
+                                    booksModels.add(booksModel);
+                                }
+                                myCallback.onCallback(booksModels);
+                            } else {
+                                Log.d("InfoBookFragment", "Error getting documents: ", task.getException());
+                            }
+                        }
+                    });
+        }catch(Exception e){
+            Log.d(TAG,e.toString());
+        }
+
     }
 }
