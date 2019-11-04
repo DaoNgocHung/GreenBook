@@ -21,7 +21,7 @@ import java.util.ArrayList;
 public class MyDataBookAdapter extends RecyclerView.Adapter<MyDataBookAdapter.ItemRowHolder> {
     private ArrayList<SectionDataModel> dataList;
     private Context mContext;
-    private BooksModel booksModel = new BooksModel();
+    //private BooksModel booksModel = new BooksModel();
 
     public MyDataBookAdapter(Context context, ArrayList<SectionDataModel> dataList) {
         this.dataList = dataList;
@@ -78,6 +78,5 @@ public class MyDataBookAdapter extends RecyclerView.Adapter<MyDataBookAdapter.It
             this.recycler_view_list = view.findViewById(R.id.recycler_view_list);
             this.imgbtnMore= view.findViewById(R.id.imgbtnMore);
         }
-
     }
 }

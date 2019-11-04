@@ -136,18 +136,6 @@
                 app:layout_constraintStart_toEndOf="@+id/btnInfoBookBuy"
                 app:layout_constraintTop_toBottomOf="@+id/txtInfoBookPrice" />
 
-            <Button
-                android:id="@+id/btnInfoBookComment"
-                android:layout_width="90dp"
-                android:layout_height="32dp"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="12dp"
-                android:background="@drawable/button_style_1"
-                android:text="Comment"
-                android:textColor="@color/colorWhite"
-                app:layout_constraintStart_toEndOf="@+id/btnInfoBookRead"
-                app:layout_constraintTop_toBottomOf="@+id/txtInfoBookPrice" />
-
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </com.google.android.material.appbar.AppBarLayout>

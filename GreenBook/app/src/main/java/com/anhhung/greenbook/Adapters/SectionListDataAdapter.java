@@ -20,16 +20,15 @@ import com.anhhung.greenbook.Models.BooksModel;
 import com.anhhung.greenbook.R;
 import com.bumptech.glide.Glide;
 import com.folioreader.FolioReader;
+
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.net.URL;
 import java.util.ArrayList;
 
-public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListDataAdapter.SingleItemRowHolder>{
+public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListDataAdapter.SingleItemRowHolder> {
     private ArrayList<BooksModel> itemsList;
     private Context mContext;
     private ArrayList<String> imgList;
@@ -60,7 +59,8 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
                 .load(imgList.get(i))
                 .into(holder.itemImage);
     }
-    public void downloadEpub(String noiDung){
+
+    public void downloadEpub(String noiDung) {
         httpsReference = storage.getReferenceFromUrl(noiDung);
         String URL = httpsReference.getPath();
         storageRef.child(URL).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
@@ -100,24 +100,22 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
                     Toast.makeText(v.getContext(), tvTitle.getText(), Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(v.getContext(), InfoBookActivity.class);
                     Bundle bundle = new Bundle();
-                    bundle.putString("anhBia",singleBook.getBiaSach());
-                    bundle.putString("tenSach",singleBook.getTenSach());
+                    bundle.putString("anhBia", singleBook.getBiaSach());
+                    bundle.putString("tenSach", singleBook.getTenSach());
                     bundle.putLong("soNguoiMua", singleBook.getSoNguoiMua());
                     bundle.putFloat("danhGia", singleBook.getDanhGia());
-                    bundle.putString("noiDung",singleBook.getNoiDung());
+                    bundle.putString("noiDung", singleBook.getNoiDung());
                     bundle.putString("gioiThieu", singleBook.getGioiThieuSach());
-                    bundle.putDouble("giaTien",singleBook.getGiaTien());
+                    bundle.putDouble("giaTien", singleBook.getGiaTien());
                     bundle.putString("NXB", singleBook.getNXB());
-                    bundle.putString("danhMuc",singleBook.getDanhMuc());
-                    bundle.putString("tacGia",singleBook.getTacGia());
-                    bundle.putString("ngonNgu",singleBook.getNgonNgu());
-                    bundle.putLong("soNguoiMua",singleBook.getSoNguoiMua());
+                    bundle.putString("danhMuc", singleBook.getDanhMuc());
+                    bundle.putString("tacGia", singleBook.getTacGia());
+                    bundle.putString("ngonNgu", singleBook.getNgonNgu());
+                    bundle.putLong("soNguoiMua", singleBook.getSoNguoiMua());
                     intent.putExtras(bundle);
                     mContext.startActivity(intent);
                 }
             });
-
-
         }
     }
 }

@@ -7,4 +7,6 @@
     <color name="colorGray">#c0c0c0</color>
     <color name="colorWhiteSmoke">#F5F5F5</color>
     <color name="colorGhostWhite">#F8F8FF</color>
+    <color name="colorOrange">#ff6600</color>
+    <color name="colorBlue">#0099ff</color>
 </resources>

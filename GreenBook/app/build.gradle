@@ -62,4 +62,7 @@ dependencies {
         config.resolutionStrategy.eachDependency { details -> details.useVersion("3.3.2-5309881") } }
     implementation 'androidx.multidex:multidex:2.0.1'
 
+    //BlurImageView
+    implementation 'com.github.jgabrielfreitas:BlurImageView:1.0.1'
+
 }

@@ -9,17 +9,22 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.anhhung.greenbook.Activities.AddInfoUserActivity;
+import com.anhhung.greenbook.Activities.WelcomeActivity;
 import com.anhhung.greenbook.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.jgabrielfreitas.core.BlurImageView;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class ProfileFragment extends Fragment {
 
-    TextView txtProfileTest;
+    BlurImageView blurImageView;
+    ImageButton imgbtnLogoutProfile;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -37,17 +42,20 @@ public class ProfileFragment extends Fragment {
     }
 
     private void addEvents() {
-        txtProfileTest.setOnClickListener(new View.OnClickListener() {
+        imgbtnLogoutProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), AddInfoUserActivity.class);
-                startActivity(intent);
+                FirebaseAuth.getInstance().signOut();
+                getActivity().finish();
+                startActivity(new Intent(getActivity(), WelcomeActivity.class));
             }
         });
     }
 
     private void addControls(View view) {
-        txtProfileTest = view.findViewById(R.id.txtProfileTest);
+        blurImageView = view.findViewById(R.id.blurImageView);
+        blurImageView.setBlur(5/2);
+        imgbtnLogoutProfile = view.findViewById(R.id.imgbtnLogoutProfile);
     }
 
 }

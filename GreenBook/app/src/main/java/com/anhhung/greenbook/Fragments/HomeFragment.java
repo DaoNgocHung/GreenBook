@@ -56,6 +56,7 @@ public class HomeFragment extends Fragment {
     MyCallbackCategories myCallbackCategories;
     String tenDM = "";
     int count = 0;
+
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -100,19 +101,19 @@ public class HomeFragment extends Fragment {
             }
         });
     }
-    public void createDummyData(List<CategoriesModel> categoriesModels,List<BooksModel> booksModels, RecyclerView myRecyclerView) {
+
+    public void createDummyData(List<CategoriesModel> categoriesModels, List<BooksModel> booksModels, RecyclerView myRecyclerView) {
         for (int i = 0; i < categoriesModels.size(); i++) {
 
             SectionDataModel dm = new SectionDataModel();
-            tenDM =categoriesModels.get(i).getTenDanhMuc();
+            tenDM = categoriesModels.get(i).getTenDanhMuc();
             dm.setHeaderTitle(tenDM);
             ArrayList<String> imgList = new ArrayList<>();
             ArrayList<BooksModel> bookItem = new ArrayList<>();
-            for (int j = 0; j< booksModels.size(); j++) {
-                if(!tenDM.equals(booksModels.get(j).getDanhMuc())){
+            for (int j = 0; j < booksModels.size(); j++) {
+                if (!tenDM.equals(booksModels.get(j).getDanhMuc())) {
                     continue;
-                }
-                else {
+                } else {
                     bookItem.add(booksModels.get(j));
                     imgList.add(booksModels.get(j).getBiaSach());
                     //TOTEST - Giam so lan chay vong lap
@@ -128,14 +129,17 @@ public class HomeFragment extends Fragment {
         myRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         myRecyclerView.setAdapter(adapter);
     }
+
     public interface MyCallback {
         void onCallback(List<BooksModel> booksModels);
     }
+
     public interface MyCallbackCategories {
         void onCallback(List<CategoriesModel> categoriesModels);
     }
-    private void getAllCategoriesName(){
-        try{
+
+    private void getAllCategoriesName() {
+        try {
             db.collection("DanhMucCollection")
                     .get()
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -154,13 +158,14 @@ public class HomeFragment extends Fragment {
                             }
                         }
                     });
-        }catch (Exception e){
+        } catch (Exception e) {
             Log.d("ERR", e.toString());
         }
     }
-    public void getAllDocumentsInDanhMucCollection(){
-        for(int i = 0; i <categoriesModels.size(); i++){
-            try{
+
+    public void getAllDocumentsInDanhMucCollection() {
+        for (int i = 0; i < categoriesModels.size(); i++) {
+            try {
                 db.collection("DanhMucCollection").document(categoriesModels.get(i).getId()).collection("SachColection")
                         .get()
                         .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -174,7 +179,7 @@ public class HomeFragment extends Fragment {
                                         booksModels.add(booksModel);
                                     }
                                     count++;
-                                    if(count - 1 == categoriesModels.size()-1){
+                                    if (count - 1 == categoriesModels.size() - 1) {
                                         myCallback.onCallback(booksModels);
                                         count = 0;
                                     }
@@ -183,7 +188,7 @@ public class HomeFragment extends Fragment {
                                 }
                             }
                         });
-            }catch (Exception e){
+            } catch (Exception e) {
                 Log.d("ERR", e.toString());
             }
         }
@@ -194,10 +199,12 @@ public class HomeFragment extends Fragment {
         this.myCallbackCategories = myCallbackCategories;
         getAllCategoriesName();
     }
+
     public void readData(MyCallback myCallback) {
         this.myCallback = myCallback;
         getAllDocumentsInDanhMucCollection();
     }
+
     private void addEvents() {
         //Auto Advertisement
         sliderViewFragment.setIndicatorAnimation(IndicatorAnimations.SLIDE); //set indicator animation by using SliderLayout.IndicatorAnimations. :WORM or THIN_WORM or COLOR or DROP or FILL or NONE or SCALE or SCALE_DOWN or SLIDE and SWAP!!
