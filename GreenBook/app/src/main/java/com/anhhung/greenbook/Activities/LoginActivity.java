@@ -41,6 +41,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.smarteist.autoimageslider.Transformations.TossTransformation;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -66,6 +68,7 @@ public class LoginActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 9001;
     private String userEmail = "";
     private FirebaseFirestore db;
+    private boolean checkEC = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -216,7 +219,7 @@ public class LoginActivity extends AppCompatActivity {
                             UsersModel usersModel = new UsersModel();
                             if (object.has("email")) {
                                 usersModel.setEmail(object.getString("email"));
-                                if (checkUserExist(object.getString("email"))== true){
+                                if (checkUserExist(object.getString("email").trim())== true){
                                     usersModel.setHoTen(object.getString("first_name") + object.getString("last_name"));
                                     usersModel.setHinhDaiDien("http://graph.facebook.com/" + object.getString("id") + "/picture?type=large");
                                     usersModel.setNgayThangNS(doiNgay(object.getString("birthday")));
@@ -322,12 +325,23 @@ public class LoginActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
     }
     public boolean checkUserExist(String email){
-        if (db.collection("UserCollection")
+        db.collection("UserCollection")
                 .whereEqualTo("email", email)
-                .get() != null){
-            return false;
-        }
-        return true;
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                checkEC = false;
+                            }
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                            checkEC = true;
+                        }
+                    }
+                });
+        return checkEC;
     }
     private void openLoadingDialog() {
         loadingDialog = new Dialog(LoginActivity.this, R.style.CustomDialog);
