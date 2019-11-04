@@ -1,6 +1,7 @@
 package com.anhhung.greenbook.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import android.widget.Toast;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.anhhung.greenbook.Activities.MoreBookActivity;
 import com.anhhung.greenbook.Models.BooksModel;
 import com.anhhung.greenbook.Models.SectionDataModel;
 import com.anhhung.greenbook.R;
@@ -53,8 +55,9 @@ public class MyDataBookAdapter extends RecyclerView.Adapter<MyDataBookAdapter.It
         itemRowHolder.imgbtnMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                Toast.makeText(v.getContext(), "Click event on more, "+ sectionName , Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(mContext, MoreBookActivity.class);
+                intent.putExtra("danhMuc",sectionName);
+                mContext.startActivity(intent);
 
             }
         });

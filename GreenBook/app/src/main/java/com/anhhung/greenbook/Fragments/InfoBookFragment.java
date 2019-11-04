@@ -114,7 +114,6 @@ public class InfoBookFragment extends Fragment {
             sectionDataModel.add(dm);
             Log.d("Notice - InfoFragment","i" );
         }
-
         MyDataBookAdapter adapter = new MyDataBookAdapter(getActivity(), sectionDataModel);
         rViewBookOffer.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         rViewBookOffer.setAdapter(adapter);
@@ -133,11 +132,10 @@ public class InfoBookFragment extends Fragment {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 category = document.toObject(CategoriesModel.class);
-                                Log.d("ID-Category",document.getId() + " => " + document.getData());
-
+                                Log.d(TAG,document.getId() + " => " + document.getData());
                             }
                         } else {
-                            Log.d("", "Error getting documents: ", task.getException());
+                            Log.d(TAG, "Error getting documents: ", task.getException());
                         }
                     }
                 });

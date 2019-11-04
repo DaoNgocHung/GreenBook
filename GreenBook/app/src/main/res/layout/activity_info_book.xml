@@ -136,6 +136,16 @@
                 app:layout_constraintStart_toEndOf="@+id/btnInfoBookBuy"
                 app:layout_constraintTop_toBottomOf="@+id/txtInfoBookPrice" />
 
+            <TextView
+                android:id="@+id/txtInfoVote"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:layout_marginTop="8dp"
+                android:text="votes"
+                app:layout_constraintStart_toEndOf="@+id/rateInfoBook"
+                app:layout_constraintTop_toBottomOf="@+id/txtInfoBookDownloaded" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </com.google.android.material.appbar.AppBarLayout>

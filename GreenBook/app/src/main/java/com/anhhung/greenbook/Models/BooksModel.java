@@ -23,11 +23,12 @@ public class BooksModel {
     private String ngonNgu;
     private long soNguoiMua;
     private String tacGia;
+    private long luotDanhGia;
 
     public BooksModel(String idSach, String tenSach, float danhGia, String biaSach,
                       String danhMuc, int giamGia, String gioiThieuSach, String noiDung,
                       String NXB, Timestamp ngayUpload, String ngonNgu,
-                      long soNguoiMua, String tacGia, double giaTien) {
+                      long soNguoiMua, String tacGia, double giaTien, long luotDanhGia) {
         this.tenSach = tenSach;
         this.danhGia = danhGia;
         this.biaSach = biaSach;
@@ -41,6 +42,7 @@ public class BooksModel {
         this.soNguoiMua = soNguoiMua;
         this.tacGia = tacGia;
         this.giaTien = giaTien;
+        this.luotDanhGia = luotDanhGia;
     }
 
     public BooksModel() {
@@ -148,5 +150,13 @@ public class BooksModel {
 
     public void setGiaTien(double giaTien) {
         this.giaTien = giaTien;
+    }
+
+    public long getLuotDanhGia() {
+        return luotDanhGia;
+    }
+
+    public void setLuotDanhGia(long luotDanhGia) {
+        this.luotDanhGia = luotDanhGia;
     }
 }

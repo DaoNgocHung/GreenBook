@@ -34,7 +34,7 @@ public class InfoBookActivity extends AppCompatActivity {
     private TabLayout tabLayoutInfoBook;
     private AppBarLayout appBarLayoutInfoBook;
     private ViewPager viewPagerInfoBook;
-    private TextView txtInfoNameBook, txtInfoBookDownload,txtInfoBookPrice;
+    private TextView txtInfoNameBook, txtInfoBookDownload,txtInfoBookPrice, txtInfoVote;
     private ImageView imgInFoBookCover;
     private ImageButton imgbtnInfoBookFavor;
     private Toolbar actionToolbarInfoBook;
@@ -63,7 +63,6 @@ public class InfoBookActivity extends AppCompatActivity {
         //adapter Setup
         viewPagerInfoBook.setAdapter(adapter);
         tabLayoutInfoBook.setupWithViewPager(viewPagerInfoBook);
-
         //Favorite Book
         imgbtnInfoBookFavor.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,7 +79,6 @@ public class InfoBookActivity extends AppCompatActivity {
                 }
             }
         });
-
         //Button Back on toolbar
         actionToolbarInfoBook.setTitle("");
         setSupportActionBar(actionToolbarInfoBook);
@@ -99,6 +97,7 @@ public class InfoBookActivity extends AppCompatActivity {
         imgInFoBookCover = findViewById(R.id.imgInFoBookCover);
         imgbtnInfoBookFavor = findViewById(R.id.imgbtnInfoBookFavor);
         actionToolbarInfoBook = findViewById(R.id.actionToolbarInfoBook);
+        txtInfoVote = findViewById(R.id.txtInfoVote);
         ratingBar = findViewById(R.id.rateInfoBook);
         Glide.with(InfoBookActivity.this)
                 .load(booksModel.getBiaSach())
@@ -106,9 +105,8 @@ public class InfoBookActivity extends AppCompatActivity {
         txtInfoNameBook.setText(booksModel.getTenSach());
         txtInfoBookDownload.setText("Downloaded: "+booksModel.getSoNguoiMua());
         txtInfoBookPrice.setText("Price: " + booksModel.getGiaTien());
+        txtInfoVote.setText("(" + booksModel.getLuotDanhGia() + ")");
         ratingBar.setRating(booksModel.getDanhGia());
-
-
     }
     private void loadBundleData(){
         Intent intent = getIntent();
@@ -127,6 +125,7 @@ public class InfoBookActivity extends AppCompatActivity {
             booksModel.setNXB(bundle.getString("NXB",""));
             booksModel.setNgonNgu(bundle.getString("ngonNgu",""));
             booksModel.setSoNguoiMua(bundle.getLong("soNguoiMua",0));
+            booksModel.setLuotDanhGia(bundle.getLong("luotDanhGia",0));
         }
     }
     @Override
