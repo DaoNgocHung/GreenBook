@@ -39,6 +39,7 @@ public class InfoBookFragment extends Fragment {
     RecyclerView rViewBookOffer;
 
     String TAG = "ERROR - InfobookFragment";
+    String tenDM = "";
 
     FirebaseFirestore db;
     List<BooksModel> booksModels = new ArrayList<>();
@@ -53,7 +54,7 @@ public class InfoBookFragment extends Fragment {
 
         String NXB = this.getArguments().getString("NXB", " ");
         String tacGia = this.getArguments().getString("tacGia", " ");
-        String danhMuc = this.getArguments().getString("danhMuc", " ");
+        tenDM = this.getArguments().getString("danhMuc", " ");
         String ngonNgu = this.getArguments().getString("ngonNgu", " ");
 
         View view = inflater.inflate(R.layout.fragment_info_book, null);
@@ -62,7 +63,7 @@ public class InfoBookFragment extends Fragment {
 
         txtInfoNXB.setText(NXB);
         txtInfoAuthor.setText(tacGia);
-        txtInfoCate.setText(danhMuc);
+        txtInfoCate.setText(tenDM);
         txtInfoLanguage.setText(ngonNgu);
 
         // Inflate the layout for this fragment
@@ -111,7 +112,7 @@ public class InfoBookFragment extends Fragment {
 
     public void readData(MyCallback myCallback) {
         this.myCallback = myCallback;
-        getAllDocumentsInDanhMucCollectionInfoBookFrag();
+        getAllDocumentsInDanhMucCollectionInfoBookFrag("dmForeignLanguage");
     }
     public String getIDCategory(String cate) {
         String nameCategory;
@@ -135,9 +136,9 @@ public class InfoBookFragment extends Fragment {
         nameCategory = category.getId();
         return nameCategory;
     }
-    private void getAllDocumentsInDanhMucCollectionInfoBookFrag(){
+    private void getAllDocumentsInDanhMucCollectionInfoBookFrag(String tenDM){
         try{
-            db.collection("DanhMucCollection").document("dmForeignLanguage").collection("SachColection")
+            db.collection("DanhMucCollection").document(tenDM).collection("SachColection")
                     .get()
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
