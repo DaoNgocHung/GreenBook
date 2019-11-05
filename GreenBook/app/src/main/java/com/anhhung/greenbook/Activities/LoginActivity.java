@@ -352,7 +352,7 @@ public class LoginActivity extends AppCompatActivity {
                                 checkEC = false;
                                 myCallback.onCallBack(checkEC);
                             }
-                            else checkEC = false;
+                            //else checkEC = false;
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
                         }

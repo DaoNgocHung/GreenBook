@@ -48,8 +48,6 @@ public class InfoBookFragment extends Fragment {
     private String nameCategory;
     ArrayList<SectionDataModel> sectionDataModel = new ArrayList<SectionDataModel>();
 
-    String danhMucSelect;
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -59,8 +57,6 @@ public class InfoBookFragment extends Fragment {
         String tacGia = this.getArguments().getString("tacGia", " ");
         tenDM = this.getArguments().getString("danhMuc", " ");
         String ngonNgu = this.getArguments().getString("ngonNgu", " ");
-
-        danhMucSelect = danhMuc;
 
         View view = inflater.inflate(R.layout.fragment_info_book, null);
 
