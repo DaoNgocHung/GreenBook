@@ -60,7 +60,7 @@ public class HomeFragment extends Fragment {
         //Auto Advertisement
         sliderViewFragment = view.findViewById(R.id.imageSliderFragmentHome);
         final SliderAdvertiseAdapter adapter = new SliderAdvertiseAdapter(getActivity());
-        adapter.setCount(3);
+        adapter.setCount(4);
         sliderViewFragment.setSliderAdapter(adapter);
         //addControls
         addControls(view);
