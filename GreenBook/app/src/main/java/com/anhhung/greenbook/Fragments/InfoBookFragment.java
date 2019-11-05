@@ -43,8 +43,11 @@ public class InfoBookFragment extends Fragment {
     FirebaseFirestore db;
     List<BooksModel> booksModels = new ArrayList<>();
 
-    CategoriesModel category;
+    CategoriesModel category = new CategoriesModel();
+    private String nameCategory;
     ArrayList<SectionDataModel> sectionDataModel = new ArrayList<SectionDataModel>();
+
+    String danhMucSelect;
 
 
     @Override
@@ -55,6 +58,8 @@ public class InfoBookFragment extends Fragment {
         String tacGia = this.getArguments().getString("tacGia", " ");
         String danhMuc = this.getArguments().getString("danhMuc", " ");
         String ngonNgu = this.getArguments().getString("ngonNgu", " ");
+
+        danhMucSelect = danhMuc;
 
         View view = inflater.inflate(R.layout.fragment_info_book, null);
 
@@ -82,13 +87,13 @@ public class InfoBookFragment extends Fragment {
         readData(new MyCallback() {
             @Override
             public void onCallback(List<BooksModel> booksModels) {
-                createData("",rViewBookOffer, booksModels);
+                createData(rViewBookOffer, booksModels);
             }
         });
 
     }
 
-    private void createData(String nameCate, RecyclerView rViewBookOffer, List<BooksModel> booksModels) {
+    private void createData(RecyclerView rViewBookOffer, List<BooksModel> booksModels) {
         SectionDataModel dm = new SectionDataModel();
         dm.setHeaderTitle("Offer");
         ArrayList<String> imgList = new ArrayList<>();
@@ -111,10 +116,9 @@ public class InfoBookFragment extends Fragment {
 
     public void readData(MyCallback myCallback) {
         this.myCallback = myCallback;
-        getAllDocumentsInDanhMucCollectionInfoBookFrag();
+        getAllDocumentsInDanhMucCollectionInfoBookFrag(getIDCategory(danhMucSelect));
     }
     public String getIDCategory(String cate) {
-        String nameCategory;
         db.collection("DanhMucCollection")
                 .whereEqualTo("tenDanhMuc", cate)
                 .limit(1)
@@ -125,6 +129,7 @@ public class InfoBookFragment extends Fragment {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 category = document.toObject(CategoriesModel.class);
+                                nameCategory = category.getId();
                                 Log.d(TAG,document.getId() + " => " + document.getData());
                             }
                         } else {
@@ -132,12 +137,12 @@ public class InfoBookFragment extends Fragment {
                         }
                     }
                 });
-        nameCategory = category.getId();
+
         return nameCategory;
     }
-    private void getAllDocumentsInDanhMucCollectionInfoBookFrag(){
+    private void getAllDocumentsInDanhMucCollectionInfoBookFrag(String s){
         try{
-            db.collection("DanhMucCollection").document("dmForeignLanguage").collection("SachColection")
+            db.collection("DanhMucCollection").document(s).collection("SachColection")
                     .get()
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override

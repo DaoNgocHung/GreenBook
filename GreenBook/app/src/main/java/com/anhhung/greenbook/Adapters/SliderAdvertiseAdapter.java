@@ -45,21 +45,28 @@ public class SliderAdvertiseAdapter extends SliderViewAdapter<SliderAdvertiseAda
             case 0:
                 viewHolder.imageGifContainer.setVisibility(View.GONE);
                 Glide.with(viewHolder.itemView)
-                        .load(R.drawable.background_welcome)
+                        .load(R.drawable.qc1)
                         .fitCenter()
                         .into(viewHolder.imageViewBackground);
                 break;
             case 1:
                 viewHolder.imageGifContainer.setVisibility(View.GONE);
                 Glide.with(viewHolder.itemView)
-                        .load(R.drawable.background_welcome)
+                        .load(R.drawable.qc2)
                         .fitCenter()
                         .into(viewHolder.imageViewBackground);
                 break;
             case 2:
                 viewHolder.imageGifContainer.setVisibility(View.GONE);
                 Glide.with(viewHolder.itemView)
-                        .load(R.drawable.background_welcome)
+                        .load(R.drawable.qc3)
+                        .fitCenter()
+                        .into(viewHolder.imageViewBackground);
+                break;
+            case 3:
+                viewHolder.imageGifContainer.setVisibility(View.GONE);
+                Glide.with(viewHolder.itemView)
+                        .load(R.drawable.qc4)
                         .fitCenter()
                         .into(viewHolder.imageViewBackground);
                 break;

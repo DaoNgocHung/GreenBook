@@ -14,6 +14,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.anhhung.greenbook.Fragments.HomeFragment;
 import com.anhhung.greenbook.Models.BooksModel;
 import com.anhhung.greenbook.Models.UsersModel;
 import com.anhhung.greenbook.R;
@@ -31,6 +32,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.Timestamp;
@@ -69,7 +71,7 @@ public class LoginActivity extends AppCompatActivity {
     private String userEmail = "";
     private FirebaseFirestore db;
     private boolean checkEC = false;
-
+    MyCallback myCallback;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -218,8 +220,15 @@ public class LoginActivity extends AppCompatActivity {
                             Log.d(TAG, "fb graph response: " + response);
                             UsersModel usersModel = new UsersModel();
                             if (object.has("email")) {
+                                userEmail = object.getString("email");
                                 usersModel.setEmail(object.getString("email"));
-                                if (checkUserExist(object.getString("email").trim())== true){
+                                readData(new MyCallback() {
+                                    @Override
+                                    public void onCallBack(Boolean checkEC2) {
+                                        checkEC = checkEC2 ;
+                                    }
+                                }, userEmail);
+                                if (checkEC == true){
                                     usersModel.setHoTen(object.getString("first_name") + object.getString("last_name"));
                                     usersModel.setHinhDaiDien("http://graph.facebook.com/" + object.getString("id") + "/picture?type=large");
                                     usersModel.setNgayThangNS(doiNgay(object.getString("birthday")));
@@ -324,7 +333,7 @@ public class LoginActivity extends AppCompatActivity {
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
         db = FirebaseFirestore.getInstance();
     }
-    public boolean checkUserExist(String email){
+    public void checkUserExist(String email){
         db.collection("UserCollection")
                 .whereEqualTo("email", email)
                 .get()
@@ -332,22 +341,42 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
+                            if(task.getResult().isEmpty() == true){
+                                checkEC = true;
+                                myCallback.onCallBack(checkEC);
+                            }
+                            else{
                                 checkEC = false;
+                                myCallback.onCallBack(checkEC);
                             }
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
-                            checkEC = true;
                         }
                     }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        checkEC = true;
+                        myCallback.onCallBack(checkEC);
+                    }
                 });
-        return checkEC;
     }
     private void openLoadingDialog() {
         loadingDialog = new Dialog(LoginActivity.this, R.style.CustomDialog);
         loadingDialog.setContentView(R.layout.loading_dialog);
         loadingDialog.setCanceledOnTouchOutside(false);
         loadingDialog.show();
+    }
+    public interface MyCallback{
+        void onCallBack(Boolean checkEC);
+
+    }
+    public  boolean readData(MyCallback myCallback, String userEmail){
+        this.myCallback = myCallback;
+        checkUserExist(userEmail);
+        return checkEC;
+
     }
 
 }
