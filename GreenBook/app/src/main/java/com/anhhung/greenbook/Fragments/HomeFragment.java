@@ -12,12 +12,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.anhhung.greenbook.Adapters.MyDataBookAdapter;
 import com.anhhung.greenbook.Adapters.SliderAdvertiseAdapter;
 import com.anhhung.greenbook.Models.BooksModel;
 import com.anhhung.greenbook.Models.CategoriesModel;
 import com.anhhung.greenbook.Models.SectionDataModel;
+import com.anhhung.greenbook.Models.UsersModel;
 import com.anhhung.greenbook.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -47,6 +49,8 @@ public class HomeFragment extends Fragment {
     MyCallbackCategories myCallbackCategories;
     String tenDM = "";
     int count = 0;
+    UsersModel usersModel = new UsersModel();
+    private String emailUser;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -66,7 +70,6 @@ public class HomeFragment extends Fragment {
         addControls(view);
         //addEvents
         addEvents();
-        // Inflate the layout for this fragment
         return view;
     }
 

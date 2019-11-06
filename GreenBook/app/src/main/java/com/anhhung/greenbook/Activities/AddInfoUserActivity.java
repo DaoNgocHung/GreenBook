@@ -115,7 +115,7 @@ public class AddInfoUserActivity extends AppCompatActivity {
                                             //uploadData(name, phone, birthDay, gender, );
                                             UsersModel usersModel = new UsersModel(userName, gender, Timestamp.now(), downloadUri.toString(),
                                                     email,phone,0.0, 0);
-                                            db.collection("UserModel").document().set(usersModel);
+                                            db.collection("UserModel").document(email).set(usersModel);
                                             Intent intentCategory = new Intent(AddInfoUserActivity.this,YourFavoriteCategory.class);
                                             intentCategory.putExtra("email", email);
                                             startActivity(intentCategory);

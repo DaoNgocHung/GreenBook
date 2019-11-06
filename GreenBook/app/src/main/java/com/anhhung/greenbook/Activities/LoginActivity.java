@@ -3,7 +3,9 @@ package com.anhhung.greenbook.Activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -80,6 +82,9 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         FacebookSdk.sdkInitialize(getApplicationContext());
         addControls();
+        SharedPreferences sharedPreferences= this.getSharedPreferences("infoUser", Context.MODE_PRIVATE);
+        edtLoginUsername.setText(sharedPreferences.getString("emailUser",null));
+        edtLoginPass.setText(sharedPreferences.getString("passUser",null));
         addEvents();
     }
 
@@ -173,6 +178,7 @@ public class LoginActivity extends AppCompatActivity {
                             if(auth.getCurrentUser().isEmailVerified() == true){
                                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                 intent.putExtra("email", userEmail.trim());
+                                savePref();
                                 startActivity(intent);
                                 finish();
                             }
@@ -382,5 +388,12 @@ public class LoginActivity extends AppCompatActivity {
         return checkEC;
 
     }
-
+    //Lưu thông tin người dùng vào sharedPreference
+    public void savePref(){
+        SharedPreferences sharedPreferences= this.getSharedPreferences("infoUser", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("emailUser", this.edtLoginUsername.getText().toString());
+        editor.putString("passUser", this.edtLoginPass.getText().toString());
+        editor.apply();
+    }
 }

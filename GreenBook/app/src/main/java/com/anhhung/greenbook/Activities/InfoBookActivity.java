@@ -1,14 +1,21 @@
 package com.anhhung.greenbook.Activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 
+import android.app.Activity;
+import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -19,13 +26,24 @@ import com.anhhung.greenbook.Adapters.InfoBookViewPagerAdapter;
 import com.anhhung.greenbook.Fragments.CommentBookFragment;
 import com.anhhung.greenbook.Fragments.InfoBookFragment;
 import com.anhhung.greenbook.Fragments.SummaryBookFragment;
+import com.anhhung.greenbook.Models.BillDetailModel;
 import com.anhhung.greenbook.Models.BooksModel;
+import com.anhhung.greenbook.Models.UsersModel;
 import com.anhhung.greenbook.R;
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
-import java.sql.Timestamp;
+import java.util.Random;
 
 import io.opencensus.stats.Aggregation;
 
@@ -39,9 +57,19 @@ public class InfoBookActivity extends AppCompatActivity {
     private ImageButton imgbtnInfoBookFavor;
     private Toolbar actionToolbarInfoBook;
     private RatingBar ratingBar;
+    private Button btnInfoBookBuy, btnInfoBookRead;
+    private Dialog dialogBuy;
     BooksModel booksModel = new BooksModel();
+    UsersModel usersModel = new UsersModel();
+    private String TAG = "InfoBookActivity - Error";
+
+    private String emailUser;
+    SharedPreferences sharedPreferences;
+    Random rd = new Random();
 
     private boolean isFavor = false;  //Biến Test cho Favor
+
+    FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +112,110 @@ public class InfoBookActivity extends AppCompatActivity {
         setSupportActionBar(actionToolbarInfoBook);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        //Button Mua sách
+        btnInfoBookBuy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialogBuy = new Dialog(InfoBookActivity.this);
+                dialogBuy.setContentView(R.layout.dialog_buy_book);
+                dialogBuy.setCancelable(false);
+                dialogBuy.show();
+                Button btnYesBuy, btnNoBuy;
+                btnYesBuy = dialogBuy.findViewById(R.id.btnYesBuy);
+                btnNoBuy  = dialogBuy.findViewById(R.id.btnNoBuy);
+
+                btnYesBuy.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        emailUser = sharedPreferences.getString("emailUser",null);
+                        //Toast.makeText(InfoBookActivity.this,emailUser, Toast.LENGTH_SHORT).show();
+                        // Kiểm tra tiền của khách hàng so với giá tiền cuốn sách
+                        db.collection("UserModel")
+                                .whereEqualTo("email", emailUser)
+                                .limit(1)
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                                usersModel = document.toObject(UsersModel.class);
+                                                if(booksModel.getGiaTien() >= usersModel.getTien()){
+                                                    Toast.makeText(InfoBookActivity.this,"Tài khoản của bạn không đủ tiền",Toast.LENGTH_SHORT).show();
+                                                }
+                                                else {
+                                                    db.collection("UserModel").document(emailUser)
+                                                            .collection("LibraryCollection").document(booksModel.getTenSach())
+                                                            .set(booksModel)
+                                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                @Override
+                                                                public void onSuccess(Void aVoid) {
+                                                                    double tien = usersModel.getTien() - booksModel.getGiaTien();
+                                                                    long soSachDaMua = usersModel.getSoSachDaMua() + 1;
+                                                                    db.collection("UserModel").document(emailUser)
+                                                                            .update("tien",tien,
+                                                                                    "soSachDaMua",soSachDaMua)
+                                                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                                @Override
+                                                                                public void onSuccess(Void aVoid) {
+                                                                                    //Tạo hoá đơn
+                                                                                    BillDetailModel billDetailModel =
+                                                                                            new BillDetailModel(emailUser, Timestamp.now(),booksModel.getTenSach(),booksModel.getGiaTien(),"Transaction Successful");
+                                                                                    db.collection("UserModel").document(emailUser)
+                                                                                            .collection("BillCollection").document(String.valueOf(rd.nextInt(1000000)))
+                                                                                            .set(billDetailModel);
+                                                                                    Toast.makeText(InfoBookActivity.this,"Transaction Successful",Toast.LENGTH_SHORT).show();
+                                                                                }
+                                                                            })
+                                                                            .addOnFailureListener(new OnFailureListener() {
+                                                                                @Override
+                                                                                public void onFailure(@NonNull Exception e) {
+                                                                                    //Tạo hoá đơn
+                                                                                    BillDetailModel billDetailModel =
+                                                                                            new BillDetailModel(emailUser, Timestamp.now(),booksModel.getTenSach(),booksModel.getGiaTien(),"Transaction Error");
+                                                                                    db.collection("UserModel").document(emailUser)
+                                                                                            .collection("BillCollection").document(String.valueOf(rd.nextInt(1000000)))
+                                                                                            .set(billDetailModel);
+                                                                                }
+                                                                            });
+                                                                }
+                                                            })
+                                                            // Sách không thêm vào thư viện được
+                                                            .addOnFailureListener(new OnFailureListener() {
+                                                                @Override
+                                                                public void onFailure(@NonNull Exception e) {
+                                                                    BillDetailModel billDetailModel =
+                                                                            new BillDetailModel(emailUser, Timestamp.now(),booksModel.getTenSach(),booksModel.getGiaTien(),"Book not added to library");
+                                                                    db.collection("UserModel").document(emailUser)
+                                                                            .collection("BillCollection").document(String.valueOf(rd.nextInt(1000000)))
+                                                                            .set(billDetailModel);
+                                                                }
+                                                            });
+                                                }
+                                            }
+                                        } else {
+                                            Log.d(TAG, "Error getting documents: ", task.getException());
+                                        }
+                                    }
+                                });
+
+
+                        // Thêm sách vào thư viện của người dùng, trừ tiền, thêm vào bill
+
+
+                        dialogBuy.dismiss();
+                    }
+                });
+
+                btnNoBuy.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialogBuy.dismiss();
+                    }
+                });
+            }
+        });
     }
 
     private void addControls() {
@@ -99,6 +231,8 @@ public class InfoBookActivity extends AppCompatActivity {
         actionToolbarInfoBook = findViewById(R.id.actionToolbarInfoBook);
         txtInfoVote = findViewById(R.id.txtInfoVote);
         ratingBar = findViewById(R.id.rateInfoBook);
+        btnInfoBookBuy =  findViewById(R.id.btnInfoBookBuy);
+        btnInfoBookRead = findViewById(R.id.btnInfoBookRead);
         Glide.with(InfoBookActivity.this)
                 .load(booksModel.getBiaSach())
                 .into(imgInFoBookCover);
@@ -107,6 +241,9 @@ public class InfoBookActivity extends AppCompatActivity {
         txtInfoBookPrice.setText("Price: " + booksModel.getGiaTien());
         txtInfoVote.setText("(" + booksModel.getLuotDanhGia() + ")");
         ratingBar.setRating(booksModel.getDanhGia());
+
+        db = FirebaseFirestore.getInstance();
+        sharedPreferences = this.getSharedPreferences("infoUser", Context.MODE_PRIVATE);
     }
     private void loadBundleData(){
         Intent intent = getIntent();
@@ -143,7 +280,6 @@ public class InfoBookActivity extends AppCompatActivity {
         return f;
     }
 
-    // Thiếu Timestamp ngayUpload,
     public static InfoBookFragment newInstance(String NXB, String tacGia, String danhMuc, String ngonNgu){
         InfoBookFragment f = new InfoBookFragment();
         Bundle args = new Bundle();

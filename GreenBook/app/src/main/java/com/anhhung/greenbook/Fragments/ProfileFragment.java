@@ -1,9 +1,12 @@
 package com.anhhung.greenbook.Fragments;
 
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -14,17 +17,34 @@ import android.widget.TextView;
 
 import com.anhhung.greenbook.Activities.AddInfoUserActivity;
 import com.anhhung.greenbook.Activities.WelcomeActivity;
+import com.anhhung.greenbook.Models.UsersModel;
 import com.anhhung.greenbook.R;
+import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.jgabrielfreitas.core.BlurImageView;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class ProfileFragment extends Fragment {
 
-    BlurImageView blurImageView;
-    ImageButton imgbtnLogoutProfile;
+    private BlurImageView blurImageView;
+    private ImageButton imgbtnLogoutProfile;
+    private CircleImageView imgAvatarProfile;
+    private TextView txtProfileCoin, txtProfileNumberBook, txtNameProfile;
+    private SharedPreferences sharedPreferences;
+
+    private FirebaseFirestore db;
+    private UsersModel usersModel;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -35,8 +55,10 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view  = inflater.inflate(R.layout.fragment_profile, container, false);
+        View view = inflater.inflate(R.layout.fragment_profile, container, false);
+        sharedPreferences = this.getActivity().getSharedPreferences("infoUser", Context.MODE_PRIVATE);
         addControls(view);
+        getData(view);
         addEvents();
         return view;
     }
@@ -54,8 +76,37 @@ public class ProfileFragment extends Fragment {
 
     private void addControls(View view) {
         blurImageView = view.findViewById(R.id.blurImageView);
-        blurImageView.setBlur(5/2);
+        blurImageView.setBlur(10);
         imgbtnLogoutProfile = view.findViewById(R.id.imgbtnLogoutProfile);
+        txtProfileCoin = view.findViewById(R.id.txtProfileCoin);
+        txtProfileNumberBook = view.findViewById(R.id.txtProfileNumberBook);
+        txtNameProfile = view.findViewById(R.id.txtNameProfile);
+        imgAvatarProfile = view.findViewById(R.id.imgAvatarProfile);
+        db = FirebaseFirestore.getInstance();
+    }
+
+    private void getData(View view) {
+        db.collection("UserModel")
+                .whereEqualTo("email", sharedPreferences.getString("emailUser", null))
+                .limit(1)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                usersModel = document.toObject(UsersModel.class);
+                                txtProfileCoin.setText(usersModel.getTien().toString());
+                                txtProfileNumberBook.setText(usersModel.getSoSachDaMua()+"");
+                                txtNameProfile.setText(usersModel.getHoTen());
+                                Glide.with(getActivity()).load(usersModel.getHinhDaiDien()).into(imgAvatarProfile);
+                                Glide.with(getActivity())
+                                        .load("https://firebasestorage.googleapis.com/v0/b/greenbookfirestore.appspot.com/o/AnhBiaUser%2FanhBiaUser.jpg?alt=media&token=73224c41-cb2e-4e38-8d06-bd95d74f6aed")
+                                        .into(blurImageView);
+                            }
+                        }
+                    }
+                });
     }
 
 }

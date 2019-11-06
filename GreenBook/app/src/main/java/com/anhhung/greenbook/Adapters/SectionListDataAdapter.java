@@ -2,7 +2,6 @@ package com.anhhung.greenbook.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -37,6 +36,7 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
     StorageReference storageRef = storage.getReference();
     StorageReference httpsReference;
     BooksModel singleBook;
+
 
     public SectionListDataAdapter(Context context, ArrayList<BooksModel> itemsList, ArrayList<String> imgList) {
         this.itemsList = itemsList;
