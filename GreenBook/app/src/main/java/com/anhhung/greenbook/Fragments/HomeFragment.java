@@ -57,14 +57,6 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        allSampleData.clear();
-        booksModels.clear();
-        categoriesModels.clear();
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
@@ -85,6 +77,9 @@ public class HomeFragment extends Fragment {
         allSampleData = new ArrayList<>();
         myRecyclerView = view.findViewById(R.id.home_recycler_view);
         myRecyclerView.setHasFixedSize(true);
+        allSampleData.clear();
+        booksModels.clear();
+        categoriesModels.clear();
         readData2(new MyCallbackCategories() {
             @Override
             public void onCallback(final List<CategoriesModel> categoriesModels) {

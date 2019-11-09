@@ -44,15 +44,10 @@ public class LibraryFragment extends Fragment {
     private MyCallback myCallback;
     private SharedPreferences sharedPreferences;
     private String emailUser;
+    private BookLibraryAdapter myAdapter;
 
     public LibraryFragment() {
         // Required empty public constructor
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        bookLibraryModels.clear();
     }
 
     @Override
@@ -76,6 +71,7 @@ public class LibraryFragment extends Fragment {
         db = FirebaseFirestore.getInstance();
 
         rViewLibrary = view.findViewById(R.id.rViewLibrary);
+        bookLibraryModels.clear();
         readData(new MyCallback() {
             @Override
             public void onCallback(List<BookLibraryModel> bookLibraryModels) {
@@ -84,7 +80,7 @@ public class LibraryFragment extends Fragment {
         });
     }
     private void createData(RecyclerView rViewMoreBook, List<BookLibraryModel> bookLibraryModels) {
-        BookLibraryAdapter myAdapter = new BookLibraryAdapter(this.getContext(),bookLibraryModels);
+        myAdapter = new BookLibraryAdapter(this.getContext(),bookLibraryModels);
         rViewMoreBook.setLayoutManager(new GridLayoutManager(this.getContext(),3));
         rViewMoreBook.setAdapter(myAdapter);
     }

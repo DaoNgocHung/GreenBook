@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,12 +18,23 @@ import com.anhhung.greenbook.Models.BookLibraryModel;
 import com.anhhung.greenbook.Models.BooksModel;
 import com.anhhung.greenbook.R;
 import com.bumptech.glide.Glide;
+import com.folioreader.FolioReader;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 public class BookLibraryAdapter extends RecyclerView.Adapter<BookLibraryAdapter.MyViewHolder>{
     private Context mContext ;
     private List<BookLibraryModel> bookLibraryModels ;
+    FirebaseStorage storage;
+    FolioReader folioReader = FolioReader.get();
+    File localFile = null;
 
 
     public BookLibraryAdapter(Context mContext, List<BookLibraryModel> booksModels) {
@@ -36,6 +48,8 @@ public class BookLibraryAdapter extends RecyclerView.Adapter<BookLibraryAdapter.
         View view ;
         LayoutInflater mInflater = LayoutInflater.from(mContext);
         view = mInflater.inflate(R.layout.card_view_book,parent,false);
+        storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
         return new MyViewHolder(view);
     }
 
@@ -49,20 +63,7 @@ public class BookLibraryAdapter extends RecyclerView.Adapter<BookLibraryAdapter.
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), InfoBookActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("anhBia", bookLibraryModels.get(position).getBiaSach());
-                bundle.putString("tenSach", bookLibraryModels.get(position).getTenSach());
-                bundle.putString("noiDung", bookLibraryModels.get(position).getNoiDung());
-                bundle.putDouble("giaTien", bookLibraryModels.get(position).getGiaTien());
-                bundle.putString("NXB", bookLibraryModels.get(position).getNXB());
-                bundle.putString("danhMuc", bookLibraryModels.get(position).getDanhMuc());
-                bundle.putString("tacGia", bookLibraryModels.get(position).getTacGia());
-                bundle.putString("ngonNgu", bookLibraryModels.get(position).getNgonNgu());
-                bundle.putString("ngayMua", bookLibraryModels.get(position).getNgayMua().toString());
-                intent.putExtras(bundle);
-                // start the activity
-               // mContext.startActivity(intent);
+                DownloadEpubFile(bookLibraryModels.get(position).getNoiDung());
             }
         });
     }
@@ -86,5 +87,29 @@ public class BookLibraryAdapter extends RecyclerView.Adapter<BookLibraryAdapter.
 
 
         }
+    }
+    private void DownloadEpubFile(String URL){
+        // [START download_to_local_file]
+        StorageReference httpsReference = storage.getReferenceFromUrl(URL);
+
+
+        try {
+            localFile = File.createTempFile("book",".epub");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        httpsReference.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                folioReader.openBook(localFile.getPath());
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+            }
+        });
+        // [END download_to_local_file]
     }
 }
