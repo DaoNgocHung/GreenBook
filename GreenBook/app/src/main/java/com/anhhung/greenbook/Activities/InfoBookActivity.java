@@ -52,7 +52,7 @@ public class InfoBookActivity extends AppCompatActivity {
     private TabLayout tabLayoutInfoBook;
     private AppBarLayout appBarLayoutInfoBook;
     private ViewPager viewPagerInfoBook;
-    private TextView txtInfoNameBook, txtInfoBookDownload,txtInfoBookPrice, txtInfoVote;
+    private TextView txtInfoNameBook, txtInfoBookDownload, txtInfoBookPrice, txtInfoVote;
     private ImageView imgInFoBookCover;
     private ImageButton imgbtnInfoBookFavor;
     private Toolbar actionToolbarInfoBook;
@@ -65,7 +65,6 @@ public class InfoBookActivity extends AppCompatActivity {
 
     private String emailUser;
     SharedPreferences sharedPreferences;
-    Random rd = new Random();
 
     private boolean isFavor = false;  //Biến Test cho Favor
 
@@ -84,8 +83,8 @@ public class InfoBookActivity extends AppCompatActivity {
         InfoBookViewPagerAdapter adapter = new InfoBookViewPagerAdapter(getSupportFragmentManager());
         //Add Fragment
         SummaryBookFragment summaryBookFragment = newInstance(booksModel.getGioiThieuSach());
-        InfoBookFragment infoBookFragment = newInstance(booksModel.getNXB(),booksModel.getTacGia(), booksModel.getDanhMuc(), booksModel.getNgonNgu());
-        adapter.AddFragment(infoBookFragment,"Info");
+        InfoBookFragment infoBookFragment = newInstance(booksModel.getNXB(), booksModel.getTacGia(), booksModel.getDanhMuc(), booksModel.getNgonNgu());
+        adapter.AddFragment(infoBookFragment, "Info");
         adapter.AddFragment(summaryBookFragment, "Summary");
         adapter.AddFragment(new CommentBookFragment(), "Comment");
         //adapter Setup
@@ -95,15 +94,14 @@ public class InfoBookActivity extends AppCompatActivity {
         imgbtnInfoBookFavor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(isFavor == false){
+                if (isFavor == false) {
                     imgbtnInfoBookFavor.setImageResource(R.drawable.ic_favor);
                     isFavor = true;
-                    Toast.makeText(InfoBookActivity.this,"You have added favorites", Toast.LENGTH_SHORT).show();
-                }
-                else{
+                    Toast.makeText(InfoBookActivity.this, "You have added favorites", Toast.LENGTH_SHORT).show();
+                } else {
                     imgbtnInfoBookFavor.setImageResource(R.drawable.ic_not_favor);
                     isFavor = false;
-                    Toast.makeText(InfoBookActivity.this,"You have canceled your favorites",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(InfoBookActivity.this, "You have canceled your favorites", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -123,13 +121,13 @@ public class InfoBookActivity extends AppCompatActivity {
                 dialogBuy.show();
                 Button btnYesBuy, btnNoBuy;
                 btnYesBuy = dialogBuy.findViewById(R.id.btnYesBuy);
-                btnNoBuy  = dialogBuy.findViewById(R.id.btnNoBuy);
-
+                btnNoBuy = dialogBuy.findViewById(R.id.btnNoBuy);
+                // Nhấn chọn mua
                 btnYesBuy.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        emailUser = sharedPreferences.getString("emailUser",null);
-                        //Toast.makeText(InfoBookActivity.this,emailUser, Toast.LENGTH_SHORT).show();
+                        emailUser = sharedPreferences.getString("emailUser", null);
+
                         // Kiểm tra tiền của khách hàng so với giá tiền cuốn sách
                         db.collection("UserModel")
                                 .whereEqualTo("email", emailUser)
@@ -141,54 +139,80 @@ public class InfoBookActivity extends AppCompatActivity {
                                         if (task.isSuccessful()) {
                                             for (QueryDocumentSnapshot document : task.getResult()) {
                                                 usersModel = document.toObject(UsersModel.class);
-                                                if(booksModel.getGiaTien() >= usersModel.getTien()){
-                                                    Toast.makeText(InfoBookActivity.this,"Tài khoản của bạn không đủ tiền",Toast.LENGTH_SHORT).show();
-                                                }
-                                                else {
+                                                if (booksModel.getGiaTien() >= usersModel.getTien()) {
+                                                    Toast.makeText(InfoBookActivity.this, "Tài khoản của bạn không đủ tiền", Toast.LENGTH_SHORT).show();
+                                                } else {
+
+                                                    //Thêm sách vào thư viện của user
                                                     db.collection("UserModel").document(emailUser)
                                                             .collection("LibraryCollection").document(booksModel.getTenSach())
                                                             .set(booksModel)
+                                                            //Thêm sách vào thư viện thành công
                                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                                 @Override
                                                                 public void onSuccess(Void aVoid) {
                                                                     double tien = usersModel.getTien() - booksModel.getGiaTien();
                                                                     long soSachDaMua = usersModel.getSoSachDaMua() + 1;
+
+                                                                    //Trừ tiền của người dùng
                                                                     db.collection("UserModel").document(emailUser)
-                                                                            .update("tien",tien,
-                                                                                    "soSachDaMua",soSachDaMua)
+                                                                            .update("tien", tien,
+                                                                                    "soSachDaMua", soSachDaMua)
                                                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                                                 @Override
                                                                                 public void onSuccess(Void aVoid) {
+
                                                                                     //Tạo hoá đơn
                                                                                     BillDetailModel billDetailModel =
-                                                                                            new BillDetailModel(emailUser, Timestamp.now(),booksModel.getTenSach(),booksModel.getGiaTien(),"Transaction Successful");
+                                                                                            new BillDetailModel(emailUser, Timestamp.now(), booksModel.getTenSach(), booksModel.getGiaTien(), "Transaction Successful");
                                                                                     db.collection("UserModel").document(emailUser)
-                                                                                            .collection("BillCollection").document(String.valueOf(rd.nextInt(1000000)))
+                                                                                            .collection("BillCollection").document()
                                                                                             .set(billDetailModel);
-                                                                                    Toast.makeText(InfoBookActivity.this,"Transaction Successful",Toast.LENGTH_SHORT).show();
+
+                                                                                    //Update thuộc tính soNguoiMua của sách
+                                                                                    db.collection("DanhMucCollection").document(booksModel.getIdDM()).collection("SachColection")
+                                                                                            .whereEqualTo("tenSach",booksModel.getTenSach())
+                                                                                            .limit(1)
+                                                                                            .get()
+                                                                                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                                                                @Override
+                                                                                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                                                                    if(task.isSuccessful()){
+                                                                                                        for (DocumentSnapshot documentSnapshot : task.getResult().getDocuments()) {
+                                                                                                            // here you can get the id.
+                                                                                                            String id = documentSnapshot.getId();
+                                                                                                            db.collection("DanhMucCollection").document(booksModel.getIdDM()).collection("SachColection").document(id)
+                                                                                                                    .update("soNguoiMua", booksModel.getSoNguoiMua()+1);
+                                                                                                        }
+                                                                                                    }
+                                                                                                }
+                                                                                            });
+                                                                                    Toast.makeText(InfoBookActivity.this, "Transaction Successful", Toast.LENGTH_SHORT).show();
                                                                                 }
                                                                             })
                                                                             .addOnFailureListener(new OnFailureListener() {
                                                                                 @Override
                                                                                 public void onFailure(@NonNull Exception e) {
+
                                                                                     //Tạo hoá đơn
                                                                                     BillDetailModel billDetailModel =
-                                                                                            new BillDetailModel(emailUser, Timestamp.now(),booksModel.getTenSach(),booksModel.getGiaTien(),"Transaction Error");
+                                                                                            new BillDetailModel(emailUser, Timestamp.now(), booksModel.getTenSach(), booksModel.getGiaTien(), "Transaction Error");
                                                                                     db.collection("UserModel").document(emailUser)
-                                                                                            .collection("BillCollection").document(String.valueOf(rd.nextInt(1000000)))
+                                                                                            .collection("BillCollection").document()
                                                                                             .set(billDetailModel);
                                                                                 }
                                                                             });
                                                                 }
                                                             })
+
                                                             // Sách không thêm vào thư viện được
                                                             .addOnFailureListener(new OnFailureListener() {
                                                                 @Override
                                                                 public void onFailure(@NonNull Exception e) {
                                                                     BillDetailModel billDetailModel =
-                                                                            new BillDetailModel(emailUser, Timestamp.now(),booksModel.getTenSach(),booksModel.getGiaTien(),"Book not added to library");
+                                                                            new BillDetailModel(emailUser, Timestamp.now(), booksModel.getTenSach(), booksModel.getGiaTien(), "Book not added to library");
                                                                     db.collection("UserModel").document(emailUser)
-                                                                            .collection("BillCollection").document(String.valueOf(rd.nextInt(1000000)))
+                                                                            .collection("BillCollection").document()
                                                                             .set(billDetailModel);
                                                                 }
                                                             });
@@ -200,7 +224,6 @@ public class InfoBookActivity extends AppCompatActivity {
                                     }
                                 });
 
-
                         // Thêm sách vào thư viện của người dùng, trừ tiền, thêm vào bill
 
 
@@ -211,6 +234,7 @@ public class InfoBookActivity extends AppCompatActivity {
                 btnNoBuy.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        Toast.makeText(InfoBookActivity.this,booksModel.getIdDM(),Toast.LENGTH_SHORT).show();
                         dialogBuy.dismiss();
                     }
                 });
@@ -231,13 +255,13 @@ public class InfoBookActivity extends AppCompatActivity {
         actionToolbarInfoBook = findViewById(R.id.actionToolbarInfoBook);
         txtInfoVote = findViewById(R.id.txtInfoVote);
         ratingBar = findViewById(R.id.rateInfoBook);
-        btnInfoBookBuy =  findViewById(R.id.btnInfoBookBuy);
+        btnInfoBookBuy = findViewById(R.id.btnInfoBookBuy);
         btnInfoBookRead = findViewById(R.id.btnInfoBookRead);
         Glide.with(InfoBookActivity.this)
                 .load(booksModel.getBiaSach())
                 .into(imgInFoBookCover);
         txtInfoNameBook.setText(booksModel.getTenSach());
-        txtInfoBookDownload.setText("Downloaded: "+booksModel.getSoNguoiMua());
+        txtInfoBookDownload.setText("Downloaded: " + booksModel.getSoNguoiMua());
         txtInfoBookPrice.setText("Price: " + booksModel.getGiaTien());
         txtInfoVote.setText("(" + booksModel.getLuotDanhGia() + ")");
         ratingBar.setRating(booksModel.getDanhGia());
@@ -245,26 +269,28 @@ public class InfoBookActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         sharedPreferences = this.getSharedPreferences("infoUser", Context.MODE_PRIVATE);
     }
-    private void loadBundleData(){
+
+    private void loadBundleData() {
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         if (bundle != null) {
             booksModel.setBiaSach(bundle.getString("anhBia", ""));
             booksModel.setTenSach(bundle.getString("tenSach", ""));
-            booksModel.setSoNguoiMua(bundle.getLong("soNguoiMua",0));
-            booksModel.setDanhGia(bundle.getFloat("danhGia",0));
-            booksModel.setNoiDung(bundle.getString("noiDung"," "));
+            booksModel.setSoNguoiMua(bundle.getLong("soNguoiMua", 0));
+            booksModel.setDanhGia(bundle.getFloat("danhGia", 0));
+            booksModel.setNoiDung(bundle.getString("noiDung", " "));
             booksModel.setGioiThieuSach(bundle.getString("gioiThieu", " "));
             booksModel.setGiaTien(bundle.getDouble("giaTien", 0));
-            booksModel.setDanhMuc(bundle.getString("danhMuc",""));
+            booksModel.setDanhMuc(bundle.getString("danhMuc", ""));
             //booksModel.setNgayUpload(bundle.get("ngayUpload",""));
-            booksModel.setTacGia(bundle.getString("tacGia",""));
-            booksModel.setNXB(bundle.getString("NXB",""));
-            booksModel.setNgonNgu(bundle.getString("ngonNgu",""));
-            booksModel.setSoNguoiMua(bundle.getLong("soNguoiMua",0));
-            booksModel.setLuotDanhGia(bundle.getLong("luotDanhGia",0));
+            booksModel.setTacGia(bundle.getString("tacGia", ""));
+            booksModel.setNXB(bundle.getString("NXB", ""));
+            booksModel.setNgonNgu(bundle.getString("ngonNgu", ""));
+            booksModel.setSoNguoiMua(bundle.getLong("soNguoiMua", 0));
+            booksModel.setLuotDanhGia(bundle.getLong("luotDanhGia", 0));
         }
     }
+
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
@@ -280,20 +306,20 @@ public class InfoBookActivity extends AppCompatActivity {
         return f;
     }
 
-    public static InfoBookFragment newInstance(String NXB, String tacGia, String danhMuc, String ngonNgu){
+    public static InfoBookFragment newInstance(String NXB, String tacGia, String danhMuc, String ngonNgu) {
         InfoBookFragment f = new InfoBookFragment();
         Bundle args = new Bundle();
-        args.putString("NXB",NXB);
+        args.putString("NXB", NXB);
         args.putString("tacGia", tacGia);
-        args.putString("danhMuc",danhMuc);
-        args.putString("ngonNgu",ngonNgu);
+        args.putString("danhMuc", danhMuc);
+        args.putString("ngonNgu", ngonNgu);
         f.setArguments(args);
         return f;
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.book_menu,menu);
+        getMenuInflater().inflate(R.menu.book_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -301,8 +327,8 @@ public class InfoBookActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if(id == R.id.mnuShare){
-            Toast.makeText(InfoBookActivity.this,"SHARE",Toast.LENGTH_SHORT).show();
+        if (id == R.id.mnuShare) {
+            Toast.makeText(InfoBookActivity.this, "SHARE", Toast.LENGTH_SHORT).show();
         }
 
         return super.onOptionsItemSelected(item);

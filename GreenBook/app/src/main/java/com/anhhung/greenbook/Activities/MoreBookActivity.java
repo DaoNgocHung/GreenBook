@@ -31,7 +31,7 @@ public class MoreBookActivity extends AppCompatActivity {
     private String danhMuc;
     private RecyclerView rViewMoreBook;
     private List<BooksModel> booksModels = new ArrayList<>();
-    private String TAG = "";
+    private String TAG = "MoreBookActivity - ERROR";
     FirebaseFirestore db;
     MyCallback myCallback;
 

@@ -16,6 +16,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.anhhung.greenbook.Activities.AddInfoUserActivity;
+import com.anhhung.greenbook.Activities.BillActivity;
 import com.anhhung.greenbook.Activities.WelcomeActivity;
 import com.anhhung.greenbook.Models.UsersModel;
 import com.anhhung.greenbook.R;
@@ -38,7 +39,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class ProfileFragment extends Fragment {
 
     private BlurImageView blurImageView;
-    private ImageButton imgbtnLogoutProfile;
+    private ImageButton imgbtnLogoutProfile, imgbtnBillProfile;
     private CircleImageView imgAvatarProfile;
     private TextView txtProfileCoin, txtProfileNumberBook, txtNameProfile;
     private SharedPreferences sharedPreferences;
@@ -72,12 +73,19 @@ public class ProfileFragment extends Fragment {
                 startActivity(new Intent(getActivity(), WelcomeActivity.class));
             }
         });
+        imgbtnBillProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getActivity(), BillActivity.class));
+            }
+        });
     }
 
     private void addControls(View view) {
         blurImageView = view.findViewById(R.id.blurImageView);
         blurImageView.setBlur(10);
         imgbtnLogoutProfile = view.findViewById(R.id.imgbtnLogoutProfile);
+        imgbtnBillProfile = view.findViewById(R.id.imgbtnBillProfile);
         txtProfileCoin = view.findViewById(R.id.txtProfileCoin);
         txtProfileNumberBook = view.findViewById(R.id.txtProfileNumberBook);
         txtNameProfile = view.findViewById(R.id.txtNameProfile);

@@ -4,11 +4,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
@@ -29,10 +31,14 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Random;
 
-public class AddInfoUserActivity extends AppCompatActivity {
+public class AddInfoUserActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener{
 
     private TextView txtAddInfoChangeBirth, txtAddInfoBirth, txtAddInfoName;
     private EditText  edtAddInfoPhone;
@@ -64,6 +70,12 @@ public class AddInfoUserActivity extends AppCompatActivity {
     }
 
     private void addEvents() {
+        txtAddInfoChangeBirth.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDatePickerDialog();
+            }
+        });
         btnAddInfoSave.setOnClickListener(new View.OnClickListener() {
             String phone, birthDay, userName, email, password;
             int rd;
@@ -73,10 +85,10 @@ public class AddInfoUserActivity extends AppCompatActivity {
                 if(checkInfo() == true){
                     // Input data
                     phone = edtAddInfoPhone.getText().toString().trim();
-                    birthDay = txtAddInfoBirth.getText().toString();
                     userName = txtAddInfoName.getText().toString();
                     email = intent.getStringExtra("email");
                     password = intent.getStringExtra("password");
+
                     rd = new Random().nextInt(100000);
                     if(rdAddInfoMale.isChecked() == true) {
                         gender = true;
@@ -113,7 +125,7 @@ public class AddInfoUserActivity extends AppCompatActivity {
                                             Uri downloadUri = task.getResult();
                                             // Function call to Upload data
                                             //uploadData(name, phone, birthDay, gender, );
-                                            UsersModel usersModel = new UsersModel(userName, gender, Timestamp.now(), downloadUri.toString(),
+                                            UsersModel usersModel = new UsersModel(userName, gender, doiNgay(birthDay), downloadUri.toString(),
                                                     email,phone,0.0, 0);
                                             db.collection("UserModel").document(email).set(usersModel);
                                             Intent intentCategory = new Intent(AddInfoUserActivity.this,YourFavoriteCategory.class);
@@ -205,5 +217,39 @@ public class AddInfoUserActivity extends AppCompatActivity {
             }
         }
         return true;
+    }
+
+    // Hiển thị DatePicker
+    private void showDatePickerDialog(){
+        DatePickerDialog datePickerDialog = new DatePickerDialog(
+                this,
+                this,
+                Calendar.getInstance().get(Calendar.YEAR),
+                Calendar.getInstance().get(Calendar.MONTH),
+                Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
+        );
+        datePickerDialog.show();
+    }
+
+    @Override
+    public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
+        String str_date = dayOfMonth +"/" + month + "/" + year;
+        txtAddInfoBirth.setText(str_date);
+    }
+
+    //Chuyen doi ngay thang nam sinh tu Facebook
+    public Timestamp doiNgay(String d){
+        Timestamp timeStampDate = null;
+        try{
+            DateFormat formatter;
+            formatter = new SimpleDateFormat("dd/MM/yyyy");
+            Date date = (Date) formatter.parse(d);
+            timeStampDate = new Timestamp(date);
+
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return timeStampDate;
     }
 }

@@ -113,6 +113,7 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
                     bundle.putString("ngonNgu", singleBook.getNgonNgu());
                     bundle.putLong("soNguoiMua", singleBook.getSoNguoiMua());
                     bundle.putLong("luotDanhGia",singleBook.getLuotDanhGia());
+                    bundle.putString("idDM",singleBook.getIdDM());
                     intent.putExtras(bundle);
                     mContext.startActivity(intent);
                 }
