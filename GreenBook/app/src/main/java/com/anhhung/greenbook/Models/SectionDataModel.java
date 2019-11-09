@@ -9,6 +9,7 @@ public class SectionDataModel {
     private String headerTitle;
     private ArrayList<BooksModel> allBooksInSection;
     private ArrayList<String> imgList;
+    private String idCategory;
 
     public ArrayList<String> getImgList() {
         return imgList;
@@ -22,12 +23,20 @@ public class SectionDataModel {
 
     }
 
-    public SectionDataModel(String headerTitle, ArrayList<BooksModel> allBooksInSection, ArrayList<String> imgList) {
+    public SectionDataModel( String idCategory,String headerTitle, ArrayList<BooksModel> allBooksInSection, ArrayList<String> imgList) {
         this.headerTitle = headerTitle;
         this.allBooksInSection = allBooksInSection;
         this.imgList = imgList;
+        this.idCategory = idCategory;
     }
 
+    public String getIdCategory() {
+        return idCategory;
+    }
+
+    public void setIdCategory(String idCategory) {
+        this.idCategory = idCategory;
+    }
 
     public String getHeaderTitle() {
         return headerTitle;

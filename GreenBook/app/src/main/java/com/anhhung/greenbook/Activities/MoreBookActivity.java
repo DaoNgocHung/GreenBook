@@ -28,7 +28,7 @@ public class MoreBookActivity extends AppCompatActivity {
 
     private Toolbar actionToolbarMoreBook;
     private Intent intent;
-    private String danhMuc;
+    private String danhMuc, idDM;
     private RecyclerView rViewMoreBook;
     private List<BooksModel> booksModels = new ArrayList<>();
     private String TAG = "MoreBookActivity - ERROR";
@@ -56,11 +56,13 @@ public class MoreBookActivity extends AppCompatActivity {
         actionToolbarMoreBook = findViewById(R.id.actionToolbarMoreBook);
         intent = getIntent();
         danhMuc = intent.getStringExtra("danhMuc");
+        idDM = intent.getStringExtra("idDanhMuc");
+
         rViewMoreBook = findViewById(R.id.rViewMoreBook);
         readData(new MyCallback() {
             @Override
             public void onCallback(List<BooksModel> booksModels) {
-                createData("dmForeignLanguage",rViewMoreBook, booksModels);
+                createData(idDM,rViewMoreBook, booksModels);
             }
         });
     }
@@ -77,7 +79,7 @@ public class MoreBookActivity extends AppCompatActivity {
 
     public void readData(MyCallback myCallback) {
         this.myCallback = myCallback;
-        getAllDocumentsInDanhMucCollectionInfoBookFrag("dmForeignLanguage");
+        getAllDocumentsInDanhMucCollectionInfoBookFrag(idDM);
     }
     private void getAllDocumentsInDanhMucCollectionInfoBookFrag(String tenDM){
         try{

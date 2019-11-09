@@ -11,21 +11,23 @@ import android.widget.TextView;
 
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.anhhung.greenbook.Activities.InfoBookActivity;
+import com.anhhung.greenbook.Models.BookLibraryModel;
 import com.anhhung.greenbook.Models.BooksModel;
 import com.anhhung.greenbook.R;
 import com.bumptech.glide.Glide;
 
 import java.util.List;
 
-public class CategoriesListBookAdater extends RecyclerView.Adapter<CategoriesListBookAdater.MyViewHolder>{
+public class BookLibraryAdapter extends RecyclerView.Adapter<BookLibraryAdapter.MyViewHolder>{
     private Context mContext ;
-    private List<BooksModel> booksModels ;
+    private List<BookLibraryModel> bookLibraryModels ;
 
 
-    public CategoriesListBookAdater(Context mContext, List<BooksModel> booksModels) {
+    public BookLibraryAdapter(Context mContext, List<BookLibraryModel> booksModels) {
         this.mContext = mContext;
-        this.booksModels = booksModels;
+        this.bookLibraryModels = booksModels;
     }
 
     @Override
@@ -40,38 +42,34 @@ public class CategoriesListBookAdater extends RecyclerView.Adapter<CategoriesLis
     @Override
     public void onBindViewHolder(MyViewHolder holder, final int position) {
 
-        holder.tv_book_title.setText(booksModels.get(position).getTenSach());
+        holder.tv_book_title.setText(bookLibraryModels.get(position).getTenSach());
         Glide.with(holder.itemView)
-                .load(booksModels.get(position).getBiaSach())
+                .load(bookLibraryModels.get(position).getBiaSach())
                 .into(holder.img_book_thumbnail);
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(), InfoBookActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putString("anhBia", booksModels.get(position).getBiaSach());
-                bundle.putString("tenSach", booksModels.get(position).getTenSach());
-                bundle.putLong("soNguoiMua", booksModels.get(position).getSoNguoiMua());
-                bundle.putFloat("danhGia", booksModels.get(position).getDanhGia());
-                bundle.putString("noiDung", booksModels.get(position).getNoiDung());
-                bundle.putString("gioiThieu", booksModels.get(position).getGioiThieuSach());
-                bundle.putDouble("giaTien", booksModels.get(position).getGiaTien());
-                bundle.putString("NXB", booksModels.get(position).getNXB());
-                bundle.putString("danhMuc", booksModels.get(position).getDanhMuc());
-                bundle.putString("tacGia", booksModels.get(position).getTacGia());
-                bundle.putString("ngonNgu", booksModels.get(position).getNgonNgu());
-                bundle.putLong("soNguoiMua", booksModels.get(position).getSoNguoiMua());
-                bundle.putLong("luotDanhGia",booksModels.get(position).getLuotDanhGia());
+                bundle.putString("anhBia", bookLibraryModels.get(position).getBiaSach());
+                bundle.putString("tenSach", bookLibraryModels.get(position).getTenSach());
+                bundle.putString("noiDung", bookLibraryModels.get(position).getNoiDung());
+                bundle.putDouble("giaTien", bookLibraryModels.get(position).getGiaTien());
+                bundle.putString("NXB", bookLibraryModels.get(position).getNXB());
+                bundle.putString("danhMuc", bookLibraryModels.get(position).getDanhMuc());
+                bundle.putString("tacGia", bookLibraryModels.get(position).getTacGia());
+                bundle.putString("ngonNgu", bookLibraryModels.get(position).getNgonNgu());
+                bundle.putString("ngayMua", bookLibraryModels.get(position).getNgayMua().toString());
                 intent.putExtras(bundle);
                 // start the activity
-                mContext.startActivity(intent);
+               // mContext.startActivity(intent);
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        return booksModels.size();
+        return bookLibraryModels.size();
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {

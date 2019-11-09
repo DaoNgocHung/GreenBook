@@ -38,6 +38,7 @@ public class MyDataBookAdapter extends RecyclerView.Adapter<MyDataBookAdapter.It
         final String sectionName = dataList.get(i).getHeaderTitle();
         ArrayList singleSectionItems = dataList.get(i).getAllBooksInSection();
         ArrayList singleSectionImages = dataList.get(i).getImgList();
+        final String idCategory = dataList.get(i).getIdCategory();
         itemRowHolder.itemTitle.setText(sectionName);
         SectionListDataAdapter itemListDataAdapter = new SectionListDataAdapter(mContext, singleSectionItems, singleSectionImages );
         itemRowHolder.recycler_view_list.setHasFixedSize(true);
@@ -49,6 +50,7 @@ public class MyDataBookAdapter extends RecyclerView.Adapter<MyDataBookAdapter.It
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, MoreBookActivity.class);
                 intent.putExtra("danhMuc",sectionName);
+                intent.putExtra("idDanhMuc", idCategory);
                 mContext.startActivity(intent);
             }
         });

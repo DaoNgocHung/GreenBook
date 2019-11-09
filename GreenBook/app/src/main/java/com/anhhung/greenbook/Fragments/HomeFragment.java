@@ -47,7 +47,7 @@ public class HomeFragment extends Fragment {
     List<CategoriesModel> categoriesModels = new ArrayList<>();
     MyCallback myCallback;
     MyCallbackCategories myCallbackCategories;
-    String tenDM = "";
+    String tenDM = "", idDM="";
     int count = 0;
     UsersModel usersModel = new UsersModel();
     private String emailUser;
@@ -56,6 +56,13 @@ public class HomeFragment extends Fragment {
         // Required empty public constructor
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        allSampleData.clear();
+        booksModels.clear();
+        categoriesModels.clear();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -95,7 +102,9 @@ public class HomeFragment extends Fragment {
         for (int i = 0; i < categoriesModels.size(); i++) {
             SectionDataModel dm = new SectionDataModel();
             tenDM = categoriesModels.get(i).getTenDanhMuc();
+            idDM = categoriesModels.get(i).getId();
             dm.setHeaderTitle(tenDM);
+            dm.setIdCategory(idDM);
             ArrayList<String> imgList = new ArrayList<>();
             ArrayList<BooksModel> bookItem = new ArrayList<>();
             for (int j = 0; j < booksModels.size(); j++) {
@@ -155,6 +164,7 @@ public class HomeFragment extends Fragment {
         for (int i = 0; i < categoriesModels.size(); i++) {
             try {
                 db.collection("DanhMucCollection").document(categoriesModels.get(i).getId()).collection("SachColection")
+                        .limit(10)
                         .get()
                         .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                             @Override
