@@ -1,8 +1,10 @@
 package com.anhhung.greenbook.Adapters;
 
+import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
+import android.os.AsyncTask;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,21 +15,27 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.anhhung.greenbook.Activities.InfoBookActivity;
 import com.anhhung.greenbook.Models.BookLibraryModel;
-import com.anhhung.greenbook.Models.BooksModel;
 import com.anhhung.greenbook.R;
 import com.bumptech.glide.Glide;
 import com.folioreader.FolioReader;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.android.gms.ads.InterstitialAd;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+
+import io.opencensus.tags.Tag;
 
 public class BookLibraryAdapter extends RecyclerView.Adapter<BookLibraryAdapter.MyViewHolder>{
     private Context mContext ;
@@ -35,7 +43,8 @@ public class BookLibraryAdapter extends RecyclerView.Adapter<BookLibraryAdapter.
     FirebaseStorage storage;
     FolioReader folioReader = FolioReader.get();
     File localFile = null;
-
+    private InterstitialAd mInterstitialAd;
+    private Dialog loadingDialog;
 
     public BookLibraryAdapter(Context mContext, List<BookLibraryModel> booksModels) {
         this.mContext = mContext;
@@ -49,6 +58,13 @@ public class BookLibraryAdapter extends RecyclerView.Adapter<BookLibraryAdapter.
         LayoutInflater mInflater = LayoutInflater.from(mContext);
         view = mInflater.inflate(R.layout.card_view_book,parent,false);
         storage = FirebaseStorage.getInstance();
+        MobileAds.initialize(mContext, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {}
+        });
+        mInterstitialAd = new InterstitialAd(mContext);
+        mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+        mInterstitialAd.loadAd(new AdRequest.Builder().build());
         return new MyViewHolder(view);
     }
 
@@ -62,6 +78,47 @@ public class BookLibraryAdapter extends RecyclerView.Adapter<BookLibraryAdapter.
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(bookLibraryModels.get(position).getGiaTien()==0){
+                    DownloadEpubFile(bookLibraryModels.get(position).getNoiDung());
+                }
+                else {
+                    if (mInterstitialAd.isLoaded()) {
+                        mInterstitialAd.show();
+
+                    } else {
+                        Log.d("TAG", "The interstitial wasn't loaded yet.");
+                    }
+                }
+            }
+        });
+        mInterstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                // Code to be executed when an ad finishes loading.
+            }
+
+            @Override
+            public void onAdFailedToLoad(int errorCode) {
+                // Code to be executed when an ad request fails.
+            }
+
+            @Override
+            public void onAdOpened() {
+                // Code to be executed when the ad is displayed.
+            }
+
+            @Override
+            public void onAdClicked() {
+                // Code to be executed when the user clicks on an ad.
+            }
+
+            @Override
+            public void onAdLeftApplication() {
+                // Code to be executed when the user has left the app.
+            }
+
+            @Override
+            public void onAdClosed() {
                 DownloadEpubFile(bookLibraryModels.get(position).getNoiDung());
             }
         });
@@ -71,7 +128,12 @@ public class BookLibraryAdapter extends RecyclerView.Adapter<BookLibraryAdapter.
     public int getItemCount() {
         return bookLibraryModels.size();
     }
-
+    private void openLoadingDialog() {
+        loadingDialog = new Dialog(mContext, R.style.CustomDialog);
+        loadingDialog.setContentView(R.layout.loading_dialog);
+        loadingDialog.setCanceledOnTouchOutside(false);
+        loadingDialog.show();
+    }
     public static class MyViewHolder extends RecyclerView.ViewHolder {
 
         TextView tv_book_title;

@@ -66,4 +66,7 @@ dependencies {
     //BlurImageView
     implementation 'com.github.jgabrielfreitas:BlurImageView:1.0.1'
 
+    //Admob
+    implementation 'com.google.android.gms:play-services-ads:18.3.0'
+
 }
