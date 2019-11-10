@@ -1,6 +1,5 @@
 package com.anhhung.greenbook.Adapters;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,48 +9,42 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.anhhung.greenbook.Models.CommentItem;
-
+import com.anhhung.greenbook.Models.CommentsModel;
 import com.anhhung.greenbook.R;
+import com.bumptech.glide.Glide;
+import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
-import java.util.List;
+public class CommentBookAdapter extends FirestoreRecyclerAdapter<CommentsModel, CommentBookAdapter.CommentBookViewHolder> {
 
-public class CommentBookAdapter extends RecyclerView.Adapter<CommentBookAdapter.CommentBookViewHolder> {
 
-    Context mContext;
-    List<CommentItem> mData;
+    /**
+     * Create a new RecyclerView adapter that listens to a Firestore Query.  See {@link
+     * FirestoreRecyclerOptions} for configuration options.
+     *
+     * @param options
+     */
+    public CommentBookAdapter(@NonNull FirestoreRecyclerOptions<CommentsModel> options) {
+        super(options);
+    }
 
-    public CommentBookAdapter(Context mContext, List<CommentItem> mData) {
-        this.mContext = mContext;
-        this.mData = mData;
+
+
+    @Override
+    protected void onBindViewHolder(@NonNull CommentBookViewHolder holder, int position, @NonNull CommentsModel model) {
+        holder.txtUserCommentBook.setText(model.getHoTen());
+        holder.txtContentCommentBook.setText(model.getNoidungBL());
+        holder.txtTimeCommentBook.setText(model.getTgBinhLuan().toString());
+        Glide.with(holder.itemView)
+                .load(model.getHinhDaiDien())
+                .into(holder.imgAvatarCommentBook);
     }
 
     @NonNull
     @Override
     public CommentBookViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
-        View layout;
-
-        layout = LayoutInflater.from(mContext).inflate(R.layout.item_comment_book,parent,false);
-
-        return new CommentBookViewHolder(layout);
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull CommentBookViewHolder holder, int position) {
-
-        //bind Data here
-
-        holder.txtUserCommentBook.setText(mData.get(position).getTitle());
-        holder.txtContentCommentBook.setText(mData.get(position).getContent());
-        holder.txtTimeCommentBook.setText(mData.get(position).getDate());
-        holder.imgAvatarCommentBook.setImageResource(mData.get(position).getAvatar());
-
-    }
-
-    @Override
-    public int getItemCount() {
-        return mData.size();
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_comment_book,parent,false);
+        return new CommentBookAdapter.CommentBookViewHolder(view);
     }
 
 

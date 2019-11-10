@@ -1,52 +1,47 @@
 package com.anhhung.greenbook.Models;
 
+
+import com.google.firebase.Timestamp;
+
 public class CommentsModel {
-    private String idBinhLuan;
-    private String idSach;
-    private String tenNguoiDung;
-    private String tgBinhLuan;
+    private String tenSach;
+    private String hoTen;
+    private Timestamp tgBinhLuan;
     private String noidungBL;
+    private String hinhDaiDien;
 
     public CommentsModel() {
     }
 
-    public CommentsModel(String idBinhLuan, String idSach, String tenNguoiDung, String tgBinhLuan, String noidungBL) {
-        this.idBinhLuan = idBinhLuan;
-        this.idSach = idSach;
-        this.tenNguoiDung = tenNguoiDung;
+    public CommentsModel(String tenSach, String hoTen, Timestamp tgBinhLuan, String noidungBL, String hinhDaiDien) {
+        this.tenSach = tenSach;
+        this.hoTen = hoTen;
         this.tgBinhLuan = tgBinhLuan;
         this.noidungBL = noidungBL;
+        this.hinhDaiDien = hinhDaiDien;
     }
 
-    public String getIdBinhLuan() {
-        return idBinhLuan;
+    public String getTenSach() {
+        return tenSach;
     }
 
-    public void setIdBinhLuan(String idBinhLuan) {
-        this.idBinhLuan = idBinhLuan;
+    public void setTenSach(String tenSach) {
+        this.tenSach = tenSach;
     }
 
-    public String getIdSach() {
-        return idSach;
+    public String getHoTen() {
+        return hoTen;
     }
 
-    public void setIdSach(String idSach) {
-        this.idSach = idSach;
+    public void setHoTen(String hoTen) {
+        this.hoTen = hoTen;
     }
 
-    public String getTenNguoiDung() {
-        return tenNguoiDung;
-    }
-
-    public void setTenNguoiDung(String tenNguoiDung) {
-        this.tenNguoiDung = tenNguoiDung;
-    }
-
-    public String getTgBinhLuan() {
+    public Timestamp getTgBinhLuan() {
         return tgBinhLuan;
     }
 
-    public void setTgBinhLuan(String tgBinhLuan) {
+    public void setTgBinhLuan(Timestamp tgBinhLuan) {
         this.tgBinhLuan = tgBinhLuan;
     }
 
@@ -56,5 +51,13 @@ public class CommentsModel {
 
     public void setNoidungBL(String noidungBL) {
         this.noidungBL = noidungBL;
+    }
+
+    public String getHinhDaiDien() {
+        return hinhDaiDien;
+    }
+
+    public void setHinhDaiDien(String hinhDaiDien) {
+        this.hinhDaiDien = hinhDaiDien;
     }
 }

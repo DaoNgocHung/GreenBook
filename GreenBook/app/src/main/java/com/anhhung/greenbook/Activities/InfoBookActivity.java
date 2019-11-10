@@ -57,7 +57,7 @@ public class InfoBookActivity extends AppCompatActivity {
     private ImageButton imgbtnInfoBookFavor;
     private Toolbar actionToolbarInfoBook;
     private RatingBar ratingBar;
-    private Button btnInfoBookBuy, btnInfoBookRead;
+    private Button btnInfoBookBuy;
     private Dialog dialogBuy;
     BooksModel booksModel = new BooksModel();
     UsersModel usersModel = new UsersModel();
@@ -84,9 +84,10 @@ public class InfoBookActivity extends AppCompatActivity {
         //Add Fragment
         SummaryBookFragment summaryBookFragment = newInstance(booksModel.getGioiThieuSach());
         InfoBookFragment infoBookFragment = newInstance(booksModel.getNXB(), booksModel.getTacGia(), booksModel.getDanhMuc(), booksModel.getNgonNgu());
+        CommentBookFragment commentBookFragment = newInstance(booksModel.getTenSach(), booksModel.getDanhMuc(), booksModel.getIdDM());
         adapter.AddFragment(infoBookFragment, "Info");
         adapter.AddFragment(summaryBookFragment, "Summary");
-        adapter.AddFragment(new CommentBookFragment(), "Comment");
+        adapter.AddFragment(commentBookFragment, "Comment");
         //adapter Setup
         viewPagerInfoBook.setAdapter(adapter);
         tabLayoutInfoBook.setupWithViewPager(viewPagerInfoBook);
@@ -256,7 +257,6 @@ public class InfoBookActivity extends AppCompatActivity {
         txtInfoVote = findViewById(R.id.txtInfoVote);
         ratingBar = findViewById(R.id.rateInfoBook);
         btnInfoBookBuy = findViewById(R.id.btnInfoBookBuy);
-        btnInfoBookRead = findViewById(R.id.btnInfoBookRead);
         Glide.with(InfoBookActivity.this)
                 .load(booksModel.getBiaSach())
                 .into(imgInFoBookCover);
@@ -288,6 +288,7 @@ public class InfoBookActivity extends AppCompatActivity {
             booksModel.setNgonNgu(bundle.getString("ngonNgu", ""));
             booksModel.setSoNguoiMua(bundle.getLong("soNguoiMua", 0));
             booksModel.setLuotDanhGia(bundle.getLong("luotDanhGia", 0));
+            booksModel.setIdDM(bundle.getString("idDM",""));
         }
     }
 
@@ -313,6 +314,16 @@ public class InfoBookActivity extends AppCompatActivity {
         args.putString("tacGia", tacGia);
         args.putString("danhMuc", danhMuc);
         args.putString("ngonNgu", ngonNgu);
+        f.setArguments(args);
+        return f;
+    }
+
+    public static CommentBookFragment newInstance(String tenSach, String danhMuc, String idDM){
+        CommentBookFragment f = new CommentBookFragment();
+        Bundle args = new Bundle();
+        args.putString("tenSach", tenSach);
+        args.putString("danhMuc", danhMuc);
+        args.putString("idDM", idDM);
         f.setArguments(args);
         return f;
     }
