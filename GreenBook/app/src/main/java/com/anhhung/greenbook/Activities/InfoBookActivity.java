@@ -57,7 +57,7 @@ public class InfoBookActivity extends AppCompatActivity {
     private ImageButton imgbtnInfoBookFavor;
     private Toolbar actionToolbarInfoBook;
     private RatingBar ratingBar;
-    private Button btnInfoBookBuy, btnInfoBookRead;
+    private Button btnInfoBookBuy;
     private Dialog dialogBuy;
     BooksModel booksModel = new BooksModel();
     UsersModel usersModel = new UsersModel();
@@ -256,7 +256,6 @@ public class InfoBookActivity extends AppCompatActivity {
         txtInfoVote = findViewById(R.id.txtInfoVote);
         ratingBar = findViewById(R.id.rateInfoBook);
         btnInfoBookBuy = findViewById(R.id.btnInfoBookBuy);
-        btnInfoBookRead = findViewById(R.id.btnInfoBookRead);
         Glide.with(InfoBookActivity.this)
                 .load(booksModel.getBiaSach())
                 .into(imgInFoBookCover);

@@ -18,4 +18,6 @@
     <string name="forgot_password_msg">We just need your registered Email Id to sent you password reset instructions.</string>
     <string name="facebook_application_id" translatable="false">465793827617062</string>
     <string name="facebook_login_protocol_scheme" translatable="false">fb465793827617062</string>
+    <string name="interstitialAd_reward">ca-app-pub-6221199019531489/4817280431</string>
+
 </resources>
