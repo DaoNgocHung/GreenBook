@@ -9,15 +9,19 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.ListView;
 
 import com.anhhung.greenbook.Activities.MoreBookActivity;
 import com.anhhung.greenbook.Adapters.BookLibraryAdapter;
+import com.anhhung.greenbook.Adapters.BookListViewLibraryAdapter;
 import com.anhhung.greenbook.Adapters.CategoriesListBookAdater;
 import com.anhhung.greenbook.Models.BookLibraryModel;
 import com.anhhung.greenbook.Models.BooksModel;
@@ -38,6 +42,7 @@ public class LibraryFragment extends Fragment {
 
     private String danhMuc, idDM;
     private RecyclerView rViewLibrary;
+    private ImageButton imgTypeView;
     private List<BookLibraryModel> bookLibraryModels = new ArrayList<>();
     private String TAG = "MoreBookActivity - ERROR";
     FirebaseFirestore db;
@@ -45,6 +50,8 @@ public class LibraryFragment extends Fragment {
     private SharedPreferences sharedPreferences;
     private String emailUser;
     private BookLibraryAdapter myAdapter;
+    private BookListViewLibraryAdapter bookListViewLibraryAdapter;
+    private boolean isGridView=true;
 
     public LibraryFragment() {
         // Required empty public constructor
@@ -64,27 +71,68 @@ public class LibraryFragment extends Fragment {
     }
 
     private void addEvent(View view) {
-
+        imgTypeView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(isGridView == true){
+                    isGridView = false;
+                    imgTypeView.setImageResource(R.drawable.ic_list_library);
+                    bookLibraryModels.clear();
+                    readData(new MyCallback() {
+                        @Override
+                        public void onCallback(List<BookLibraryModel> bookLibraryModels) {
+                            createDataListView(rViewLibrary, bookLibraryModels);
+                        }
+                    });
+                }
+                else{
+                    isGridView = true;
+                    bookLibraryModels.clear();
+                    imgTypeView.setImageResource((R.drawable.ic_grid_library));
+                    readData(new MyCallback() {
+                        @Override
+                        public void onCallback(List<BookLibraryModel> bookLibraryModels) {
+                            createDataGridView(rViewLibrary, bookLibraryModels);
+                        }
+                    });
+                }
+            }
+        });
     }
 
     private void addControl(View view) {
         db = FirebaseFirestore.getInstance();
-
+        imgTypeView = view.findViewById(R.id.imgButtonTypeView);
         rViewLibrary = view.findViewById(R.id.rViewLibrary);
         bookLibraryModels.clear();
-        readData(new MyCallback() {
-            @Override
-            public void onCallback(List<BookLibraryModel> bookLibraryModels) {
-                createData(rViewLibrary, bookLibraryModels);
-            }
-        });
-    }
-    private void createData(RecyclerView rViewMoreBook, List<BookLibraryModel> bookLibraryModels) {
-        myAdapter = new BookLibraryAdapter(this.getContext(),bookLibraryModels);
-        rViewMoreBook.setLayoutManager(new GridLayoutManager(this.getContext(),3));
-        rViewMoreBook.setAdapter(myAdapter);
-    }
+        if (isGridView ==true){
+            readData(new MyCallback() {
+                @Override
+                public void onCallback(List<BookLibraryModel> bookLibraryModels) {
+                    createDataGridView(rViewLibrary, bookLibraryModels);
+                }
+            });
+        }
+        else{
+            readData(new MyCallback() {
+                @Override
+                public void onCallback(List<BookLibraryModel> bookLibraryModels) {
+                    createDataListView(rViewLibrary, bookLibraryModels);
+                }
+            });
+        }
 
+    }
+    private void createDataGridView(RecyclerView rViewLibBook, List<BookLibraryModel> bookLibraryModels) {
+        myAdapter = new BookLibraryAdapter(this.getContext(),bookLibraryModels);
+        rViewLibBook.setLayoutManager(new GridLayoutManager(this.getContext(),3));
+        rViewLibBook.setAdapter(myAdapter);
+    }
+    private void createDataListView(RecyclerView rViewLibBook, List<BookLibraryModel> bookLibraryModels){
+        bookListViewLibraryAdapter = new BookListViewLibraryAdapter(this.getContext(),bookLibraryModels);
+        rViewLibBook.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+        rViewLibBook.setAdapter(bookListViewLibraryAdapter);
+    }
     public interface MyCallback {
         void onCallback(List<BookLibraryModel> bookLibraryModels);
     }

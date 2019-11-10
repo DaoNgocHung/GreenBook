@@ -59,7 +59,7 @@
                 android:foregroundGravity="center_vertical"
                 android:gravity="center_vertical"
                 android:text="One Piece One Piece Tap 90"
-                android:textColor="@color/colorLimeGreen"
+                android:textColor="@color/colorDark"
                 android:textSize="20dp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -114,26 +114,16 @@
 
             <Button
                 android:id="@+id/btnInfoBookBuy"
-                android:layout_width="62dp"
+                android:layout_width="130dp"
                 android:layout_height="32dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="12dp"
                 android:background="@drawable/button_style_1"
                 android:text="Buy"
                 android:textColor="@color/colorWhite"
+                android:textSize="16dp"
+                android:textStyle="bold"
                 app:layout_constraintStart_toEndOf="@+id/imgInFoBookCover"
-                app:layout_constraintTop_toBottomOf="@+id/txtInfoBookPrice" />
-
-            <Button
-                android:id="@+id/btnInfoBookRead"
-                android:layout_width="62dp"
-                android:layout_height="32dp"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="12dp"
-                android:background="@drawable/button_style_1"
-                android:text="Read"
-                android:textColor="@color/colorWhite"
-                app:layout_constraintStart_toEndOf="@+id/btnInfoBookBuy"
                 app:layout_constraintTop_toBottomOf="@+id/txtInfoBookPrice" />
 
             <TextView

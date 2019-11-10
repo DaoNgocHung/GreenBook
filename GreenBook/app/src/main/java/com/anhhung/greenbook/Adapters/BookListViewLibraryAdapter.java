@@ -1,8 +1,6 @@
 package com.anhhung.greenbook.Adapters;
 
 import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,9 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.anhhung.greenbook.Activities.InfoBookActivity;
 import com.anhhung.greenbook.Models.BookLibraryModel;
-import com.anhhung.greenbook.Models.BooksModel;
 import com.anhhung.greenbook.R;
 import com.bumptech.glide.Glide;
 import com.folioreader.FolioReader;
@@ -29,33 +25,34 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-public class BookLibraryAdapter extends RecyclerView.Adapter<BookLibraryAdapter.MyViewHolder>{
+public class BookListViewLibraryAdapter extends RecyclerView.Adapter<BookListViewLibraryAdapter.MyViewHolder> {
     private Context mContext ;
     private List<BookLibraryModel> bookLibraryModels ;
     FirebaseStorage storage;
     FolioReader folioReader = FolioReader.get();
     File localFile = null;
 
-
-    public BookLibraryAdapter(Context mContext, List<BookLibraryModel> booksModels) {
+    public BookListViewLibraryAdapter(Context mContext, List<BookLibraryModel> bookLibraryModels) {
         this.mContext = mContext;
-        this.bookLibraryModels = booksModels;
+        this.bookLibraryModels = bookLibraryModels;
     }
 
+    @NonNull
     @Override
-    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
+    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view ;
         LayoutInflater mInflater = LayoutInflater.from(mContext);
-        view = mInflater.inflate(R.layout.card_view_book,parent,false);
+        view = mInflater.inflate(R.layout.listview_book_library,parent,false);
         storage = FirebaseStorage.getInstance();
         return new MyViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, final int position) {
-
-        holder.tv_book_title.setText(bookLibraryModels.get(position).getTenSach());
+    public void onBindViewHolder(@NonNull BookListViewLibraryAdapter.MyViewHolder holder, final int position) {
+        holder.txtTenSachLibrary.setText(bookLibraryModels.get(position).getTenSach());
+        holder.txtTenTacGiaLibrary.setText("Tác giả: "+ bookLibraryModels.get(position).getTacGia());
+        holder.txtNXBLibrary.setText("NXB: "+bookLibraryModels.get(position).getNXB());
+        holder.txtDanhMucLibrary.setText("Danh Mục: "+bookLibraryModels.get(position).getDanhMuc());
         Glide.with(holder.itemView)
                 .load(bookLibraryModels.get(position).getBiaSach())
                 .into(holder.img_book_thumbnail);
@@ -71,29 +68,26 @@ public class BookLibraryAdapter extends RecyclerView.Adapter<BookLibraryAdapter.
     public int getItemCount() {
         return bookLibraryModels.size();
     }
-
     public static class MyViewHolder extends RecyclerView.ViewHolder {
 
-        TextView tv_book_title;
+        TextView txtTenSachLibrary, txtTenTacGiaLibrary, txtNXBLibrary, txtDanhMucLibrary;
         ImageView img_book_thumbnail;
         CardView cardView ;
 
         public MyViewHolder(View itemView) {
             super(itemView);
-            tv_book_title = itemView.findViewById(R.id.labelBookName) ;
-            img_book_thumbnail = itemView.findViewById(R.id.imgBookCategories);
-            cardView = itemView.findViewById(R.id.cardviewCategories);
-
-
+            txtTenSachLibrary = itemView.findViewById(R.id.txtTenSachLibrary) ;
+            txtTenTacGiaLibrary = itemView.findViewById(R.id.txtTenTacGiaLibrary);
+            txtDanhMucLibrary = itemView.findViewById(R.id.txtDanhMucLibrary);
+            txtNXBLibrary = itemView.findViewById(R.id.txtNXBLibrary);
+            img_book_thumbnail = itemView.findViewById(R.id.imgBiaSachLibrary);
+            cardView = itemView.findViewById(R.id.cardViewListViewLibrary);
         }
     }
     private void DownloadEpubFile(String URL){
-        // [START download_to_local_file]
         StorageReference httpsReference = storage.getReferenceFromUrl(URL);
-
-
         try {
-            localFile = File.createTempFile("book",".epub");
+            localFile = File.createTempFile("booklist",".epub");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -109,6 +103,5 @@ public class BookLibraryAdapter extends RecyclerView.Adapter<BookLibraryAdapter.
                 // Handle any errors
             }
         });
-        // [END download_to_local_file]
     }
 }

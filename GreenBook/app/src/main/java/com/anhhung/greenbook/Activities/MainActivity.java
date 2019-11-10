@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private NavigationView navigationDrawerView;
     View view;
-    private TextView txtNameAccount, txtMoneyAccount;
+    private TextView txtNameAccount;
     private HomeFragment homeFragment;
     private LibraryFragment libraryFragment;
     private ProfileFragment profileFragment;
@@ -99,7 +99,6 @@ public class MainActivity extends AppCompatActivity {
         actionBarDrawerToggle.syncState();
         view =  navigationDrawerView.getHeaderView(0);
         txtNameAccount = view.findViewById(R.id.txtNameAccount);
-        txtMoneyAccount = view.findViewById(R.id.txtMoneyAccount);
         imgDrawerProfile = view.findViewById(R.id.imgDrawerProfile);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
@@ -116,7 +115,6 @@ public class MainActivity extends AppCompatActivity {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 user = document.toObject(UsersModel.class);
                                 txtNameAccount.setText(user.getHoTen());
-                                txtMoneyAccount.setText(user.getTien().toString());
                                 if(user.getHinhDaiDien() != null){
                                     Glide.with(MainActivity.this)
                                             .load(user.getHinhDaiDien())
