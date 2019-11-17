@@ -17,6 +17,8 @@ import android.widget.TextView;
 
 import com.anhhung.greenbook.Activities.AddInfoUserActivity;
 import com.anhhung.greenbook.Activities.BillActivity;
+import com.anhhung.greenbook.Activities.InfoUserActivity;
+import com.anhhung.greenbook.Activities.RechargeActivity;
 import com.anhhung.greenbook.Activities.WelcomeActivity;
 import com.anhhung.greenbook.Models.UsersModel;
 import com.anhhung.greenbook.R;
@@ -39,7 +41,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class ProfileFragment extends Fragment {
 
     private BlurImageView blurImageView;
-    private ImageButton imgbtnLogoutProfile, imgbtnBillProfile;
+    private ImageButton imgbtnLogoutProfile, imgbtnBillProfile, imgbtnEditProfile, imgbtnWalletProfile;
     private CircleImageView imgAvatarProfile;
     private TextView txtProfileCoin, txtProfileNumberBook, txtNameProfile;
     private SharedPreferences sharedPreferences;
@@ -79,6 +81,18 @@ public class ProfileFragment extends Fragment {
                 startActivity(new Intent(getActivity(), BillActivity.class));
             }
         });
+        imgbtnEditProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getActivity(), InfoUserActivity.class));
+            }
+        });
+        imgbtnWalletProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getActivity(), RechargeActivity.class));
+            }
+        });
     }
 
     private void addControls(View view) {
@@ -86,6 +100,8 @@ public class ProfileFragment extends Fragment {
         blurImageView.setBlur(10);
         imgbtnLogoutProfile = view.findViewById(R.id.imgbtnLogoutProfile);
         imgbtnBillProfile = view.findViewById(R.id.imgbtnBillProfile);
+        imgbtnEditProfile = view.findViewById(R.id.imgbtnEditProfile);
+        imgbtnWalletProfile = view.findViewById(R.id.imgbtnWalletProfile);
         txtProfileCoin = view.findViewById(R.id.txtProfileCoin);
         txtProfileNumberBook = view.findViewById(R.id.txtProfileNumberBook);
         txtNameProfile = view.findViewById(R.id.txtNameProfile);

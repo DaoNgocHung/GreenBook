@@ -63,9 +63,9 @@ public class CommentBookFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-         tenSach = this.getArguments().getString("tenSach"," ");
-         danhMuc = this.getArguments().getString("danhMuc"," ");
-         idDM = this.getArguments().getString("idDM"," ");
+        tenSach = this.getArguments().getString("tenSach", " ");
+        danhMuc = this.getArguments().getString("danhMuc", " ");
+        idDM = this.getArguments().getString("idDM", " ");
 
         sharedPreferences = getActivity().getSharedPreferences("infoUser", Context.MODE_PRIVATE);
         emailUser = sharedPreferences.getString("emailUser", null).trim();
@@ -73,76 +73,43 @@ public class CommentBookFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_comment_book, container, false);
         addControls(view);
         loadData();
-        addEvents(view);
+        addEvents();
         return view;
     }
 
     private void loadData() {
-        db.collection("UserModel").whereEqualTo("email",emailUser)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                usersModel = document.toObject(UsersModel.class);
-                                commentsModel =
-                                        new CommentsModel(tenSach,emailUser, Timestamp.now(), edtEnterComment.getText().toString(), usersModel.getHinhDaiDien());
-                                db.collection("DanhMucCollection").document(idDM).collection("SachColection")
-                                        .whereEqualTo("tenSach",tenSach)
-                                        .limit(1)
-                                        .get()
-                                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                                if(task.isSuccessful()){
-                                                    for (DocumentSnapshot documentSnapshot : task.getResult().getDocuments()) {
-                                                        // here you can get the id.
-                                                        idSach = documentSnapshot.getId();
-                                                        db.collection("DanhMucCollection").document(idDM).collection("SachColection").document(idSach)
-                                                                .collection("CommentCollection").document()
-                                                                .set(commentsModel)
-                                                                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                                    @Override
-                                                                    public void onComplete(@NonNull Task<Void> task) {
-                                                                        Query query = db.collection("DanhMucCollection").document(idDM).collection("SachColection")
-                                                                                .document(idSach).collection("CommentCollection");
-                                                                        FirestoreRecyclerOptions<CommentsModel> options = new FirestoreRecyclerOptions.Builder<CommentsModel>()
-                                                                                .setQuery(query, CommentsModel.class)
-                                                                                .build();
-                                                                        adapter = new CommentBookAdapter(options);
+        Query query = db.collection("DanhMucCollection").document(idDM).collection("SachColection").document(tenSach)
+                .collection("CommentCollection");
+        FirestoreRecyclerOptions<CommentsModel> options = new FirestoreRecyclerOptions.Builder<CommentsModel>()
+                .setQuery(query, CommentsModel.class)
+                .build();
+        adapter = new CommentBookAdapter(options);
 
-                                                                        Log.d(TAG,adapter.toString());
+        Log.d("CommentBookFragment", adapter.toString());
 
-                                                                        rViewComment.setHasFixedSize(true);
-                                                                        rViewComment.setLayoutManager(new LinearLayoutManager(getActivity()));
-                                                                        rViewComment.setAdapter(adapter);
-                                                                    }
-                                                                })
-                                                                .addOnFailureListener(new OnFailureListener() {
-                                                                    @Override
-                                                                    public void onFailure(@NonNull Exception e) {
-                                                                        Toast.makeText(getActivity(),"Failure",Toast.LENGTH_SHORT).show();
-                                                                    }
-                                                                });
-                                                    }
-                                                }
-                                            }
-                                        });
-                            }
-                        } else {
-                            Log.d(TAG, "Error getting documents: ", task.getException());
-                        }
-                    }
-                });
+        rViewComment.setHasFixedSize(true);
+        rViewComment.setLayoutManager(new LinearLayoutManager(getActivity()));
+        rViewComment.setAdapter(adapter);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        adapter.startListening();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        adapter.stopListening();
     }
 
 
-    private void addEvents(View view) {
+    private void addEvents() {
         imgbtnSendComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                db.collection("UserModel").whereEqualTo("email",emailUser)
+                db.collection("UserModel").whereEqualTo("email", emailUser)
                         .get()
                         .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                             @Override
@@ -151,15 +118,15 @@ public class CommentBookFragment extends Fragment {
                                     for (QueryDocumentSnapshot document : task.getResult()) {
                                         usersModel = document.toObject(UsersModel.class);
                                         commentsModel =
-                                                new CommentsModel(tenSach,emailUser, Timestamp.now(), edtEnterComment.getText().toString(), usersModel.getHinhDaiDien());
+                                                new CommentsModel(tenSach, emailUser, Timestamp.now(), edtEnterComment.getText().toString(), usersModel.getHinhDaiDien());
                                         db.collection("DanhMucCollection").document(idDM).collection("SachColection")
-                                                .whereEqualTo("tenSach",tenSach)
+                                                .whereEqualTo("tenSach", tenSach)
                                                 .limit(1)
                                                 .get()
                                                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                                     @Override
                                                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                                        if(task.isSuccessful()){
+                                                        if (task.isSuccessful()) {
                                                             for (DocumentSnapshot documentSnapshot : task.getResult().getDocuments()) {
                                                                 // here you can get the id.
                                                                 idSach = documentSnapshot.getId();
@@ -169,14 +136,15 @@ public class CommentBookFragment extends Fragment {
                                                                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                                             @Override
                                                                             public void onComplete(@NonNull Task<Void> task) {
-                                                                                Toast.makeText(getActivity(),"Success",Toast.LENGTH_SHORT).show();
+                                                                                Toast.makeText(getActivity(), "Success", Toast.LENGTH_SHORT).show();
                                                                                 edtEnterComment.setText("");
+                                                                                loadData();
                                                                             }
                                                                         })
                                                                         .addOnFailureListener(new OnFailureListener() {
                                                                             @Override
                                                                             public void onFailure(@NonNull Exception e) {
-                                                                                Toast.makeText(getActivity(),"Failure",Toast.LENGTH_SHORT).show();
+                                                                                Toast.makeText(getActivity(), "Failure", Toast.LENGTH_SHORT).show();
                                                                             }
                                                                         });
                                                             }

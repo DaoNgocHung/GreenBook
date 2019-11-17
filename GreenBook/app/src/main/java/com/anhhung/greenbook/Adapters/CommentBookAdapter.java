@@ -1,5 +1,6 @@
 package com.anhhung.greenbook.Adapters;
 
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,8 @@ import com.anhhung.greenbook.R;
 import com.bumptech.glide.Glide;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class CommentBookAdapter extends FirestoreRecyclerAdapter<CommentsModel, CommentBookAdapter.CommentBookViewHolder> {
 
@@ -34,7 +37,7 @@ public class CommentBookAdapter extends FirestoreRecyclerAdapter<CommentsModel, 
     protected void onBindViewHolder(@NonNull CommentBookViewHolder holder, int position, @NonNull CommentsModel model) {
         holder.txtUserCommentBook.setText(model.getHoTen());
         holder.txtContentCommentBook.setText(model.getNoidungBL());
-        holder.txtTimeCommentBook.setText(model.getTgBinhLuan().toString());
+        holder.txtTimeCommentBook.setText(DateFormat.format("dd-MM-yyyy", model.getTgBinhLuan().toDate()).toString());
         Glide.with(holder.itemView)
                 .load(model.getHinhDaiDien())
                 .into(holder.imgAvatarCommentBook);
@@ -44,14 +47,14 @@ public class CommentBookAdapter extends FirestoreRecyclerAdapter<CommentsModel, 
     @Override
     public CommentBookViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_comment_book,parent,false);
-        return new CommentBookAdapter.CommentBookViewHolder(view);
+        return new CommentBookViewHolder(view);
     }
 
 
     public class CommentBookViewHolder extends RecyclerView.ViewHolder {
 
         TextView txtUserCommentBook, txtContentCommentBook, txtTimeCommentBook;
-        ImageView imgAvatarCommentBook;
+        CircleImageView imgAvatarCommentBook;
 
         public CommentBookViewHolder(@NonNull View itemView) {
             super(itemView);

@@ -56,6 +56,7 @@ public class BillActivity extends AppCompatActivity {
 
     private void addControls() {
         actionToolbarBill  = findViewById(R.id.actionToolbarBill);
+        actionToolbarBill.setTitle("Your Bill");
         rViewBill = findViewById(R.id.rViewBill);
         db = FirebaseFirestore.getInstance();
     }

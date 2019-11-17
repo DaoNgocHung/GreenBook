@@ -55,11 +55,11 @@ public class MainActivity extends AppCompatActivity {
     private ProfileFragment profileFragment;
     private CircleImageView imgDrawerProfile;
 
-    Intent intent;
+    private Intent intent;
     private String emailUser;
     private UsersModel user;
 
-    FirebaseFirestore db;
+    private FirebaseFirestore db;
     FirebaseUser firebaseUser;
 
 

@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.anhhung.greenbook">
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher_logo"
@@ -9,7 +12,9 @@
         android:roundIcon="@mipmap/ic_launcher_logo_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activities.AdMob"></activity>
+        <activity android:name=".Activities.RechargeActivity"></activity>
+        <activity android:name=".Activities.InfoUserActivity" />
+        <activity android:name=".Activities.AdMob" />
         <activity android:name=".Activities.BillActivity" />
         <activity android:name=".Activities.MoreBookActivity" />
         <activity android:name=".Activities.YourFavoriteCategory" />
@@ -39,10 +44,7 @@
             android:resource="@array/preloaded_fonts" />
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-6221199019531489~6976045071"/>
+            android:value="ca-app-pub-6221199019531489~6976045071" />
     </application>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
-    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>

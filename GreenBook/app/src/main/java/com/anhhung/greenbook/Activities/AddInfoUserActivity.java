@@ -88,8 +88,9 @@ public class AddInfoUserActivity extends AppCompatActivity implements DatePicker
                     userName = txtAddInfoName.getText().toString();
                     email = intent.getStringExtra("email");
                     password = intent.getStringExtra("password");
+                    birthDay = txtAddInfoBirth.getText().toString();
 
-                    rd = new Random().nextInt(100000);
+                    //rd = new Random().nextInt(100000);
                     if(rdAddInfoMale.isChecked() == true) {
                         gender = true;
                     }
@@ -233,6 +234,7 @@ public class AddInfoUserActivity extends AppCompatActivity implements DatePicker
 
     @Override
     public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
+        month += 1;
         String str_date = dayOfMonth +"/" + month + "/" + year;
         txtAddInfoBirth.setText(str_date);
     }
@@ -243,7 +245,7 @@ public class AddInfoUserActivity extends AppCompatActivity implements DatePicker
         try{
             DateFormat formatter;
             formatter = new SimpleDateFormat("dd/MM/yyyy");
-            Date date = (Date) formatter.parse(d);
+            Date date = formatter.parse(d);
             timeStampDate = new Timestamp(date);
 
         }
