@@ -84,6 +84,40 @@ public class BookLibraryAdapter extends RecyclerView.Adapter<BookLibraryAdapter.
                 else {
                     if (mInterstitialAd.isLoaded()) {
                         mInterstitialAd.show();
+                        mInterstitialAd.setAdListener(new AdListener() {
+                            @Override
+                            public void onAdLoaded() {
+                                // Code to be executed when an ad finishes loading.
+                            }
+
+                            @Override
+                            public void onAdFailedToLoad(int errorCode) {
+                                // Code to be executed when an ad request fails.
+                            }
+
+                            @Override
+                            public void onAdOpened() {
+                                // Code to be executed when the ad is displayed.
+
+
+                            }
+
+                            @Override
+                            public void onAdClicked() {
+                                // Code to be executed when the user clicks on an ad.
+                            }
+
+                            @Override
+                            public void onAdLeftApplication() {
+                                // Code to be executed when the user has left the app.
+                            }
+
+                            @Override
+                            public void onAdClosed() {
+                                DownloadEpubFile(bookLibraryModels.get(position).getNoiDung());
+                                mInterstitialAd.loadAd(new AdRequest.Builder().build());
+                            }
+                        });
 
                     } else {
                         Log.d("TAG", "The interstitial wasn't loaded yet.");
@@ -91,37 +125,7 @@ public class BookLibraryAdapter extends RecyclerView.Adapter<BookLibraryAdapter.
                 }
             }
         });
-        mInterstitialAd.setAdListener(new AdListener() {
-            @Override
-            public void onAdLoaded() {
-                // Code to be executed when an ad finishes loading.
-            }
 
-            @Override
-            public void onAdFailedToLoad(int errorCode) {
-                // Code to be executed when an ad request fails.
-            }
-
-            @Override
-            public void onAdOpened() {
-                // Code to be executed when the ad is displayed.
-            }
-
-            @Override
-            public void onAdClicked() {
-                // Code to be executed when the user clicks on an ad.
-            }
-
-            @Override
-            public void onAdLeftApplication() {
-                // Code to be executed when the user has left the app.
-            }
-
-            @Override
-            public void onAdClosed() {
-                DownloadEpubFile(bookLibraryModels.get(position).getNoiDung());
-            }
-        });
     }
 
     @Override

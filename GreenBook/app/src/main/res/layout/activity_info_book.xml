@@ -80,13 +80,16 @@
             <RatingBar
                 android:id="@+id/rateInfoBook"
                 style="@android:style/Widget.Holo.RatingBar.Small"
-                android:layout_width="83dp"
-                android:layout_height="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="24dp"
                 android:layout_marginStart="6dp"
                 android:layout_marginTop="8dp"
                 android:max="5"
+                android:numStars="5"
                 android:progressTint="#FFEB3B"
                 android:rating="0.0"
+                android:stepSize="0.1"
+                android:isIndicator="true"
                 app:layout_constraintStart_toEndOf="@+id/imgInFoBookCover"
                 app:layout_constraintTop_toBottomOf="@+id/txtInfoBookDownloaded" />
 
@@ -136,10 +139,20 @@
                 app:layout_constraintStart_toEndOf="@+id/rateInfoBook"
                 app:layout_constraintTop_toBottomOf="@+id/txtInfoBookDownloaded" />
 
+            <TextView
+                android:id="@+id/txtRate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_marginBottom="44dp"
+                android:text="Rate"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/btnInfoBookBuy"
+                app:layout_constraintStart_toEndOf="@+id/txtInfoVote" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
-
     </com.google.android.material.appbar.AppBarLayout>
-
     <com.google.android.material.tabs.TabLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

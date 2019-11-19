@@ -21,6 +21,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.UploadTask;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -172,4 +173,6 @@ public class InfoUserActivity extends AppCompatActivity implements DatePickerDia
         String str_date = dayOfMonth +"/" + month + "/" + year;
         txtInfoUserBirthDay.setText(str_date);
     }
+
+
 }

@@ -1,17 +1,18 @@
 package com.anhhung.greenbook.Activities;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,6 +29,7 @@ import com.anhhung.greenbook.Fragments.InfoBookFragment;
 import com.anhhung.greenbook.Fragments.SummaryBookFragment;
 import com.anhhung.greenbook.Models.BillDetailModel;
 import com.anhhung.greenbook.Models.BooksModel;
+import com.anhhung.greenbook.Models.DanhGiaModel;
 import com.anhhung.greenbook.Models.UsersModel;
 import com.anhhung.greenbook.R;
 import com.bumptech.glide.Glide;
@@ -42,26 +44,34 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.UploadTask;
 
-import java.util.Random;
-
-import io.opencensus.stats.Aggregation;
+import static java.lang.Math.round;
 
 public class InfoBookActivity extends AppCompatActivity {
 
     private TabLayout tabLayoutInfoBook;
     private AppBarLayout appBarLayoutInfoBook;
     private ViewPager viewPagerInfoBook;
-    private TextView txtInfoNameBook, txtInfoBookDownload, txtInfoBookPrice, txtInfoVote;
+    private TextView txtInfoNameBook, txtInfoBookDownload, txtInfoBookPrice, txtInfoVote, txtInfoRateButton;
     private ImageView imgInFoBookCover;
     private ImageButton imgbtnInfoBookFavor;
     private Toolbar actionToolbarInfoBook;
-    private RatingBar ratingBar;
+    private RatingBar rateInfoBook;
     private Button btnInfoBookBuy;
     private Dialog dialogBuy;
     BooksModel booksModel = new BooksModel();
     UsersModel usersModel = new UsersModel();
     private String TAG = "InfoBookActivity - Error";
+    private UploadTask uploadTask;
+    RatingBar rtBarDialog;
+    private AlertDialog dialog;
+    private long userRateNums;
+    private float starRateNums;
+    private UserRateCount userRateCount;
+    private StarRateTotal starRateTotal;
+    private float starAverage;
+
 
     private String emailUser;
     SharedPreferences sharedPreferences;
@@ -79,6 +89,14 @@ public class InfoBookActivity extends AppCompatActivity {
     }
 
     private void addEvents() {
+        //RatingBar
+        txtInfoRateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                displayAlertDialog();
+            }
+        });
+
         //ViewPager
         InfoBookViewPagerAdapter adapter = new InfoBookViewPagerAdapter(getSupportFragmentManager());
         //Add Fragment
@@ -127,7 +145,7 @@ public class InfoBookActivity extends AppCompatActivity {
                 btnYesBuy.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        emailUser = sharedPreferences.getString("emailUser", null);
+
 
                         // Kiểm tra tiền của khách hàng so với giá tiền cuốn sách
                         db.collection("UserModel")
@@ -255,7 +273,8 @@ public class InfoBookActivity extends AppCompatActivity {
         imgbtnInfoBookFavor = findViewById(R.id.imgbtnInfoBookFavor);
         actionToolbarInfoBook = findViewById(R.id.actionToolbarInfoBook);
         txtInfoVote = findViewById(R.id.txtInfoVote);
-        ratingBar = findViewById(R.id.rateInfoBook);
+        rateInfoBook = findViewById(R.id.rateInfoBook);
+        txtInfoRateButton = findViewById(R.id.txtRate);
         btnInfoBookBuy = findViewById(R.id.btnInfoBookBuy);
         Glide.with(InfoBookActivity.this)
                 .load(booksModel.getBiaSach())
@@ -264,10 +283,12 @@ public class InfoBookActivity extends AppCompatActivity {
         txtInfoBookDownload.setText("Downloaded: " + booksModel.getSoNguoiMua());
         txtInfoBookPrice.setText("Price: " + booksModel.getGiaTien());
         txtInfoVote.setText("(" + booksModel.getLuotDanhGia() + ")");
-        ratingBar.setRating(booksModel.getDanhGia());
+
 
         db = FirebaseFirestore.getInstance();
         sharedPreferences = this.getSharedPreferences("infoUser", Context.MODE_PRIVATE);
+        emailUser = sharedPreferences.getString("emailUser", null);
+        computeStarRatingBar(rateInfoBook);
     }
 
     private void loadBundleData() {
@@ -297,7 +318,21 @@ public class InfoBookActivity extends AppCompatActivity {
         onBackPressed();
         return true;
     }
+    private interface UserRateCount{
+        void onCallBack(long userRateNums);
 
+    }
+    private  interface StarRateTotal{
+        void onCallBack(float starRateNums);
+    }
+    public void readUserRateCount(UserRateCount userRateCount) {
+        this.userRateCount = userRateCount;
+        getNumsUserDanhGia();
+    }
+    public void readStarTotal(StarRateTotal starRateTotal) {
+        this.starRateTotal = starRateTotal;
+        getNumsStarDanhGia();
+    }
     public static SummaryBookFragment newInstance(String gioiThieu) {
         SummaryBookFragment f = new SummaryBookFragment();
         // Supply index input as an argument.
@@ -343,5 +378,166 @@ public class InfoBookActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+    public void displayAlertDialog() {
+        Log.d("INFO","Show Dialog");
+        LayoutInflater inflater = getLayoutInflater();
+        View alertLayout = inflater.inflate(R.layout.activity_rating_dialog, null);
+        final TextView txtRtBar = alertLayout.findViewById(R.id.txtRatingBarStar);
+        rtBarDialog =  alertLayout.findViewById(R.id.ratingBarDialog);
+        final Button btnCanelDialog = alertLayout.findViewById(R.id.btnCancelDialog);
+        Button btnRateDialog = alertLayout.findViewById(R.id.btnDanhGiaDialog);
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setView(alertLayout);
+        alert.setCancelable(false);
+        dialog = alert.create();
+        dialog.show();
+        rtBarDialog.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
+                txtRtBar.setText("You rated " + v +" stars.");
+            }
+        });
+        btnRateDialog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                rateStar();
+                computeStarRatingBar(rateInfoBook);
+
+
+            }
+        });
+        btnCanelDialog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.cancel();
+            }
+        });
+    }
+    private void rateStar(){
+        db.collection("DanhMucCollection").document(booksModel.getIdDM()).collection("SachColection")
+                .document(booksModel.getTenSach()).collection("DanhGiaCollection")
+                .whereEqualTo("userName", emailUser)
+                .limit(1)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(final QuerySnapshot queryDocumentSnapshots) {
+                        if (queryDocumentSnapshots.getDocuments().isEmpty()){
+                            Log.d("INFO", "Create Star");
+                            DanhGiaModel dg = new DanhGiaModel();
+                            dg.setRateStar(rtBarDialog.getRating());
+                            dg.setUserName(sharedPreferences.getString("emailUser",null));
+                            db.collection("DanhMucCollection").document(booksModel.getIdDM()).collection("SachColection").document(booksModel.getTenSach())
+                                    .collection("DanhGiaCollection").document(emailUser).set(dg).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    addStarRateBook((float) 0.0);
+                                    dialog.cancel();
+                                }
+                            });
+                        }
+                        else{
+                            Log.d("INFO", "Update Start");
+                            db.collection("DanhMucCollection").document(booksModel.getIdDM()).collection("SachColection")
+                                    .document(booksModel.getTenSach()).collection("DanhGiaCollection").document(emailUser)
+                                    .update("userName", emailUser, "rateStar", rtBarDialog.getRating())
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    DanhGiaModel dgia = new DanhGiaModel();
+                                    dgia = queryDocumentSnapshots.getDocuments().get(0).toObject(DanhGiaModel.class);
+                                    addStarRateBook(dgia.getRateStar());
+                                    dialog.cancel();
+//                                    db.collection("DanhMucCollection").document(booksModel.getIdDM()).collection("SachColection").document(booksModel.getTenSach())
+//                                            .collection("DanhGiaCollection").document(emailUser).get()
+//                                            .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//                                                @Override
+//                                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                                                    DanhGiaModel dgia = new DanhGiaModel();
+//                                                    dgia = task.getResult().toObject(DanhGiaModel.class);
+//                                                    addStarRateBook(dgia.getRateStar());
+//                                                    dialog.cancel();
+//
+//                                                }
+//                                            });
+                                }
+                            });
+
+                        }
+
+                    }
+                })
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        dialog.cancel();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
+                    }
+                });
+
+    }
+    private void getNumsUserDanhGia(){
+        db.collection("DanhMucCollection").document(booksModel.getIdDM()).collection("SachColection")
+                .document(booksModel.getTenSach()).collection("DanhGiaCollection").get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        userRateNums = queryDocumentSnapshots.size();
+                        userRateCount.onCallBack(userRateNums);
+                    }
+                });
+
+    }
+    private void getNumsStarDanhGia(){
+        db.collection("DanhMucCollection").document(booksModel.getIdDM()).collection("SachColection")
+                .document(booksModel.getTenSach()).get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        BooksModel booksModel = new BooksModel();
+                        booksModel = documentSnapshot.toObject(BooksModel.class);
+                        starRateTotal.onCallBack(booksModel.getDanhGia());
+                    }
+                });
+
+    }
+    private void computeStarRatingBar(final RatingBar rtBar){
+        readStarTotal(new StarRateTotal() {
+            @Override
+            public void onCallBack(final float starRateNums) {
+                readUserRateCount(new UserRateCount() {
+                    @Override
+                    public void onCallBack(long userRateNums) {
+                        txtInfoVote.setText("("+userRateNums+")");
+                        if(userRateNums!=0){
+                            starAverage = round((starRateNums/userRateNums)*10)/10;
+                        }
+                        else{
+                            starAverage = 0;
+                        }
+                        rtBar.setRating(starAverage);
+                    }
+                });
+            }
+        });
+    }
+    private void addStarRateBook(final Float numOldUpdate){
+        readStarTotal(new StarRateTotal() {
+            @Override
+            public void onCallBack(float starRateNums) {
+                updateStarRateBook(rtBarDialog, numOldUpdate, starRateNums);
+            }
+        });
+    }
+    private void updateStarRateBook(RatingBar rtBar, Float numOldUpdate, Float starRateNums){
+        db.collection("DanhMucCollection").document(booksModel.getIdDM()).collection("SachColection")
+                .document(booksModel.getTenSach()).update("danhGia", starRateNums+rtBar.getRating()-numOldUpdate);
+
     }
 }
