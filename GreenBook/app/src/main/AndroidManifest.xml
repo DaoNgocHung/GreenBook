@@ -10,6 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".Dialog.RatingDialog"></activity>
+        <activity android:name=".Activities.ChangePassActivity"></activity>
         <activity android:name=".Activities.RechargeActivity" />
         <activity android:name=".Activities.InfoUserActivity" />
         <activity android:name=".Activities.AdMob" />
