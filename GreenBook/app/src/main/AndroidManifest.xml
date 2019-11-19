@@ -12,7 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher_logo_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activities.RechargeActivity"></activity>
+        <activity android:name=".Activities.ChangePassActivity"></activity>
+        <activity android:name=".Activities.RechargeActivity" />
         <activity android:name=".Activities.InfoUserActivity" />
         <activity android:name=".Activities.AdMob" />
         <activity android:name=".Activities.BillActivity" />
