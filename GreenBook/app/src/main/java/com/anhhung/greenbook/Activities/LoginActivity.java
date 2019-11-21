@@ -37,6 +37,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.Timestamp;
@@ -76,6 +77,12 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseFirestore db;
     private boolean checkEC = false;
     MyCallback myCallback;
+    private String hoTenFB="";
+    private Timestamp ngayThangNSFB;
+    private String urlHinhDaiDienFB = "";
+
+    UsersModel usersModel = new UsersModel();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -227,26 +234,29 @@ public class LoginActivity extends AppCompatActivity {
                         try {
                             Log.d(TAG, "fb json object: " + object);
                             Log.d(TAG, "fb graph response: " + response);
-                            UsersModel usersModel = new UsersModel();
                             if (object.has("email")) {
                                 userEmail = object.getString("email");
                                 usersModel.setEmail(object.getString("email"));
+                                urlHinhDaiDienFB = "http://graph.facebook.com/" + object.getString("id") + "/picture?type=large";
+                                hoTenFB=object.getString("first_name") + object.getString("last_name");
+
+                                ngayThangNSFB = doiNgay(object.getString("birthday"));
                                 readData(new MyCallback() {
                                     @Override
                                     public void onCallBack(Boolean checkEC2) {
-                                        checkEC = checkEC2 ;
+                                        if (checkEC2 == true){
+                                            usersModel.setHoTen(hoTenFB);
+                                            usersModel.setHinhDaiDien(urlHinhDaiDienFB);
+                                            usersModel.setNgayThangNS(ngayThangNSFB);
+                                            usersModel.setGioiTinh(true);
+                                            usersModel.setSoDT("");
+                                            usersModel.setSoSachDaMua(0);
+                                            usersModel.setTien(0.0);
+                                            db.collection("UserModel").document().set(usersModel);
+                                        }
                                     }
                                 }, userEmail);
-                                if (checkEC == true){
-                                    usersModel.setHoTen(object.getString("first_name") + object.getString("last_name"));
-                                    usersModel.setHinhDaiDien("http://graph.facebook.com/" + object.getString("id") + "/picture?type=large");
-                                    usersModel.setNgayThangNS(doiNgay(object.getString("birthday")));
-                                    usersModel.setGioiTinh(true);
-                                    usersModel.setSoDT("");
-                                    usersModel.setSoSachDaMua(0);
-                                    usersModel.setTien(0.0);
-                                    db.collection("UserModel").document().set(usersModel);
-                                }
+
                             }
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                             intent.putExtra("email", usersModel.getEmail().trim());
@@ -344,31 +354,19 @@ public class LoginActivity extends AppCompatActivity {
     }
     public void checkUserExist(String email){
         db.collection("UserCollection")
-                .whereEqualTo("email", email)
+                .whereEqualTo("email", email).limit(1)
                 .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            if(task.getResult().isEmpty() == true){
-                                checkEC = true;
-                                myCallback.onCallBack(checkEC);
-                            }
-                            else{
-                                checkEC = false;
-                                myCallback.onCallBack(checkEC);
-                            }
-                            //else checkEC = false;
-                        } else {
-                            Log.d(TAG, "Error getting documents: ", task.getException());
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        if(queryDocumentSnapshots.getDocuments().isEmpty()){
+                            checkEC = true;
+                            myCallback.onCallBack(checkEC);
                         }
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        checkEC = true;
-                        myCallback.onCallBack(checkEC);
+                        else{
+                            checkEC = false;
+                            myCallback.onCallBack(checkEC);
+                        }
                     }
                 });
     }
