@@ -1,6 +1,7 @@
 package com.anhhung.greenbook.Activities;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -25,10 +26,12 @@ import android.widget.Toast;
 import com.anhhung.greenbook.Fragments.HomeFragment;
 import com.anhhung.greenbook.Fragments.LibraryFragment;
 import com.anhhung.greenbook.Fragments.ProfileFragment;
+import com.anhhung.greenbook.Models.BooksModel;
 import com.anhhung.greenbook.Models.UsersModel;
 import com.anhhung.greenbook.R;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
+
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
@@ -36,6 +39,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -61,6 +66,8 @@ public class MainActivity extends AppCompatActivity {
 
     private FirebaseFirestore db;
     FirebaseUser firebaseUser;
+
+    private List<BooksModel> listBooks;
 
 
     String TAG = "MainActivity";
@@ -115,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 user = document.toObject(UsersModel.class);
                                 txtNameAccount.setText(user.getHoTen());
-                                if(user.getHinhDaiDien() != null){
+                                if (user.getHinhDaiDien() != null) {
                                     Glide.with(MainActivity.this)
                                             .load(user.getHinhDaiDien())
                                             .into(imgDrawerProfile);
@@ -129,36 +136,6 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 });
-
-//        db.collection("UserModel")
-//                .whereEqualTo("id",firebaseUser.getUid())
-//                .limit(1)
-//                .get()
-//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                        if (task.isSuccessful()) {
-//                            for (QueryDocumentSnapshot document : task.getResult()) {
-//                                user = document.toObject(UsersModel.class);
-//                                txtNameAccount.setText(user.getHoTen());
-//                                txtMoneyAccount.setText(user.getTien().toString());
-//                                Glide.with(MainActivity.this)
-//                                        .load(user.getHinhDaiDien())
-//                                        .into(imgDrawerProfile);
-//                                Log.d(TAG, user.getHoTen());
-//                                Log.d(TAG, document.getId() + " => " + document.getData());
-//                            }
-//                        } else {
-//                            Log.d(TAG, "Error getting documents: ", task.getException());
-//                        }
-//                    }
-//                });
-
-
-//        ImageView imgDrawerProfile = view.findViewById(R.id.imgDrawerProfile);
-//        imgDrawerProfile.setImageResource();
-
-
     }
 
     private void addEvents() {
