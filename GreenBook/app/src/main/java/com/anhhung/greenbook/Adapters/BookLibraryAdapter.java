@@ -78,11 +78,9 @@ public class BookLibraryAdapter extends RecyclerView.Adapter<BookLibraryAdapter.
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(bookLibraryModels.get(position).getGiaTien()==0){
-                    DownloadEpubFile(bookLibraryModels.get(position).getNoiDung());
-                }
-                else {
-                    if (mInterstitialAd.isLoaded()) {
+                DownloadEpubFile(bookLibraryModels.get(position).getNoiDung());
+                if(bookLibraryModels.get(position).getGiaTien()!=0){
+                    if (mInterstitialAd.isLoaded() ) {
                         mInterstitialAd.show();
                         mInterstitialAd.setAdListener(new AdListener() {
                             @Override
@@ -114,12 +112,12 @@ public class BookLibraryAdapter extends RecyclerView.Adapter<BookLibraryAdapter.
 
                             @Override
                             public void onAdClosed() {
-                                DownloadEpubFile(bookLibraryModels.get(position).getNoiDung());
+
                                 mInterstitialAd.loadAd(new AdRequest.Builder().build());
                             }
                         });
-
-                    } else {
+                }
+                else {
                         Log.d("TAG", "The interstitial wasn't loaded yet.");
                     }
                 }

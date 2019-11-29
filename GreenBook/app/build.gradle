@@ -69,4 +69,7 @@ dependencies {
     //Admob
     implementation 'com.google.android.gms:play-services-ads:18.3.0'
 
+    //Blurry
+    implementation 'jp.wasabeef:blurry:3.0.0'
+
 }

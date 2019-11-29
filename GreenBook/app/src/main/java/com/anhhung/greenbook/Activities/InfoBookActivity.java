@@ -1,24 +1,33 @@
 package com.anhhung.greenbook.Activities;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.viewpager.widget.ViewPager;
 
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.ScaleDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,18 +42,24 @@ import com.anhhung.greenbook.Models.DanhGiaModel;
 import com.anhhung.greenbook.Models.UsersModel;
 import com.anhhung.greenbook.R;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.tabs.TabLayout;
+import com.google.api.Distribution;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.UploadTask;
+import jp.wasabeef.blurry.Blurry;
 
 import static java.lang.Math.round;
 
@@ -71,6 +86,8 @@ public class InfoBookActivity extends AppCompatActivity {
     private UserRateCount userRateCount;
     private StarRateTotal starRateTotal;
     private float starAverage;
+    private ConstraintLayout constraintLayout;
+    private LinearLayout linearLayout;
 
 
     private String emailUser;
@@ -263,6 +280,7 @@ public class InfoBookActivity extends AppCompatActivity {
 
     private void addControls() {
         loadBundleData();
+        linearLayout = findViewById(R.id.linearLayoutInfoBook);
         tabLayoutInfoBook = findViewById(R.id.tabLayoutInfoBook);
         appBarLayoutInfoBook = findViewById(R.id.appBarLayoutInfoBook);
         viewPagerInfoBook = findViewById(R.id.viewPagerInfoBook);
@@ -278,7 +296,30 @@ public class InfoBookActivity extends AppCompatActivity {
         btnInfoBookBuy = findViewById(R.id.btnInfoBookBuy);
         Glide.with(InfoBookActivity.this)
                 .load(booksModel.getBiaSach())
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        linearLayout.setBackground(scaleImage(resource, appBarLayoutInfoBook.getWidth(),appBarLayoutInfoBook.getHeight()));
+                        Blurry.with(InfoBookActivity.this)
+                                .radius(10)
+                                .sampling(8)
+                                .color(Color.argb(66, 255, 255, 0))
+                                .async()
+                                .animate(500)
+                                .onto(linearLayout);
+                        return false;
+                    }
+                })
                 .into(imgInFoBookCover);
+
+
+
+        constraintLayout = findViewById(R.id.constraintLayoutInfoBook);
         txtInfoNameBook.setText(booksModel.getTenSach());
         txtInfoBookDownload.setText("Downloaded: " + booksModel.getSoNguoiMua());
         txtInfoBookPrice.setText("Price: " + booksModel.getGiaTien());
@@ -540,4 +581,21 @@ public class InfoBookActivity extends AppCompatActivity {
                 .document(booksModel.getTenSach()).update("danhGia", starRateNums+rtBar.getRating()-numOldUpdate);
 
     }
+    private Drawable scaleImage (Drawable image, float scaleWidth, float scaleHeight) {
+
+        if ((image == null) || !(image instanceof BitmapDrawable)) {
+            return image;
+        }
+
+        Bitmap b = ((BitmapDrawable)image).getBitmap();
+
+        int sizeX = Math.round(scaleWidth);
+        int sizeY = Math.round(scaleHeight);
+
+        Bitmap bitmapResized = Bitmap.createScaledBitmap(b, sizeX, sizeY, false);
+        image = new BitmapDrawable(getResources(), bitmapResized);
+        return image;
+
+    }
 }
+

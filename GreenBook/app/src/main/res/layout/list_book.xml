@@ -8,7 +8,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="2dp">
+        android:padding="0dp">
 
         <ImageButton
             android:id="@+id/imgbtnMore"
@@ -21,6 +21,15 @@
             android:background="@color/colorWhite"
             android:src="@drawable/ic_right_arrow" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="0dp"
+            android:background="#b8b8b7"
+            android:orientation="horizontal"></LinearLayout>
+
         <TextView
             android:id="@+id/itemTitle"
             android:layout_width="match_parent"
@@ -29,14 +38,14 @@
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="8dp"
-            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="30dp"
             android:layout_toLeftOf="@+id/imgbtnMore"
             android:fontFamily="@font/roboto"
             android:text="Sample title"
             android:textColor="@color/colorDark"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            android:textSize="15sp"
+            android:textStyle="normal" />
 
     </RelativeLayout>
 
@@ -45,5 +54,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center_vertical"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="20dp"
         android:orientation="horizontal" />
 </LinearLayout>

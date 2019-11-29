@@ -26,11 +26,13 @@
 
             <ImageButton
                 android:id="@+id/imgButtonTypeView"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0"
                 android:background="@color/colorWhite"
+                android:scaleType="centerInside"
                 android:src="@drawable/ic_grid_library" />
+
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
