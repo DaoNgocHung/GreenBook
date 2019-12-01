@@ -10,11 +10,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.anhhung.greenbook.Fragments.LibraryFragment;
 import com.anhhung.greenbook.Models.BookLibraryModel;
 import com.anhhung.greenbook.R;
 import com.bumptech.glide.Glide;
@@ -35,6 +37,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+
 import io.opencensus.tags.Tag;
 
 public class BookLibraryAdapter extends RecyclerView.Adapter<BookLibraryAdapter.MyViewHolder>{
@@ -45,6 +48,7 @@ public class BookLibraryAdapter extends RecyclerView.Adapter<BookLibraryAdapter.
     File localFile = null;
     private InterstitialAd mInterstitialAd;
     private Dialog loadingDialog;
+    MyCallback myCallback;
 
     public BookLibraryAdapter(Context mContext, List<BookLibraryModel> booksModels) {
         this.mContext = mContext;
@@ -79,48 +83,53 @@ public class BookLibraryAdapter extends RecyclerView.Adapter<BookLibraryAdapter.
             @Override
             public void onClick(View v) {
                 DownloadEpubFile(bookLibraryModels.get(position).getNoiDung());
-                if(bookLibraryModels.get(position).getGiaTien()!=0){
-                    if (mInterstitialAd.isLoaded() ) {
-                        mInterstitialAd.show();
-                        mInterstitialAd.setAdListener(new AdListener() {
-                            @Override
-                            public void onAdLoaded() {
-                                // Code to be executed when an ad finishes loading.
+                readData(new MyCallback() {
+                    @Override
+                    public void onCallback(final File file) {
+                        if(bookLibraryModels.get(position).getGiaTien()!=0){
+                            if (mInterstitialAd.isLoaded() ) {
+                                mInterstitialAd.show();
+                                mInterstitialAd.setAdListener(new AdListener() {
+                                    @Override
+                                    public void onAdLoaded() {
+                                        // Code to be executed when an ad finishes loading.
+                                    }
+
+                                    @Override
+                                    public void onAdFailedToLoad(int errorCode) {
+                                        // Code to be executed when an ad request fails.
+                                    }
+
+                                    @Override
+                                    public void onAdOpened() {
+                                        // Code to be executed when the ad is displayed.
+
+
+                                    }
+
+                                    @Override
+                                    public void onAdClicked() {
+                                        // Code to be executed when the user clicks on an ad.
+                                    }
+
+                                    @Override
+                                    public void onAdLeftApplication() {
+                                        // Code to be executed when the user has left the app.
+                                    }
+
+                                    @Override
+                                    public void onAdClosed() {
+                                        mInterstitialAd.loadAd(new AdRequest.Builder().build());
+                                        folioReader.openBook(file.getPath());
+                                    }
+                                });
                             }
-
-                            @Override
-                            public void onAdFailedToLoad(int errorCode) {
-                                // Code to be executed when an ad request fails.
+                            else {
+                                Toast.makeText(mContext,"Please waiting load advertised...", Toast.LENGTH_LONG).show();
                             }
-
-                            @Override
-                            public void onAdOpened() {
-                                // Code to be executed when the ad is displayed.
-
-
-                            }
-
-                            @Override
-                            public void onAdClicked() {
-                                // Code to be executed when the user clicks on an ad.
-                            }
-
-                            @Override
-                            public void onAdLeftApplication() {
-                                // Code to be executed when the user has left the app.
-                            }
-
-                            @Override
-                            public void onAdClosed() {
-
-                                mInterstitialAd.loadAd(new AdRequest.Builder().build());
-                            }
-                        });
-                }
-                else {
-                        Log.d("TAG", "The interstitial wasn't loaded yet.");
+                        }
                     }
-                }
+                });
             }
         });
 
@@ -151,6 +160,13 @@ public class BookLibraryAdapter extends RecyclerView.Adapter<BookLibraryAdapter.
 
         }
     }
+    public interface MyCallback {
+        void onCallback(File file);
+    }
+    public void readData(MyCallback myCallback) {
+        this.myCallback = myCallback;
+
+    }
     private void DownloadEpubFile(String URL){
         // [START download_to_local_file]
         StorageReference httpsReference = storage.getReferenceFromUrl(URL);
@@ -161,18 +177,18 @@ public class BookLibraryAdapter extends RecyclerView.Adapter<BookLibraryAdapter.
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         httpsReference.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                folioReader.openBook(localFile.getPath());
+                myCallback.onCallback(localFile);
+
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {
-                // Handle any errors
+                Log.d("ERR", exception.toString());
             }
         });
-        // [END download_to_local_file]
+
     }
 }

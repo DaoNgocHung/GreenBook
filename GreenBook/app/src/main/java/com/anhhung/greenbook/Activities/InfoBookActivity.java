@@ -18,6 +18,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ScaleDrawable;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -88,6 +89,8 @@ public class InfoBookActivity extends AppCompatActivity {
     private float starAverage;
     private ConstraintLayout constraintLayout;
     private LinearLayout linearLayout;
+    private int linearHeight = 0 ;
+    private int linearWidth = 0;
 
 
     private String emailUser;
@@ -303,20 +306,28 @@ public class InfoBookActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                        linearLayout.setBackground(scaleImage(resource, appBarLayoutInfoBook.getWidth(),appBarLayoutInfoBook.getHeight()));
-                        Blurry.with(InfoBookActivity.this)
-                                .radius(10)
-                                .sampling(8)
-                                .color(Color.argb(66, 255, 255, 0))
-                                .async()
-                                .animate(500)
-                                .onto(linearLayout);
+                    public boolean onResourceReady(final Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        linearLayout.post(new Runnable(){
+                            public void run(){
+                                linearHeight = linearLayout.getHeight();
+                                linearWidth = linearLayout.getWidth();
+                                if (linearHeight != 0 && linearWidth != 0){
+                                    linearLayout.setBackground(scaleImage(resource, linearWidth, linearHeight));
+                                    Blurry.with(InfoBookActivity.this)
+                                            .radius(10)
+                                            .sampling(8)
+                                            .color(Color.argb(60, 240, 240, 20))
+                                            .async()
+                                            .animate(500)
+                                            .onto(linearLayout);
+
+                                }
+                            }
+                        });
                         return false;
                     }
                 })
                 .into(imgInFoBookCover);
-
 
 
         constraintLayout = findViewById(R.id.constraintLayoutInfoBook);

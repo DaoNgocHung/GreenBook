@@ -53,7 +53,7 @@ public class HomeFragment extends Fragment {
     private String emailUser;
 
     public HomeFragment() {
-        // Required empty public constructor
+
     }
 
     @Override
