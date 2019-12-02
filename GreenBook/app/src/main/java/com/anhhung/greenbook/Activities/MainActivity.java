@@ -10,7 +10,10 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,10 +26,12 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.anhhung.greenbook.Adapters.BookFindingAdapter;
 import com.anhhung.greenbook.Fragments.HomeFragment;
 import com.anhhung.greenbook.Fragments.LibraryFragment;
 import com.anhhung.greenbook.Fragments.ProfileFragment;
 import com.anhhung.greenbook.Models.BooksModel;
+import com.anhhung.greenbook.Models.CategoriesModel;
 import com.anhhung.greenbook.Models.UsersModel;
 import com.anhhung.greenbook.R;
 import com.bumptech.glide.Glide;
@@ -40,11 +45,15 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class MainActivity extends AppCompatActivity {
+import static android.app.PendingIntent.getActivity;
+
+public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
     private BottomNavigationView navigationBottom;
     private FrameLayout navBottomFramelayout;
@@ -66,8 +75,15 @@ public class MainActivity extends AppCompatActivity {
 
     private FirebaseFirestore db;
     FirebaseUser firebaseUser;
-
-    private List<BooksModel> listBooks;
+    private RecyclerView recyclerView;
+    private BookFindingAdapter bookFindingAdapter;
+    private List<BooksModel> booksModelsFindBook = new ArrayList<>();
+    private List<BooksModel> booksModels = new ArrayList<>();
+    private List<CategoriesModel> categoriesModels = new ArrayList<>();
+    private MyCallback myCallback;
+    private MyCallbackCategories myCallbackCategories;
+    int count = 0;
+    private boolean loadBoookSuccess = false;
 
 
     String TAG = "MainActivity";
@@ -86,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
         intent = getIntent();
         emailUser = intent.getStringExtra("email");
         db = FirebaseFirestore.getInstance();
-
+        recyclerView = findViewById(R.id.recyclerFindBook);
         navBottomFramelayout = findViewById(R.id.navBottomFramelayout);
         navigationBottom = findViewById(R.id.navigationBottom);
         actionToolbar = findViewById(R.id.actionToolbar);
@@ -108,6 +124,23 @@ public class MainActivity extends AppCompatActivity {
         txtNameAccount = view.findViewById(R.id.txtNameAccount);
         imgDrawerProfile = view.findViewById(R.id.imgDrawerProfile);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        booksModels.clear();
+        recyclerView.removeAllViews();
+        categoriesModels.clear();
+        readData2(new MyCallbackCategories() {
+            @Override
+            public void onCallback(final List<CategoriesModel> categoriesModels) {
+                readData(new MyCallback() {
+                    @Override
+                    public void onCallback(List<BooksModel> abooksModels) {
+                        booksModels = abooksModels;
+                        createDataListView(recyclerView,booksModels);
+                        booksModelsFindBook.addAll(booksModels);
+                        loadBoookSuccess = true;
+                    }
+                });
+            }
+        });
     }
 
     private void loadUser() {
@@ -210,17 +243,135 @@ public class MainActivity extends AppCompatActivity {
         inflater.inflate(R.menu.search_menu,menu);
         MenuItem menuSearch = menu.findItem(R.id.mnuSeach);
         SearchView searchView = (SearchView) menuSearch.getActionView();
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                recyclerView.removeAllViews();
+                recyclerView.setVisibility(View.INVISIBLE);
+                return false;
+
+            }
+        });
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                recyclerView.removeAllViews();
+                recyclerView.setVisibility(View.INVISIBLE);
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                if(loadBoookSuccess == true){
+                    newText = newText.toLowerCase(Locale.getDefault());
+                    booksModels.clear();
+                    if (newText.length() == 0) {
+                    } else {
+                        for (BooksModel wp : booksModelsFindBook ) {
+                            if (wp.getTenSach().toLowerCase(Locale.getDefault()).contains(newText)) {
+                                booksModels.add(wp);
+                            }
+                        }
+                    }
+                    bookFindingAdapter.notifyDataSetChanged();
+                    recyclerView.setVisibility(View.VISIBLE);
+                }
                 return false;
+
             }
         });
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String s) {
+        recyclerView.setVisibility(View.VISIBLE);
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String s) {
+        return false;
+    }
+
+    //Find Book
+    public interface MyCallback {
+        void onCallback(List<BooksModel> booksModels);
+    }
+
+    public interface MyCallbackCategories {
+        void onCallback(List<CategoriesModel> categoriesModels);
+    }
+
+    private void getAllCategoriesName() {
+        try {
+            db.collection("DanhMucCollection")
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    CategoriesModel categoriesModel;
+                                    categoriesModel = document.toObject(CategoriesModel.class);
+                                    Log.d(TAG, document.getId() + " => " + document.getData());
+                                    categoriesModels.add(categoriesModel);
+                                }
+                                myCallbackCategories.onCallback(categoriesModels);
+                            } else {
+                                Log.d(TAG, "Error getting documents: ", task.getException());
+                            }
+                        }
+                    });
+        } catch (Exception e) {
+            Log.d("ERR", e.toString());
+        }
+    }
+
+    public void getAllDocumentsInDanhMucCollection() {
+        for (int i = 0; i < categoriesModels.size(); i++) {
+            try {
+                db.collection("DanhMucCollection").document(categoriesModels.get(i).getId()).collection("SachColection")
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                        BooksModel booksModel;
+                                        booksModel = document.toObject(BooksModel.class);
+                                        Log.d(TAG, document.getId() + " => " + document.getData());
+                                        booksModels.add(booksModel);
+                                    }
+                                    count++;
+                                    if (count - 1 == categoriesModels.size() - 1) {
+                                        myCallback.onCallback(booksModels);
+                                        count = 0;
+                                    }
+                                } else {
+                                    Log.d(TAG, "Error getting documents: ", task.getException());
+                                }
+                            }
+                        });
+            } catch (Exception e) {
+                Log.d("ERR", e.toString());
+            }
+        }
+
+    }
+
+    public void readData2(MyCallbackCategories myCallbackCategories) {
+        this.myCallbackCategories = myCallbackCategories;
+        getAllCategoriesName();
+    }
+
+    public void readData(MyCallback myCallback) {
+        this.myCallback = myCallback;
+        getAllDocumentsInDanhMucCollection();
+    }
+    private void createDataListView(RecyclerView recyclerView, List<BooksModel> booksModels){
+        bookFindingAdapter = new BookFindingAdapter(this,booksModels);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        recyclerView.setAdapter(bookFindingAdapter);
     }
 }
