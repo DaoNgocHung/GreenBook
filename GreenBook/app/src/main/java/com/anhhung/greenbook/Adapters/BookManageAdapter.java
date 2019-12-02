@@ -1,10 +1,12 @@
 package com.anhhung.greenbook.Adapters;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -13,6 +15,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.anhhung.greenbook.Activities.BookManagementActivity;
 import com.anhhung.greenbook.Activities.EditBookManageActivity;
 import com.anhhung.greenbook.Activities.ManageAdminActivity;
 import com.anhhung.greenbook.Models.BooksModel;
@@ -29,6 +32,7 @@ import java.util.List;
 
 public class BookManageAdapter extends FirestoreRecyclerAdapter<BooksModel, BookManageAdapter.BookManageHolder> {
     private FirebaseFirestore db;
+    private Dialog dialogDelete;
     /**
      * Create a new RecyclerView adapter that listens to a Firestore Query.  See {@link
      * FirestoreRecyclerOptions} for configuration options.
@@ -57,24 +61,53 @@ public class BookManageAdapter extends FirestoreRecyclerAdapter<BooksModel, Book
                     public boolean onMenuItemClick(MenuItem menuItem) {
                         switch (menuItem.getItemId()){
                             case R.id.mnu_book_manage_edit:
-                                view.getContext().startActivity(new Intent(view.getContext(), EditBookManageActivity.class));
+                                Intent intent = new Intent(view.getContext(), EditBookManageActivity.class);
+                                intent.putExtra("title",model.getTenSach());
+                                intent.putExtra("cover",model.getBiaSach());
+                                intent.putExtra("nxb",model.getNXB());
+                                intent.putExtra("price",model.getGiaTien());
+                                intent.putExtra("language",model.getNgonNgu());
+                                intent.putExtra("intro",model.getGioiThieuSach());
+                                intent.putExtra("author",model.getTacGia());
+                                intent.putExtra("iddm",model.getIdDM());
+                                view.getContext().startActivity(intent);
                                 break;
                             case R.id.mnu_book_manage_delete:
-                                db.collection("DanhMucCollection").document(model.getIdDM())
-                                        .collection("SachColection").document(model.getTenSach())
-                                        .delete()
-                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
-                                                Toast.makeText(view.getContext(),"Delete Successful",Toast.LENGTH_SHORT).show();
-                                            }
-                                        })
-                                        .addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception e) {
-                                                Toast.makeText(view.getContext(),"Delete Error",Toast.LENGTH_SHORT).show();
-                                            }
-                                        });
+                                dialogDelete = new Dialog(view.getContext());
+                                dialogDelete.setContentView(R.layout.dialog_delete_book);
+                                dialogDelete.setCancelable(false);
+                                dialogDelete.show();
+                                Button btnYesDelete, btnNoDelete;
+                                btnYesDelete = dialogDelete.findViewById(R.id.btnYesDelete);
+                                btnNoDelete = dialogDelete.findViewById(R.id.btnNoDelete);
+                                btnYesDelete.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(final View view) {
+                                        db.collection("DanhMucCollection").document(model.getIdDM())
+                                                .collection("SachColection").document(model.getTenSach())
+                                                .delete()
+                                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                        Toast.makeText(view.getContext(),"Delete Successful",Toast.LENGTH_SHORT).show();
+                                                        dialogDelete.dismiss();
+                                                    }
+                                                })
+                                                .addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        Toast.makeText(view.getContext(),"Delete Error",Toast.LENGTH_SHORT).show();
+                                                        dialogDelete.dismiss();
+                                                    }
+                                                });
+                                    }
+                                });
+                                btnNoDelete.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        dialogDelete.dismiss();
+                                    }
+                                });
                                 break;
                             default:
                                 break;
