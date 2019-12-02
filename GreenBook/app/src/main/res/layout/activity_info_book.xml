@@ -49,14 +49,14 @@
                     android:id="@+id/btnInfoBookBuy2"
                     android:layout_width="80dp"
                     android:layout_height="32dp"
-                    android:layout_marginStart="108dp"
+                    android:layout_marginStart="4dp"
                     android:layout_marginTop="10dp"
                     android:background="@drawable/button_style_1"
                     android:text="VOTE"
                     android:textColor="@color/colorWhite"
                     android:textSize="16dp"
                     android:textStyle="bold"
-                    app:layout_constraintStart_toEndOf="@+id/imgInFoBookCover"
+                    app:layout_constraintStart_toEndOf="@+id/btnInfoBookBuy"
                     app:layout_constraintTop_toBottomOf="@+id/txtInfoBookPrice" />
 
                 <Button
@@ -77,26 +77,25 @@
                     android:id="@+id/imgbtnInfoBookFavor"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:layout_marginTop="96dp"
+                    android:layout_marginTop="10dp"
                     android:layout_marginEnd="24dp"
                     android:background="@drawable/button_circle_social"
                     android:scaleType="fitXY"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/txtInfoNameBook"
+                    app:layout_constraintTop_toBottomOf="@+id/txtInfoBookPrice"
                     app:srcCompat="@drawable/ic_not_favor" />
 
                 <ImageView
                     android:id="@+id/imgInFoBookCover"
                     android:layout_width="141dp"
                     android:layout_height="205dp"
+                    android:layout_marginStart="4dp"
                     android:layout_marginTop="1dp"
                     android:cropToPadding="false"
-                    android:padding="7dp"
+                    android:padding="6dp"
                     android:scaleType="fitXY"
                     android:src="@drawable/background_welcome"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.048"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintVertical_bias="0" />
@@ -121,9 +120,9 @@
                     android:id="@+id/txtInfoNameBook"
                     android:layout_width="246dp"
                     android:layout_height="67dp"
-                    android:layout_marginStart="8dp"
+                    android:layout_marginStart="5dp"
                     android:layout_marginTop="5dp"
-                    android:layout_marginEnd="10dp"
+                    android:layout_marginEnd="3dp"
                     android:fontFamily="@font/roboto"
                     android:foregroundGravity="center_vertical"
                     android:gravity="center_vertical"
@@ -171,12 +170,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="12dp"
-                    android:layout_marginBottom="44dp"
+                    android:layout_marginTop="8dp"
                     android:text="Rate"
                     android:textSize="14sp"
                     android:textStyle="bold"
-                    app:layout_constraintBottom_toTopOf="@+id/btnInfoBookBuy"
-                    app:layout_constraintStart_toEndOf="@+id/txtInfoVote" />
+                    app:layout_constraintStart_toEndOf="@+id/txtInfoVote"
+                    app:layout_constraintTop_toBottomOf="@+id/txtInfoBookDownloaded" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </FrameLayout>
