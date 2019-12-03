@@ -78,7 +78,7 @@ public class LoginActivity extends AppCompatActivity {
     private boolean checkEC = false;
     MyCallback myCallback;
     private String hoTenFB="";
-    private Timestamp ngayThangNSFB;
+    private Date ngayThangNSFB;
     private String urlHinhDaiDienFB = "";
 
     UsersModel usersModel = new UsersModel();
@@ -239,28 +239,31 @@ public class LoginActivity extends AppCompatActivity {
                                 usersModel.setEmail(object.getString("email"));
                                 urlHinhDaiDienFB = "http://graph.facebook.com/" + object.getString("id") + "/picture?type=large";
                                 hoTenFB=object.getString("first_name") + object.getString("last_name");
-
-                                ngayThangNSFB = doiNgay(object.getString("birthday"));
+                                ngayThangNSFB = doiNgayDate(object.getString("birthday"));
                                 readData(new MyCallback() {
                                     @Override
                                     public void onCallBack(Boolean checkEC2) {
                                         if (checkEC2 == true){
-                                            usersModel.setHoTen(hoTenFB);
-                                            usersModel.setHinhDaiDien(urlHinhDaiDienFB);
-                                            usersModel.setNgayThangNS(ngayThangNSFB);
-                                            usersModel.setGioiTinh(true);
-                                            usersModel.setSoDT("");
-                                            usersModel.setSoSachDaMua(0);
-                                            usersModel.setTien(0.0);
-                                            db.collection("UserModel").document().set(usersModel);
+                                            Intent intent = new Intent(LoginActivity.this, AddInfoUserActivity.class);
+                                            intent.putExtra("userName", hoTenFB);
+                                            intent.putExtra("email",userEmail);
+                                            intent.putExtra("hinhDaiDien", urlHinhDaiDienFB);
+                                            intent.putExtra("ngayThangNS", ngayThangNSFB);
+                                            startActivity(intent);
+                                            finish();
+                                        }
+                                        else{
+                                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                            intent.putExtra("email", userEmail.trim());
+                                            savePref();
+                                            startActivity(intent);
+                                            finish();
+
                                         }
                                     }
                                 }, userEmail);
 
                             }
-                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                            intent.putExtra("email", usersModel.getEmail().trim());
-                            startActivity(intent);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -295,19 +298,19 @@ public class LoginActivity extends AppCompatActivity {
                 });
     }
     //Chuyen doi ngay thang nam sinh tu Facebook
-    public Timestamp doiNgay(String d){
-        Timestamp timeStampDate = null;
+    public Date doiNgayDate(String d){
+        Date date = null;
         try{
             DateFormat formatter;
             formatter = new SimpleDateFormat("dd/MM/yyyy");
-            Date date = (Date) formatter.parse(d);
-            timeStampDate = new Timestamp(date);
+            date = (Date) formatter.parse(d);
+
 
         }
         catch (Exception e){
             e.printStackTrace();
         }
-        return timeStampDate;
+        return date;
     }
     //Sign in with google
     private void signInGoogle() {
@@ -353,7 +356,7 @@ public class LoginActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
     }
     public void checkUserExist(String email){
-        db.collection("UserCollection")
+        db.collection("UserModel")
                 .whereEqualTo("email", email).limit(1)
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {

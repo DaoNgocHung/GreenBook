@@ -6,8 +6,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -31,6 +34,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -53,11 +57,12 @@ public class AddInfoUserActivity extends AppCompatActivity implements DatePicker
     Intent intent;
 
     private Uri imgUri;
-    private Uri urlImage;
-
+    private String urlImage;
+    private Bitmap bitmap;
     private UploadTask uploadTask;
     private boolean isError = false;
     private boolean isSelectImage = false;  // kiểm tra người dùng  có chọn hình chưa
+    private Date ngaythangNS = new Date();
 
     private final int CHOOSE_IMAGE_REQUEST = 1;
 
@@ -171,9 +176,17 @@ public class AddInfoUserActivity extends AppCompatActivity implements DatePicker
     private void addControls() {
 
         intent = getIntent();
+        urlImage = intent.getStringExtra("hinhDaiDien");
+        if(urlImage != null){
+        bitmap = getFacebookProfilePicture(imgAddInfoAvatar,bitmap, urlImage);
 
+        }
+        ngaythangNS = (Date) intent.getSerializableExtra("ngayThangNS");
         txtAddInfoBirth = findViewById(R.id.txtAddInfoBirth);
         txtAddInfoChangeBirth = findViewById(R.id.txtAddInfoChangeBirth);
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        String strDate = dateFormat.format(ngaythangNS);
+        txtAddInfoBirth.setText(strDate);
         txtAddInfoName = findViewById(R.id.txtAddInfoName);
         txtAddInfoName.setText(intent.getStringExtra("userName"));
         edtAddInfoPhone = findViewById(R.id.edtAddInfoPhone);
@@ -188,6 +201,17 @@ public class AddInfoUserActivity extends AppCompatActivity implements DatePicker
         firebaseStorage = FirebaseStorage.getInstance();
         avatarStorageReference = firebaseStorage.getReference().child("Avatar");
     }
+    public static Bitmap getFacebookProfilePicture(ImageView imageView, Bitmap bitmap, String URLImg){
+        try{
+            URL imageURL = new URL(URLImg);
+            bitmap = BitmapFactory.decodeStream(imageURL.openConnection().getInputStream());
+            imageView.setImageBitmap(bitmap);
+        }catch (Exception e){
+            Log.d("ERROR", e.toString());
+        }
+        return bitmap;
+    }
+
 
     private boolean checkInfo() {
         if(edtAddInfoPhone.getText().equals("")) {
