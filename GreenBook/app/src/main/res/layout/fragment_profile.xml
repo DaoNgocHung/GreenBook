@@ -32,9 +32,8 @@
                 android:id="@+id/imgAvatarProfile"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="24dp"
                 android:src="@drawable/chopper"
-                app:layout_constraintBottom_toTopOf="@+id/txtNameProfile"
                 app:layout_constraintEnd_toEndOf="@+id/blurImageView"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -43,14 +42,14 @@
                 android:id="@+id/txtNameProfile"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
+                android:layout_marginTop="8dp"
                 android:text="Name User"
                 android:textColor="@color/colorWhite"
-                android:textStyle="bold"
                 android:textSize="20dp"
-                app:layout_constraintBottom_toBottomOf="@+id/blurImageView"
+                android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/imgAvatarProfile" />
 
             <ImageButton
                 android:background="@color/colorTransparent"
@@ -62,6 +61,17 @@
                 android:src="@drawable/ic_notification"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/txtPermissionProfile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Permission"
+                android:textColor="@color/colorWhite"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txtNameProfile" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -202,6 +212,7 @@
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/cardViewManageAdmin"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginTop="1dp">

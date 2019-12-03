@@ -185,7 +185,7 @@ public class LoginActivity extends AppCompatActivity {
                             if(auth.getCurrentUser().isEmailVerified() == true){
                                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                 intent.putExtra("email", userEmail.trim());
-                                savePref();
+                                savePref(edtLoginUsername.getText().toString().trim(), edtLoginPass.getText().toString());
                                 startActivity(intent);
                                 finish();
                             }
@@ -249,13 +249,14 @@ public class LoginActivity extends AppCompatActivity {
                                             intent.putExtra("email",userEmail);
                                             intent.putExtra("hinhDaiDien", urlHinhDaiDienFB);
                                             intent.putExtra("ngayThangNS", ngayThangNSFB);
+                                            savePref(userEmail,"");
                                             startActivity(intent);
                                             finish();
                                         }
                                         else{
                                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                             intent.putExtra("email", userEmail.trim());
-                                            savePref();
+                                            savePref(userEmail,"");
                                             startActivity(intent);
                                             finish();
 
@@ -390,11 +391,11 @@ public class LoginActivity extends AppCompatActivity {
 
     }
     //Lưu thông tin người dùng vào sharedPreference
-    public void savePref(){
+    public void savePref(String userEmail, String pass){
         SharedPreferences sharedPreferences= this.getSharedPreferences("infoUser", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("emailUser", this.edtLoginUsername.getText().toString());
-        editor.putString("passUser", this.edtLoginPass.getText().toString());
+        editor.putString("emailUser", userEmail);
+        editor.putString("passUser", pass);
         editor.apply();
     }
 }

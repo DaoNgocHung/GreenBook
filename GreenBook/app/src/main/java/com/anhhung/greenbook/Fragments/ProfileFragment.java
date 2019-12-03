@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -47,8 +48,9 @@ public class ProfileFragment extends Fragment {
     private ImageButton imgbtnLogoutProfile, imgbtnBillProfile, imgbtnEditProfile, imgbtnWalletProfile, imgbtnChangePassProfile,
             imgbtnManageProfile;
     private CircleImageView imgAvatarProfile;
-    private TextView txtProfileCoin, txtProfileNumberBook, txtNameProfile;
+    private TextView txtProfileCoin, txtProfileNumberBook, txtNameProfile, txtPermissionProfile;
     private SharedPreferences sharedPreferences;
+    private CardView cardViewManageAdmin;
 
     private FirebaseFirestore db;
     private UsersModel usersModel;
@@ -123,7 +125,9 @@ public class ProfileFragment extends Fragment {
         txtProfileCoin = view.findViewById(R.id.txtProfileCoin);
         txtProfileNumberBook = view.findViewById(R.id.txtProfileNumberBook);
         txtNameProfile = view.findViewById(R.id.txtNameProfile);
+        txtPermissionProfile = view.findViewById(R.id.txtPermissionProfile);
         imgAvatarProfile = view.findViewById(R.id.imgAvatarProfile);
+        cardViewManageAdmin = view.findViewById(R.id.cardViewManageAdmin);
         db = FirebaseFirestore.getInstance();
     }
 
@@ -141,10 +145,16 @@ public class ProfileFragment extends Fragment {
                                 txtProfileCoin.setText(usersModel.getTien().toString());
                                 txtProfileNumberBook.setText(usersModel.getSoSachDaMua()+"");
                                 txtNameProfile.setText(usersModel.getHoTen());
+                                txtPermissionProfile.setText(usersModel.getQuyen());
                                 Glide.with(getActivity()).load(usersModel.getHinhDaiDien()).into(imgAvatarProfile);
                                 Glide.with(getActivity())
                                         .load("https://firebasestorage.googleapis.com/v0/b/greenbookfirestore.appspot.com/o/AnhBiaUser%2FanhBiaUser.jpg?alt=media&token=73224c41-cb2e-4e38-8d06-bd95d74f6aed")
                                         .into(blurImageView);
+                                if(usersModel.getQuyen().trim().equals("admin")){
+                                    cardViewManageAdmin.setVisibility(View.VISIBLE);
+                                } else {
+                                    cardViewManageAdmin.setVisibility(View.GONE);
+                                }
                             }
                         }
                     }

@@ -107,7 +107,7 @@ public class AddInfoUserActivity extends AppCompatActivity implements DatePicker
                         UsersModel usersModel = new UsersModel(userName, gender, doiNgay(birthDay), urlImage,
                                 email,"member",phone,0.0, 0);
                         db.collection("UserModel").document(email).set(usersModel);
-                        Intent intentCategory = new Intent(AddInfoUserActivity.this,YourFavoriteCategory.class);
+                        Intent intentCategory = new Intent(AddInfoUserActivity.this,MainActivity.class);
                         intentCategory.putExtra("email", email);
                         startActivity(intentCategory);
                     }
@@ -144,7 +144,7 @@ public class AddInfoUserActivity extends AppCompatActivity implements DatePicker
                                                 UsersModel usersModel = new UsersModel(userName, gender, doiNgay(birthDay), downloadUri.toString(),
                                                         email,"member",phone,0.0, 0);
                                                 db.collection("UserModel").document(email).set(usersModel);
-                                                Intent intentCategory = new Intent(AddInfoUserActivity.this,YourFavoriteCategory.class);
+                                                Intent intentCategory = new Intent(AddInfoUserActivity.this,LoginActivity.class);
                                                 intentCategory.putExtra("email", email);
                                                 startActivity(intentCategory);
                                             } else {
@@ -193,9 +193,14 @@ public class AddInfoUserActivity extends AppCompatActivity implements DatePicker
         ngaythangNS = (Date) intent.getSerializableExtra("ngayThangNS");
         txtAddInfoBirth = findViewById(R.id.txtAddInfoBirth);
         txtAddInfoChangeBirth = findViewById(R.id.txtAddInfoChangeBirth);
-        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        String strDate = dateFormat.format(ngaythangNS);
-        txtAddInfoBirth.setText(strDate);
+        if(ngaythangNS != null){
+            DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            String strDate = dateFormat.format(ngaythangNS);
+            txtAddInfoBirth.setText(strDate);
+        }
+        else{
+            txtAddInfoBirth.setText(Calendar.DAY_OF_MONTH+"/"+Calendar.MONTH+"/"+Calendar.YEAR);
+        }
         txtAddInfoName = findViewById(R.id.txtAddInfoName);
         txtAddInfoName.setText(intent.getStringExtra("userName"));
         edtAddInfoPhone = findViewById(R.id.edtAddInfoPhone);
