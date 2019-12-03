@@ -237,8 +237,8 @@ public class LoginActivity extends AppCompatActivity {
                             if (object.has("email")) {
                                 userEmail = object.getString("email");
                                 usersModel.setEmail(object.getString("email"));
-                                urlHinhDaiDienFB = "http://graph.facebook.com/" + object.getString("id") + "/picture?type=large";
-                                hoTenFB=object.getString("first_name") + object.getString("last_name");
+                                urlHinhDaiDienFB = "https://graph.facebook.com/" + object.getString("id") + "/picture?type=large";
+                                hoTenFB=object.getString("first_name")+ " " + object.getString("last_name");
                                 ngayThangNSFB = doiNgayDate(object.getString("birthday"));
                                 readData(new MyCallback() {
                                     @Override

@@ -36,17 +36,6 @@ public class UsersModel {
         this.tien = tien;
         this.soSachDaMua = soSachDaMua;
     }
-    public UsersModel(String hoTen,
-                      Timestamp ngayThangNS, String hinhDaiDien, String email,
-                      String soDT, Double tien, long soSachDaMua) {
-        this.hoTen = hoTen;
-        this.ngayThangNS = ngayThangNS;
-        this.hinhDaiDien = hinhDaiDien;
-        this.email = email;
-        this.soDT = soDT;
-        this.tien = tien;
-        this.soSachDaMua = soSachDaMua;
-    }
 
     public boolean getGioiTinh() {
         return gioiTinh;

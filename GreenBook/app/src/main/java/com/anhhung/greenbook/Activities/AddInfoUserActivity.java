@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.anhhung.greenbook.Models.UsersModel;
 import com.anhhung.greenbook.R;
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -102,51 +103,62 @@ public class AddInfoUserActivity extends AppCompatActivity implements DatePicker
                     else {
                         gender = false;
                     }
-                    avatarStorageReference = avatarStorageReference.child("image" + imgUri.getLastPathSegment());
-                    //Upload image to Storage
-                    uploadTask = avatarStorageReference.putFile(imgUri);
-                    // Register observers to listen for when the download is done or if it fails
-                    uploadTask.addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception exception) {
-                            Toast.makeText(AddInfoUserActivity.this,"Upload Fail",Toast.LENGTH_SHORT).show();
-                        }
-                    }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            Toast.makeText(AddInfoUserActivity.this,"Completed",Toast.LENGTH_SHORT).show();
-                            if(isSelectImage == true){
-                                Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-                                    @Override
-                                    public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                                        if (!task.isSuccessful()) {
-                                            throw task.getException();
-                                        }
-                                        return avatarStorageReference.getDownloadUrl();
-                                    }
-                                }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Uri> task) {
-                                        if (task.isSuccessful()) {
-                                            Uri downloadUri = task.getResult();
-                                            // Function call to Upload data
-                                            //uploadData(name, phone, birthDay, gender, );
-                                            UsersModel usersModel = new UsersModel(userName, gender, doiNgay(birthDay), downloadUri.toString(),
-                                                    email,"member",phone,0.0, 0);
-                                            db.collection("UserModel").document(email).set(usersModel);
-                                            Intent intentCategory = new Intent(AddInfoUserActivity.this,YourFavoriteCategory.class);
-                                            intentCategory.putExtra("email", email);
-                                            startActivity(intentCategory);
-                                        } else {
-                                            Toast.makeText(AddInfoUserActivity.this,"Get Image URL Fail.", Toast.LENGTH_SHORT).show();
-                                        }
-                                    }
-                                });
-
+                    if(urlImage != null){
+                        UsersModel usersModel = new UsersModel(userName, gender, doiNgay(birthDay), urlImage,
+                                email,"member",phone,0.0, 0);
+                        db.collection("UserModel").document(email).set(usersModel);
+                        Intent intentCategory = new Intent(AddInfoUserActivity.this,YourFavoriteCategory.class);
+                        intentCategory.putExtra("email", email);
+                        startActivity(intentCategory);
+                    }
+                    else{
+                        avatarStorageReference = avatarStorageReference.child("image" + imgUri.getLastPathSegment());
+                        //Upload image to Storage
+                        uploadTask = avatarStorageReference.putFile(imgUri);
+                        // Register observers to listen for when the download is done or if it fails
+                        uploadTask.addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception exception) {
+                                Toast.makeText(AddInfoUserActivity.this,"Upload Fail",Toast.LENGTH_SHORT).show();
                             }
-                            // ...
-                        }
-                    });
+                        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                Toast.makeText(AddInfoUserActivity.this,"Completed",Toast.LENGTH_SHORT).show();
+                                if(isSelectImage == true){
+                                    Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                                        @Override
+                                        public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                                            if (!task.isSuccessful()) {
+                                                throw task.getException();
+                                            }
+                                            return avatarStorageReference.getDownloadUrl();
+                                        }
+                                    }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Uri> task) {
+                                            if (task.isSuccessful()) {
+                                                Uri downloadUri = task.getResult();
+                                                // Function call to Upload data
+                                                //uploadData(name, phone, birthDay, gender, );
+                                                UsersModel usersModel = new UsersModel(userName, gender, doiNgay(birthDay), downloadUri.toString(),
+                                                        email,"member",phone,0.0, 0);
+                                                db.collection("UserModel").document(email).set(usersModel);
+                                                Intent intentCategory = new Intent(AddInfoUserActivity.this,YourFavoriteCategory.class);
+                                                intentCategory.putExtra("email", email);
+                                                startActivity(intentCategory);
+                                            } else {
+                                                Toast.makeText(AddInfoUserActivity.this,"Get Image URL Fail.", Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                    });
+
+                                }
+                                // ...
+                            }
+                        });
+                    }
+
                 }
             }
         });
@@ -177,10 +189,7 @@ public class AddInfoUserActivity extends AppCompatActivity implements DatePicker
 
         intent = getIntent();
         urlImage = intent.getStringExtra("hinhDaiDien");
-        if(urlImage != null){
-        bitmap = getFacebookProfilePicture(imgAddInfoAvatar,bitmap, urlImage);
 
-        }
         ngaythangNS = (Date) intent.getSerializableExtra("ngayThangNS");
         txtAddInfoBirth = findViewById(R.id.txtAddInfoBirth);
         txtAddInfoChangeBirth = findViewById(R.id.txtAddInfoChangeBirth);
@@ -195,21 +204,15 @@ public class AddInfoUserActivity extends AppCompatActivity implements DatePicker
         rdAddInfoFemale = findViewById(R.id.rdAddInfoFemale);
         btnAddInfoSave = findViewById(R.id.btnAddInfoSave);
         imgAddInfoAvatar = findViewById(R.id.imgAddInfoAvatar);
+        if(urlImage != null){
+            Glide.with(this).load(urlImage).into(imgAddInfoAvatar);
+        }
+
 
         //firestore
         db = FirebaseFirestore.getInstance();
         firebaseStorage = FirebaseStorage.getInstance();
         avatarStorageReference = firebaseStorage.getReference().child("Avatar");
-    }
-    public static Bitmap getFacebookProfilePicture(ImageView imageView, Bitmap bitmap, String URLImg){
-        try{
-            URL imageURL = new URL(URLImg);
-            bitmap = BitmapFactory.decodeStream(imageURL.openConnection().getInputStream());
-            imageView.setImageBitmap(bitmap);
-        }catch (Exception e){
-            Log.d("ERROR", e.toString());
-        }
-        return bitmap;
     }
 
 
@@ -226,8 +229,11 @@ public class AddInfoUserActivity extends AppCompatActivity implements DatePicker
         }
 
         if(isSelectImage == false){
-            Toast.makeText(AddInfoUserActivity.this,"Select your image", Toast.LENGTH_SHORT).show();
-            isError = true;
+            if(urlImage == null){
+                Toast.makeText(AddInfoUserActivity.this,"Select your image", Toast.LENGTH_SHORT).show();
+                isError = true;
+            }
+
         }
         if(isError == false){
             return true;
