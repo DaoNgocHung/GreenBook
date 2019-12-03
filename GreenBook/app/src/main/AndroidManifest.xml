@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_logo_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activities.FindBookActivity"></activity>
+        <activity android:name=".Activities.CollectionMapActivity"></activity>
+        <activity android:name=".Activities.FindBookActivity" />
         <activity android:name=".Activities.EditBookManageActivity" />
         <activity android:name=".Activities.BookManagementActivity" />
         <activity android:name=".Activities.ManageAdminActivity" />
@@ -49,8 +50,8 @@
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-6221199019531489~6976045071" />
     </application>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
     <uses-permission android:name="android.permission.INTERNET" />
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
 </manifest>

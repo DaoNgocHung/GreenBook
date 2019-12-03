@@ -72,4 +72,7 @@ dependencies {
     //Blurry
     implementation 'jp.wasabeef:blurry:3.0.0'
 
+    //Chart
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.0.2'
+
 }
