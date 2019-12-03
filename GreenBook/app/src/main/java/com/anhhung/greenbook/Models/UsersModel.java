@@ -17,19 +17,21 @@ public class UsersModel {
     private String email;
     private String soDT;
     private Double tien;
+    private String quyen;
     private long soSachDaMua;
 
     public UsersModel() {
     }
 
     public UsersModel(String hoTen, boolean gioiTinh,
-                       Timestamp ngayThangNS, String hinhDaiDien, String email,
+                       Timestamp ngayThangNS, String hinhDaiDien, String email, String quyen,
                        String soDT, Double tien, long soSachDaMua) {
         this.hoTen = hoTen;
         this.gioiTinh = gioiTinh;
         this.ngayThangNS = ngayThangNS;
         this.hinhDaiDien = hinhDaiDien;
         this.email = email;
+        this.quyen = quyen;
         this.soDT = soDT;
         this.tien = tien;
         this.soSachDaMua = soSachDaMua;
@@ -108,5 +110,13 @@ public class UsersModel {
 
     public void setSoSachDaMua(long soSachDaMua) {
         this.soSachDaMua = soSachDaMua;
+    }
+
+    public String getQuyen() {
+        return quyen;
+    }
+
+    public void setQuyen(String quyen) {
+        this.quyen = quyen;
     }
 }

@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.anhhung.greenbook.Adapters.BookManageAdapter;
 import com.anhhung.greenbook.Models.BooksModel;
@@ -31,7 +32,7 @@ public class BookManagementActivity extends AppCompatActivity {
     private LinearLayoutManager layoutManager;
 
     private FirebaseFirestore db;
-    private List<String> listCategory = new ArrayList<>();
+    private ArrayList<String> listCategory = new ArrayList<>();
 
     // Cho người dùng chọn từ spinner danh mục
 
@@ -39,10 +40,8 @@ public class BookManagementActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_management);
-        listCategory.add("History - Politic");
-        listCategory.add("Life Skill");
         addControls();
-        getBookData("dmEconomyManage");
+        getBookData("dmHistoryPolitic");
         addEvents();
     }
 
@@ -53,18 +52,38 @@ public class BookManagementActivity extends AppCompatActivity {
         rViewBookManage.setLayoutManager(layoutManager);
         spDMBookManage = findViewById(R.id.spDMBookManage);
         db = FirebaseFirestore.getInstance();
+        listCategory = addCategoryData(listCategory);
         ArrayAdapter<String> adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item,listCategory);
         adapter.setDropDownViewResource(android.R.layout.simple_list_item_single_choice);
         spDMBookManage.setAdapter(adapter);
+    }
+
+    public ArrayList<String> addCategoryData(ArrayList<String> list){
+        list.add("History - Politic");
+        list.add("Life Skill");
+        list.add("Economy Manage");
+        list.add("Foreign Language");
+        list.add("Myth - Fairy");
+        return list;
     }
 
     private void addEvents() {
         spDMBookManage.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                switch (spDMBookManage.getSelectedItem().toString()){
-                    case "":
-                }
+//                Toast.makeText(BookManagementActivity.this,spDMBookManage.getSelectedItem().toString(),Toast.LENGTH_SHORT).show();
+//                String selected = adapterView.getItemAtPosition(i).toString();
+//                if(selected.equals("History - Politic")) {
+//                    getBookData("dmHistoryPolitic");
+//                } else if(selected.equals("Life Skill")) {
+//                    getBookData("dmLifeSkill");
+//                } else if(selected.equals("Economy Manage")) {
+//                    getBookData("dmEconomyManage");
+//                } else if(selected.equals("Foreign Language")) {
+//                    getBookData("dmForeignLanguage");
+//                } else if(selected.equals("Myth - Fairy")) {
+//                    getBookData("dmMythFairy");
+//                }
             }
 
             @Override

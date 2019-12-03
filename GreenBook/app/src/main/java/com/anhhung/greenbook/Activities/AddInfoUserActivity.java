@@ -132,7 +132,7 @@ public class AddInfoUserActivity extends AppCompatActivity implements DatePicker
                                             // Function call to Upload data
                                             //uploadData(name, phone, birthDay, gender, );
                                             UsersModel usersModel = new UsersModel(userName, gender, doiNgay(birthDay), downloadUri.toString(),
-                                                    email,phone,0.0, 0);
+                                                    email,"member",phone,0.0, 0);
                                             db.collection("UserModel").document(email).set(usersModel);
                                             Intent intentCategory = new Intent(AddInfoUserActivity.this,YourFavoriteCategory.class);
                                             intentCategory.putExtra("email", email);

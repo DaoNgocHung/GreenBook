@@ -20,6 +20,7 @@ import com.anhhung.greenbook.Activities.BillActivity;
 import com.anhhung.greenbook.Activities.BookManagementActivity;
 import com.anhhung.greenbook.Activities.ChangePassActivity;
 import com.anhhung.greenbook.Activities.InfoUserActivity;
+import com.anhhung.greenbook.Activities.ManageAdminActivity;
 import com.anhhung.greenbook.Activities.RechargeActivity;
 import com.anhhung.greenbook.Activities.WelcomeActivity;
 import com.anhhung.greenbook.Models.UsersModel;
@@ -105,7 +106,7 @@ public class ProfileFragment extends Fragment {
         imgbtnManageProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getActivity(), BookManagementActivity.class));
+                startActivity(new Intent(getActivity(), ManageAdminActivity.class));
             }
         });
     }
