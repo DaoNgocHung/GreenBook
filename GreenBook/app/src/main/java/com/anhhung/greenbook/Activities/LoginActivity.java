@@ -361,18 +361,18 @@ public class LoginActivity extends AppCompatActivity {
                 .whereEqualTo("email", email).limit(1)
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        if(queryDocumentSnapshots.getDocuments().isEmpty()){
-                            checkEC = true;
-                            myCallback.onCallBack(checkEC);
-                        }
-                        else{
-                            checkEC = false;
-                            myCallback.onCallBack(checkEC);
-                        }
+                @Override
+                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                    if(queryDocumentSnapshots.getDocuments().isEmpty()){
+                        checkEC = true;
+                        myCallback.onCallBack(checkEC);
                     }
-                });
+                    else{
+                        checkEC = false;
+                        myCallback.onCallBack(checkEC);
+                    }
+                }
+            });
     }
     private void openLoadingDialog() {
         loadingDialog = new Dialog(LoginActivity.this, R.style.CustomDialog);

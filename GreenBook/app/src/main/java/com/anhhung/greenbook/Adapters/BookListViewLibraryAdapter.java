@@ -1,11 +1,13 @@
 package com.anhhung.greenbook.Adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -15,6 +17,12 @@ import com.anhhung.greenbook.Models.BookLibraryModel;
 import com.anhhung.greenbook.R;
 import com.bumptech.glide.Glide;
 import com.folioreader.FolioReader;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FileDownloadTask;
@@ -31,6 +39,10 @@ public class BookListViewLibraryAdapter extends RecyclerView.Adapter<BookListVie
     FirebaseStorage storage;
     FolioReader folioReader = FolioReader.get();
     File localFile = null;
+    private InterstitialAd mInterstitialAd;
+
+    private MyCallback myCallback;
+
 
     public BookListViewLibraryAdapter(Context mContext, List<BookLibraryModel> bookLibraryModels) {
         this.mContext = mContext;
@@ -44,6 +56,13 @@ public class BookListViewLibraryAdapter extends RecyclerView.Adapter<BookListVie
         LayoutInflater mInflater = LayoutInflater.from(mContext);
         view = mInflater.inflate(R.layout.listview_book_library,parent,false);
         storage = FirebaseStorage.getInstance();
+        MobileAds.initialize(mContext, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {}
+        });
+        mInterstitialAd = new InterstitialAd(mContext);
+        mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+        mInterstitialAd.loadAd(new AdRequest.Builder().build());
         return new MyViewHolder(view);
     }
 
@@ -60,10 +79,66 @@ public class BookListViewLibraryAdapter extends RecyclerView.Adapter<BookListVie
             @Override
             public void onClick(View v) {
                 DownloadEpubFile(bookLibraryModels.get(position).getNoiDung());
+                readData(new MyCallback() {
+                    @Override
+                    public void onCallback(final File file) {
+                        if(bookLibraryModels.get(position).getGiaTien()==0){
+                            if (mInterstitialAd.isLoaded() ) {
+                                mInterstitialAd.show();
+                                mInterstitialAd.setAdListener(new AdListener() {
+                                    @Override
+                                    public void onAdLoaded() {
+                                        // Code to be executed when an ad finishes loading.
+                                    }
+
+                                    @Override
+                                    public void onAdFailedToLoad(int errorCode) {
+                                        // Code to be executed when an ad request fails.
+                                    }
+
+                                    @Override
+                                    public void onAdOpened() {
+                                        // Code to be executed when the ad is displayed.
+
+
+                                    }
+
+                                    @Override
+                                    public void onAdClicked() {
+                                        // Code to be executed when the user clicks on an ad.
+                                    }
+
+                                    @Override
+                                    public void onAdLeftApplication() {
+                                        // Code to be executed when the user has left the app.
+                                    }
+
+                                    @Override
+                                    public void onAdClosed() {
+                                        mInterstitialAd.loadAd(new AdRequest.Builder().build());
+                                        folioReader.openBook(file.getPath());
+                                    }
+                                });
+                            }
+                            else {
+                                Toast.makeText(mContext,"Please waiting load advertised...", Toast.LENGTH_LONG).show();
+                            }
+                        }
+                        else {
+                            folioReader.openBook(file.getPath());
+                        }
+                    }
+                });
             }
         });
     }
+    public interface MyCallback {
+        void onCallback(File file);
+    }
+    public void readData(MyCallback myCallback) {
+        this.myCallback = myCallback;
 
+    }
     @Override
     public int getItemCount() {
         return bookLibraryModels.size();
@@ -84,24 +159,28 @@ public class BookListViewLibraryAdapter extends RecyclerView.Adapter<BookListVie
             cardView = itemView.findViewById(R.id.cardViewListViewLibrary);
         }
     }
-    private void DownloadEpubFile(String URL){
+    private void DownloadEpubFile(String URL) {
+        // [START download_to_local_file]
         StorageReference httpsReference = storage.getReferenceFromUrl(URL);
+
+
         try {
-            localFile = File.createTempFile("booklist",".epub");
+            localFile = File.createTempFile("book", ".epub");
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         httpsReference.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                folioReader.openBook(localFile.getPath());
+                myCallback.onCallback(localFile);
+
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {
-                // Handle any errors
+                Log.d("ERR", exception.toString());
             }
         });
     }
-}
+
+    }

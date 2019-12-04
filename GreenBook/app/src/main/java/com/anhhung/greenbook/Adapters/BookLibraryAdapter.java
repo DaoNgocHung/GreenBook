@@ -86,7 +86,7 @@ public class BookLibraryAdapter extends RecyclerView.Adapter<BookLibraryAdapter.
                 readData(new MyCallback() {
                     @Override
                     public void onCallback(final File file) {
-                        if(bookLibraryModels.get(position).getGiaTien()!=0){
+                        if(bookLibraryModels.get(position).getGiaTien()==0){
                             if (mInterstitialAd.isLoaded() ) {
                                 mInterstitialAd.show();
                                 mInterstitialAd.setAdListener(new AdListener() {
@@ -127,6 +127,9 @@ public class BookLibraryAdapter extends RecyclerView.Adapter<BookLibraryAdapter.
                             else {
                                 Toast.makeText(mContext,"Please waiting load advertised...", Toast.LENGTH_LONG).show();
                             }
+                        }
+                        else{
+                            folioReader.openBook(file.getPath());
                         }
                     }
                 });

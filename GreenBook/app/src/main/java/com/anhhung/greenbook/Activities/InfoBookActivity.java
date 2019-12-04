@@ -39,6 +39,7 @@ import com.anhhung.greenbook.Fragments.InfoBookFragment;
 import com.anhhung.greenbook.Fragments.SummaryBookFragment;
 import com.anhhung.greenbook.Models.BillDetailModel;
 import com.anhhung.greenbook.Models.BooksModel;
+import com.anhhung.greenbook.Models.CollectionMapModel;
 import com.anhhung.greenbook.Models.DanhGiaModel;
 import com.anhhung.greenbook.Models.UsersModel;
 import com.anhhung.greenbook.R;
@@ -60,6 +61,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.UploadTask;
+
+import java.util.Calendar;
+
 import jp.wasabeef.blurry.Blurry;
 
 import static java.lang.Math.round;
@@ -99,6 +103,9 @@ public class InfoBookActivity extends AppCompatActivity {
     private boolean isFavor = false;  //Biến Test cho Favor
 
     FirebaseFirestore db;
+    private Calendar c = Calendar.getInstance();
+    private String year = c.get(Calendar.YEAR)+"";
+    private String month = c.get(Calendar.MONTH)+1+"";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -165,8 +172,6 @@ public class InfoBookActivity extends AppCompatActivity {
                 btnYesBuy.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-
-
                         // Kiểm tra tiền của khách hàng so với giá tiền cuốn sách
                         db.collection("UserModel")
                                 .whereEqualTo("email", emailUser)
@@ -181,7 +186,6 @@ public class InfoBookActivity extends AppCompatActivity {
                                                 if (booksModel.getGiaTien() >= usersModel.getTien()) {
                                                     Toast.makeText(InfoBookActivity.this, "Tài khoản của bạn không đủ tiền", Toast.LENGTH_SHORT).show();
                                                 } else {
-
                                                     //Thêm sách vào thư viện của user
                                                     db.collection("UserModel").document(emailUser)
                                                             .collection("LibraryCollection").document(booksModel.getTenSach())
@@ -200,6 +204,40 @@ public class InfoBookActivity extends AppCompatActivity {
                                                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                                                 @Override
                                                                                 public void onSuccess(Void aVoid) {
+                                                                                    //Cập nhật thống kê
+                                                                                    db.collection("CollectionMap").document((year)).collection(month)
+                                                                                            .limit(1)
+                                                                                            .whereEqualTo("collectionMapName", booksModel.getTenSach())
+                                                                                            .get()
+                                                                                            .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                                                                                @Override
+                                                                                                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                                                                                    if (queryDocumentSnapshots.getDocuments().isEmpty()) {
+                                                                                                        Calendar ca = Calendar.getInstance();
+                                                                                                        CollectionMapModel collectionMapModel = new CollectionMapModel(1, booksModel.getGiaTien(), booksModel.getTenSach(), ca.MONTH);
+                                                                                                        db.collection("CollectionMap").document((year)).collection(month).document(booksModel.getTenSach())
+                                                                                                                .set(collectionMapModel);
+                                                                                                    } else {
+                                                                                                        db.collection("CollectionMap").document((year)).collection(month)
+                                                                                                                .limit(1)
+                                                                                                                .whereEqualTo("collectionMapName", booksModel.getTenSach())
+                                                                                                                .get()
+                                                                                                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                                                                                    @Override
+                                                                                                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                                                                                        if (task.isSuccessful()) {
+                                                                                                                            for (DocumentSnapshot documentSnapshot : task.getResult().getDocuments()) {
+                                                                                                                                CollectionMapModel collectionMapModel = documentSnapshot.toObject(CollectionMapModel.class);
+                                                                                                                                double tien = collectionMapModel.getTongDoanhThuTien() + booksModel.getGiaTien();
+                                                                                                                                db.collection("CollectionMap").document((year + "")).collection(month + "").document(booksModel.getTenSach())
+                                                                                                                                        .update("tongDoanhThuTien", tien, "tongSachBan", collectionMapModel.getTongSachBan()+1);
+                                                                                                                            }
+                                                                                                                        }
+                                                                                                                    }
+                                                                                                                });
+                                                                                                    }
+                                                                                                }
+                                                                                            });
 
                                                                                     //Tạo hoá đơn
                                                                                     BillDetailModel billDetailModel =
