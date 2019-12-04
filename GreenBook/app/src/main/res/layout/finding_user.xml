@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/imgAvatarFindUser"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:src="@drawable/chopper"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/txtNameFindUser"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:text="Name: "
+            android:textSize="16sp"
+            app:layout_constraintStart_toEndOf="@+id/imgAvatarFindUser"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/txtMailFindUser"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:text="Email: "
+            app:layout_constraintStart_toEndOf="@+id/imgAvatarFindUser"
+            app:layout_constraintTop_toBottomOf="@+id/txtNameFindUser" />
+
+        <TextView
+            android:id="@+id/txtPerFindUser"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="6dp"
+            android:text="Permission:"
+            app:layout_constraintStart_toEndOf="@+id/imgAvatarFindUser"
+            app:layout_constraintTop_toBottomOf="@+id/txtMailFindUser" />
+
+        <ImageView
+            android:id="@+id/imgDeleteUser"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="6dp"
+            android:src="@drawable/ic_delete_user"
+            android:textAlignment="center"
+            android:textAppearance="?android:textAppearanceLarge"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <RadioGroup
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="6dp"
+            android:orientation="horizontal"
+            app:layout_constraintStart_toEndOf="@+id/txtPerFindUser"
+            app:layout_constraintTop_toBottomOf="@+id/txtMailFindUser">
+
+            <RadioButton
+                android:id="@+id/rdMakeUserMember"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:scaleX="0.7"
+                android:scaleY="0.7"
+                android:text="Member" />
+
+            <RadioButton
+                android:id="@+id/rdMakeUserAdmin"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:scaleX="0.7"
+                android:scaleY="0.7"
+                android:text="Admin" />
+        </RadioGroup>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>

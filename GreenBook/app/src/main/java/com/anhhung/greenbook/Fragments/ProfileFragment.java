@@ -50,7 +50,7 @@ public class ProfileFragment extends Fragment {
     private CircleImageView imgAvatarProfile;
     private TextView txtProfileCoin, txtProfileNumberBook, txtNameProfile, txtPermissionProfile;
     private SharedPreferences sharedPreferences;
-    private CardView cardViewManageAdmin;
+    private CardView cardViewManageAdmin, cardViewEditProfile, cardViewWalletProfile, cardViewBillProfile, cardViewChangePassProfile, cardViewLogoutProfile;
 
     private FirebaseFirestore db;
     private UsersModel usersModel;
@@ -81,7 +81,21 @@ public class ProfileFragment extends Fragment {
                 startActivity(new Intent(getActivity(), WelcomeActivity.class));
             }
         });
+        cardViewLogoutProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FirebaseAuth.getInstance().signOut();
+                getActivity().finish();
+                startActivity(new Intent(getActivity(), WelcomeActivity.class));
+            }
+        });
         imgbtnBillProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getActivity(), BillActivity.class));
+            }
+        });
+        cardViewBillProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(getActivity(), BillActivity.class));
@@ -93,7 +107,19 @@ public class ProfileFragment extends Fragment {
                 startActivity(new Intent(getActivity(), InfoUserActivity.class));
             }
         });
+        cardViewEditProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getActivity(), InfoUserActivity.class));
+            }
+        });
         imgbtnWalletProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getActivity(), RechargeActivity.class));
+            }
+        });
+        cardViewWalletProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(getActivity(), RechargeActivity.class));
@@ -105,7 +131,19 @@ public class ProfileFragment extends Fragment {
                 startActivity(new Intent(getActivity(), ChangePassActivity.class));
             }
         });
+        cardViewChangePassProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getActivity(), ChangePassActivity.class));
+            }
+        });
         imgbtnManageProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getActivity(), ManageAdminActivity.class));
+            }
+        });
+        cardViewManageAdmin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(getActivity(), ManageAdminActivity.class));
@@ -128,6 +166,11 @@ public class ProfileFragment extends Fragment {
         txtPermissionProfile = view.findViewById(R.id.txtPermissionProfile);
         imgAvatarProfile = view.findViewById(R.id.imgAvatarProfile);
         cardViewManageAdmin = view.findViewById(R.id.cardViewManageAdmin);
+        cardViewBillProfile = view.findViewById(R.id.cardViewBillProfile);
+        cardViewChangePassProfile = view.findViewById(R.id.cardViewChangePassProfile);
+        cardViewEditProfile = view.findViewById(R.id.cardViewEditProfile);
+        cardViewLogoutProfile = view.findViewById(R.id.cardViewLogoutProfile);
+        cardViewWalletProfile = view.findViewById(R.id.cardViewWalletProfile);
         db = FirebaseFirestore.getInstance();
     }
 

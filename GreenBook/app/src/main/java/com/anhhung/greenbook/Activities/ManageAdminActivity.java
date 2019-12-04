@@ -25,7 +25,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class ManageAdminActivity extends AppCompatActivity {
 
     private TextView txtNameAdmin, txtPermissionAdmin;
-    private Button btnAddBook, btnBookManagement, btnManageCollectionMap;
+    private Button btnAddBook, btnBookManagement, btnManageCollectionMap, btnUserManagement;
     private CircleImageView imgAvatarAdmin;
     private SharedPreferences sharedPreferences;
     private String emailUser;
@@ -70,6 +70,7 @@ public class ManageAdminActivity extends AppCompatActivity {
         txtPermissionAdmin = findViewById(R.id.txtPermissionAdmin);
         btnAddBook = findViewById(R.id.btnAddBook);
         btnBookManagement = findViewById(R.id.btnBookManagement);
+        btnUserManagement = findViewById(R.id.btnUserManagement);
         imgAvatarAdmin = findViewById(R.id.imgAvatarAdmin);
         btnManageCollectionMap = findViewById(R.id.btnManageCollectionMap);
         db = FirebaseFirestore.getInstance();
@@ -87,6 +88,12 @@ public class ManageAdminActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(ManageAdminActivity.this,CollectionMapActivity.class);
                 startActivity(intent);
+            }
+        });
+        btnUserManagement.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(ManageAdminActivity.this,UserManagementActivity.class));
             }
         });
     }

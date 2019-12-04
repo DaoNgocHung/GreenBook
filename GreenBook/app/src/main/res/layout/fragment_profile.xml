@@ -170,12 +170,15 @@
                 android:orientation="vertical">
 
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/cardViewEditProfile"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginTop="15dp">
+
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
+
                         <ImageView
                             android:id="@+id/imgEditProfile"
                             android:layout_width="wrap_content"
@@ -198,12 +201,13 @@
                             app:layout_constraintStart_toEndOf="@+id/imgEditProfile"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintVertical_bias="0.483" />
+
                         <ImageButton
-                            android:background="@color/colorWhite"
                             android:id="@+id/imgbtnEditProfile"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="8dp"
+                            android:background="@color/colorWhite"
                             android:src="@drawable/ic_go_activity"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -255,12 +259,15 @@
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/cardViewWalletProfile"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginTop="1dp">
+
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
+
                         <ImageView
                             android:id="@+id/imgWalletProfile"
                             android:layout_width="wrap_content"
@@ -283,12 +290,13 @@
                             app:layout_constraintStart_toEndOf="@+id/imgWalletProfile"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintVertical_bias="0.483" />
+
                         <ImageButton
-                            android:background="@color/colorWhite"
                             android:id="@+id/imgbtnWalletProfile"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="8dp"
+                            android:background="@color/colorWhite"
                             android:src="@drawable/ic_go_activity"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -339,12 +347,15 @@
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/cardViewBillProfile"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginTop="1dp">
+
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
+
                         <ImageView
                             android:id="@+id/imgBillProfile"
                             android:layout_width="wrap_content"
@@ -367,12 +378,13 @@
                             app:layout_constraintStart_toEndOf="@+id/imgBillProfile"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintVertical_bias="0.483" />
+
                         <ImageButton
-                            android:background="@color/colorWhite"
                             android:id="@+id/imgbtnBillProfile"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="8dp"
+                            android:background="@color/colorWhite"
                             android:src="@drawable/ic_go_activity"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -381,12 +393,15 @@
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/cardViewChangePassProfile"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginTop="1dp">
+
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
+
                         <ImageView
                             android:id="@+id/imgChangePasswordProfile"
                             android:layout_width="wrap_content"
@@ -409,12 +424,13 @@
                             app:layout_constraintStart_toEndOf="@+id/imgChangePasswordProfile"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintVertical_bias="0.483" />
+
                         <ImageButton
-                            android:background="@color/colorWhite"
                             android:id="@+id/imgbtnChangePassProfile"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="8dp"
+                            android:background="@color/colorWhite"
                             android:src="@drawable/ic_go_activity"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -423,12 +439,15 @@
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/cardViewLogoutProfile"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginTop="1dp">
+
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
+
                         <ImageView
                             android:id="@+id/imgLogoutProfile"
                             android:layout_width="wrap_content"
@@ -451,12 +470,13 @@
                             app:layout_constraintStart_toEndOf="@+id/imgLogoutProfile"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintVertical_bias="0.483" />
+
                         <ImageButton
-                            android:background="@color/colorWhite"
                             android:id="@+id/imgbtnLogoutProfile"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="8dp"
+                            android:background="@color/colorWhite"
                             android:src="@drawable/ic_go_activity"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
