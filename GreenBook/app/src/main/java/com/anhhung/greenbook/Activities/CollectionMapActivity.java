@@ -9,9 +9,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.anhhung.greenbook.Adapters.CustomListViewCMAdapter;
 import com.anhhung.greenbook.Models.CollectionMapModel;
 import com.anhhung.greenbook.R;
 
@@ -47,6 +50,7 @@ public class CollectionMapActivity extends AppCompatActivity implements OnChartV
     private String year = c.get(Calendar.YEAR)+"";
     private String month = c.get(Calendar.MONTH)+1+"";
     private Spinner spMonthCM;
+    private List<CollectionMapModel> collectionMapModels = new ArrayList<>();
     private ArrayList<Integer> listSachBan = new ArrayList<>(12);
     private int sachCount = 0;
     private double sachMoney = 0;
@@ -54,6 +58,8 @@ public class CollectionMapActivity extends AppCompatActivity implements OnChartV
     private int callback = 0;
     private MyCallback myCallback;
     private int thangThongKe;
+    private TextView txtYearIncomeCM, txtMonthIncomeCM;
+    private ListView listViewCM;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -74,8 +80,13 @@ public class CollectionMapActivity extends AppCompatActivity implements OnChartV
                     Toast.makeText(CollectionMapActivity.this,year +"", Toast.LENGTH_LONG).show();
                     readData(new MyCallback() {
                         @Override
-                        public void onCallback(List<Integer> lisSachBan, double sachMoney) {
+                        public void onCallback(List<Integer> lisSachBan, double sachMoneyRD, List<CollectionMapModel> collectionMapModelList) {
+
                             showChart(listSachBan);
+                            txtYearIncomeCM.setText(sachMoneyRD+"");
+                            collectionMapModels = collectionMapModelList;
+                            sachMoney =0;
+
                         }
                     });
                 }
@@ -90,6 +101,9 @@ public class CollectionMapActivity extends AppCompatActivity implements OnChartV
 
     private void addControls() {
         initListSachBan(listSachBan);
+        txtYearIncomeCM = findViewById(R.id.txtYearIncomeCM);
+        txtMonthIncomeCM = findViewById(R.id.txtMonthIncomeCM);
+        listViewCM = findViewById(R.id.listViewCM);
         spMonthCM = findViewById(R.id.spMonthCM);
         db = FirebaseFirestore.getInstance();
         ArrayAdapter<String> adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item,addMonthData());
@@ -100,17 +114,22 @@ public class CollectionMapActivity extends AppCompatActivity implements OnChartV
             year = spMonthCM.getSelectedItem().toString();
             readData(new MyCallback() {
                 @Override
-                public void onCallback(List<Integer> lisSachBan, double sachMoney) {
+                public void onCallback(List<Integer> lisSachBan, double sachMoneyRD, List<CollectionMapModel> collectionMapModelList) {
                     showChart(listSachBan);
+                    txtYearIncomeCM.setText(sachMoneyRD+"");
+                    collectionMapModels = collectionMapModelList;
+                    sachMoney = 0;
                 }
             });
+
         }
     }
 
     @Override
-    public void onValueSelected(Entry e, Highlight h) {
+    public void onValueSelected(Entry e, final Highlight h) {
         Toast.makeText(this, "Sold book nums: "
                 + e.getY(), Toast.LENGTH_SHORT).show();
+        setCustomListCMData(collectionMapModels, ((int) h.getX()+1));
     }
 
     @Override
@@ -164,6 +183,7 @@ public class CollectionMapActivity extends AppCompatActivity implements OnChartV
                                     sachCount += collectionMapModel.getTongSachBan();
                                     sachMoney += collectionMapModel.getTongDoanhThuTien();
                                     thangThongKe = collectionMapModel.getThangThongKe()-1;
+                                    collectionMapModels.add(collectionMapModel);
                                 }
                                 listSachBan.set(thangThongKe,sachCount);
                             } else {
@@ -172,7 +192,7 @@ public class CollectionMapActivity extends AppCompatActivity implements OnChartV
                             sachCount = 0;
                             callback+=1;
                             if(callback == 12){
-                                myCallback.onCallback(listSachBan, sachMoney);
+                                myCallback.onCallback(listSachBan, sachMoney, collectionMapModels);
                                 callback=0;
                             }
                         }
@@ -183,7 +203,7 @@ public class CollectionMapActivity extends AppCompatActivity implements OnChartV
 
     }
     public interface MyCallback {
-        void onCallback(List<Integer> lisSachBan, double sachMoney);
+        void onCallback(List<Integer> lisSachBan, double sachMoney, List<CollectionMapModel> collectionMapModelList);
     }
     public void readData(MyCallback myCallback) {
         this.myCallback = myCallback;
@@ -249,6 +269,21 @@ public class CollectionMapActivity extends AppCompatActivity implements OnChartV
         for(int j = 0; j< 12 ; j++){
             listSachBan.add(j,0);
         }
+    }
+    private void setCustomListCMData(List<CollectionMapModel> collectionMapModelList, int thangThongKe){
+        List<CollectionMapModel> collectionMapModelCM = new ArrayList<>();
+        int tongGia = 0;
+        for(int i =0; i< collectionMapModelList.size();i++){
+            if(collectionMapModelList.get(i).getThangThongKe()==thangThongKe){
+                collectionMapModelCM.add(collectionMapModelList.get(i));
+                tongGia+=collectionMapModelList.get(i).getTongDoanhThuTien();
+            }
+        }
+        Log.d("INFO", collectionMapModelCM.toString());
+        CustomListViewCMAdapter customListViewCMAdapter = new CustomListViewCMAdapter(this,collectionMapModelCM);
+        txtMonthIncomeCM.setText(tongGia+"");
+        listViewCM.setAdapter(customListViewCMAdapter);
+
     }
 
 }
