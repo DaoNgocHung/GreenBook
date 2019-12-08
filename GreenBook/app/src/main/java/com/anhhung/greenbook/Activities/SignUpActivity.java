@@ -26,7 +26,6 @@ public class SignUpActivity extends AppCompatActivity {
 
     private EditText edtSignUpUsername, edtSignUpPass, edtSignUpConfirmPass, edtSignUpEmail;
     private Button btnSignUpSignUp;
-    private ImageButton imgbtnSignUpFaceBook, imgbtnSignUpTwitter, imgbtnSignUpGoogle;
     private TextView txtSignUpSignIn;
     private ProgressBar progressBar;
     private FirebaseAuth auth;
@@ -64,26 +63,6 @@ public class SignUpActivity extends AppCompatActivity {
             }
         });
 
-        imgbtnSignUpFaceBook.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(SignUpActivity.this,"Login with Facebook", Toast.LENGTH_LONG).show();
-            }
-        });
-
-        imgbtnSignUpGoogle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(SignUpActivity.this,"Login with Google",Toast.LENGTH_LONG).show();
-            }
-        });
-
-        imgbtnSignUpTwitter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(SignUpActivity.this,"Login with Twitter",Toast.LENGTH_LONG).show();
-            }
-        });
     }
     private void sendEmailVerify(){
         auth.createUserWithEmailAndPassword(edtSignUpEmail.getText().toString(), edtSignUpPass.getText().toString())
@@ -194,9 +173,6 @@ public class SignUpActivity extends AppCompatActivity {
         edtSignUpConfirmPass = findViewById(R.id.edtSignUpConfirmPass);
         edtSignUpEmail = findViewById(R.id.edtSignUpEmail);
         btnSignUpSignUp = findViewById(R.id.btnSignUpSignUp);
-        imgbtnSignUpFaceBook = findViewById(R.id.imgbtnSignUpFaceBook);
-        imgbtnSignUpGoogle = findViewById(R.id.imgbtnSignUpGoogle);
-        imgbtnSignUpTwitter = findViewById(R.id.imgbtnSignUpTwitter);
         txtSignUpSignIn = findViewById(R.id.txtSignUpSignIn);
         auth = FirebaseAuth.getInstance();
     }

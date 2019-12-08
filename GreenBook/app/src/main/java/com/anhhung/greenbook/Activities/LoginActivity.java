@@ -50,6 +50,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.shobhitpuri.custombuttons.GoogleSignInButton;
 import com.smarteist.autoimageslider.Transformations.TossTransformation;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -58,9 +59,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class LoginActivity extends AppCompatActivity {
-
     private Button btnLoginLogin;
-    private ImageButton imgbtnLoginGoogle;
     private EditText edtLoginUsername, edtLoginPass;
     private CheckBox chkLoginRemember;
     private TextView txtLoginForgot, txtLoginSignUp;
@@ -80,6 +79,7 @@ public class LoginActivity extends AppCompatActivity {
     private String hoTenFB="";
     private Date ngayThangNSFB;
     private String urlHinhDaiDienFB = "";
+    private GoogleSignInButton googleSignInButton;
 
     UsersModel usersModel = new UsersModel();
 
@@ -96,9 +96,9 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void addEvents() {
-        imgbtnLoginGoogle.setOnClickListener(new View.OnClickListener() {
+        googleSignInButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 Toast.makeText(LoginActivity.this,"Login with Google", Toast.LENGTH_LONG).show();
                 signInGoogle();
             }
@@ -338,8 +338,8 @@ public class LoginActivity extends AppCompatActivity {
                 });
     }
     private void addControls() {
+        googleSignInButton = findViewById(R.id.googleSignInButton2);
         btnLoginLogin = findViewById(R.id.btnLoginLogin);
-        imgbtnLoginGoogle = findViewById(R.id.imgbtnLoginGoogle);
         edtLoginUsername = findViewById(R.id.edtLoginUsername);
         edtLoginPass = findViewById(R.id.edtLoginPass);
         chkLoginRemember = findViewById(R.id.chkLoginRemember);

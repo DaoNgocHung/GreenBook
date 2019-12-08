@@ -27,6 +27,7 @@ import com.anhhung.greenbook.Activities.WelcomeActivity;
 import com.anhhung.greenbook.Models.UsersModel;
 import com.anhhung.greenbook.R;
 import com.bumptech.glide.Glide;
+import com.facebook.login.LoginManager;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -43,7 +44,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * A simple {@link Fragment} subclass.
  */
 public class ProfileFragment extends Fragment {
-
+    private LoginManager loginManager;
     private BlurImageView blurImageView;
     private ImageButton imgbtnLogoutProfile, imgbtnBillProfile, imgbtnEditProfile, imgbtnWalletProfile, imgbtnChangePassProfile,
             imgbtnManageProfile;
@@ -77,14 +78,25 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 FirebaseAuth.getInstance().signOut();
+                savePref("","");
+                if(loginManager.getInstance() != null){
+                    loginManager.getInstance().logOut();
+                }
                 getActivity().finish();
                 startActivity(new Intent(getActivity(), WelcomeActivity.class));
+
+
+
             }
         });
         cardViewLogoutProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 FirebaseAuth.getInstance().signOut();
+                savePref("","");
+                if(loginManager.getInstance() != null){
+                    loginManager.getInstance().logOut();
+                }
                 getActivity().finish();
                 startActivity(new Intent(getActivity(), WelcomeActivity.class));
             }
@@ -202,6 +214,13 @@ public class ProfileFragment extends Fragment {
                         }
                     }
                 });
+    }
+    public void savePref(String userEmail, String pass){
+        SharedPreferences sharedPreferences= getActivity().getSharedPreferences("infoUser", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("emailUser", userEmail);
+        editor.putString("passUser", pass);
+        editor.apply();
     }
 
 }
