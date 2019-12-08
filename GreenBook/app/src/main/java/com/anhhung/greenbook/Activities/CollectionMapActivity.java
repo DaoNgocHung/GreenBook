@@ -2,6 +2,7 @@ package com.anhhung.greenbook.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -32,9 +33,7 @@ import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -60,6 +59,8 @@ public class CollectionMapActivity extends AppCompatActivity implements OnChartV
     private int thangThongKe;
     private TextView txtYearIncomeCM, txtMonthIncomeCM;
     private ListView listViewCM;
+
+    private Toolbar actionToolbarCollectionMap;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -70,6 +71,11 @@ public class CollectionMapActivity extends AppCompatActivity implements OnChartV
     }
 
     private void addEvents() {
+        // BACK toolbar
+        setSupportActionBar(actionToolbarCollectionMap);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         spMonthCM.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -105,6 +111,8 @@ public class CollectionMapActivity extends AppCompatActivity implements OnChartV
         txtMonthIncomeCM = findViewById(R.id.txtMonthIncomeCM);
         listViewCM = findViewById(R.id.listViewCM);
         spMonthCM = findViewById(R.id.spMonthCM);
+        actionToolbarCollectionMap = findViewById(R.id.actionToolbarCollectionMap);
+        actionToolbarCollectionMap.setTitle("Collation Map");
         db = FirebaseFirestore.getInstance();
         ArrayAdapter<String> adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item,addMonthData());
         adapter.setDropDownViewResource(android.R.layout.simple_list_item_single_choice);
@@ -284,6 +292,12 @@ public class CollectionMapActivity extends AppCompatActivity implements OnChartV
         txtMonthIncomeCM.setText(tongGia+"");
         listViewCM.setAdapter(customListViewCMAdapter);
 
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
 }

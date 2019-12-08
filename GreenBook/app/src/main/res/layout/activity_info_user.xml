@@ -6,15 +6,27 @@
     android:layout_height="match_parent"
     tools:context=".Activities.InfoUserActivity">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/actionToolbarInfoUser"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorLimeGreen"
+        android:orientation="vertical"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:titleTextColor="@color/colorWhite"></androidx.appcompat.widget.Toolbar>
+
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/imgInfoUserAvatar"
         android:layout_width="140dp"
         android:layout_height="140dp"
-        android:layout_marginTop="64dp"
+        android:layout_marginTop="32dp"
         android:src="@drawable/chopper"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/actionToolbarInfoUser" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardViewUser1"

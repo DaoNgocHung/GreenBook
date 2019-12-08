@@ -52,13 +52,14 @@
                 app:layout_constraintTop_toBottomOf="@+id/imgAvatarProfile" />
 
             <ImageButton
-                android:background="@color/colorTransparent"
                 android:id="@+id/imgbtnNotification"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
+                android:background="@color/colorTransparent"
                 android:src="@drawable/ic_notification"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -238,7 +239,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="32dp"
-                            android:text="Manage"
+                            android:text="Admin Board"
                             android:textColor="@color/black"
                             android:textSize="18sp"
                             app:layout_constraintBottom_toBottomOf="parent"
@@ -307,10 +308,13 @@
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
-                    android:layout_marginTop="1dp">
+                    android:layout_marginTop="1dp"
+                    android:visibility="gone">
+
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
+
                         <ImageView
                             android:id="@+id/imgFavorProfile"
                             android:layout_width="wrap_content"
@@ -333,12 +337,13 @@
                             app:layout_constraintStart_toEndOf="@+id/imgFavorProfile"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintVertical_bias="0.483" />
+
                         <ImageButton
-                            android:background="@color/colorWhite"
                             android:id="@+id/imgbtnFavorProfile"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="8dp"
+                            android:background="@color/colorWhite"
                             android:src="@drawable/ic_go_activity"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"

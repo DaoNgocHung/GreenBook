@@ -134,7 +134,8 @@ public class InfoBookActivity extends AppCompatActivity {
         InfoBookViewPagerAdapter adapter = new InfoBookViewPagerAdapter(getSupportFragmentManager());
         //Add Fragment
         SummaryBookFragment summaryBookFragment = newInstance(booksModel.getGioiThieuSach());
-        InfoBookFragment infoBookFragment = newInstance(booksModel.getNXB(), booksModel.getTacGia(), booksModel.getDanhMuc(), booksModel.getNgonNgu());
+        InfoBookFragment infoBookFragment = newInstance(booksModel.getNXB(), booksModel.getTacGia(),
+                booksModel.getDanhMuc(), booksModel.getNgonNgu(), booksModel.getIdDM());
         CommentBookFragment commentBookFragment = newInstance(booksModel.getTenSach(), booksModel.getDanhMuc(), booksModel.getIdDM());
         adapter.AddFragment(infoBookFragment, "Info");
         adapter.AddFragment(summaryBookFragment, "Summary");
@@ -476,13 +477,14 @@ public class InfoBookActivity extends AppCompatActivity {
         return f;
     }
 
-    public static InfoBookFragment newInstance(String NXB, String tacGia, String danhMuc, String ngonNgu) {
+    public static InfoBookFragment newInstance(String NXB, String tacGia, String danhMuc, String ngonNgu, String idDM) {
         InfoBookFragment f = new InfoBookFragment();
         Bundle args = new Bundle();
         args.putString("NXB", NXB);
         args.putString("tacGia", tacGia);
         args.putString("danhMuc", danhMuc);
         args.putString("ngonNgu", ngonNgu);
+        args.putString("idDM",idDM);
         f.setArguments(args);
         return f;
     }

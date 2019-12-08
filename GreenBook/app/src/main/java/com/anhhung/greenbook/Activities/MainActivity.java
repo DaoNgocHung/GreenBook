@@ -13,14 +13,19 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -68,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private LibraryFragment libraryFragment;
     private ProfileFragment profileFragment;
     private CircleImageView imgDrawerProfile;
+    private Dialog dialogNoConnect;
 
     private Intent intent;
     private String emailUser;
@@ -373,5 +379,35 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         bookFindingAdapter = new BookFindingAdapter(this,booksModels);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recyclerView.setAdapter(bookFindingAdapter);
+    }
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    @Override
+    protected void onResume() {
+        if(isNetworkAvailable() == false){
+            dialogNoConnect = new Dialog(view.getContext());
+            dialogNoConnect.setContentView(R.layout.dialog_no_internet);
+            dialogNoConnect.setCancelable(false);
+            dialogNoConnect.show();
+            Button btnYesConnect, btnNoConnect;
+            btnYesConnect = dialogNoConnect.findViewById(R.id.btnYesConnect);
+            btnYesConnect.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(isNetworkAvailable() == false){
+                        Intent intent = new Intent(Settings.ACTION_WIFI_SETTINGS);
+                        startActivity(intent);
+                    }  else {
+                        dialogNoConnect.dismiss();
+                    }
+                }
+            });
+        }
+        super.onResume();
     }
 }

@@ -88,6 +88,11 @@ public class ChangePassActivity extends AppCompatActivity {
                 }
             }
         });
+
+        //Back toolbar
+        setSupportActionBar(actionToolbarChangePass);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
 
     @Override

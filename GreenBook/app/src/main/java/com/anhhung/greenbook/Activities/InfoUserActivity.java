@@ -1,6 +1,7 @@
 package com.anhhung.greenbook.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
@@ -37,6 +38,7 @@ public class InfoUserActivity extends AppCompatActivity implements DatePickerDia
     private EditText edtInfoUserName;
     private RadioButton rdInfoUserMale, rdInfoUserFemale;
     private SharedPreferences sharedPreferences;
+    private Toolbar actionToolbarInfoUser;
 
     private boolean isCheckEdit = false;
     private String emailUser;
@@ -84,6 +86,11 @@ public class InfoUserActivity extends AppCompatActivity implements DatePickerDia
                 showDatePickerDialog();
             }
         });
+
+        //Back toolbar
+        setSupportActionBar(actionToolbarInfoUser);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
 
     private void editDataProfile(){
@@ -135,11 +142,13 @@ public class InfoUserActivity extends AppCompatActivity implements DatePickerDia
         edtInfoUserName = findViewById(R.id.edtInfoUserName);
         rdInfoUserMale = findViewById(R.id.rdInfoUserMale);
         rdInfoUserFemale = findViewById(R.id.rdInfoUserFemale);
+        actionToolbarInfoUser = findViewById(R.id.actionToolbarInfoUser);
+        actionToolbarInfoUser.setTitle("Info User");
         sharedPreferences= this.getSharedPreferences("infoUser", Context.MODE_PRIVATE);
         db = FirebaseFirestore.getInstance();
     }
 
-    //Chuyen doi ngay thang nam sinh tu Facebook
+    //Chuyen doi ngay thang nam
     public Timestamp doiNgay(String d){
         Timestamp timeStampDate = null;
         try{
@@ -174,5 +183,10 @@ public class InfoUserActivity extends AppCompatActivity implements DatePickerDia
         txtInfoUserBirthDay.setText(str_date);
     }
 
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
 
 }

@@ -75,4 +75,6 @@ dependencies {
     //Chart
     implementation 'com.github.PhilJay:MPAndroidChart:v3.0.2'
 
+    //Gif
+    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.19'
 }

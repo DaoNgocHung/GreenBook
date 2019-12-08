@@ -6,13 +6,25 @@
     android:layout_height="match_parent"
     tools:context=".Activities.BookManagementActivity">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/actionToolbarBookManagement"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorLimeGreen"
+        android:orientation="vertical"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:titleTextColor="@color/colorWhite"></androidx.appcompat.widget.Toolbar>
+
     <Spinner
         android:id="@+id/spDMBookManage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/actionToolbarBookManagement" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rViewBookManage"

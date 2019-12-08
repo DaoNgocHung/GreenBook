@@ -76,18 +76,6 @@
             android:background="#F1F3CE">
 
             <Button
-                android:id="@+id/btnAddBook"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
-                android:background="@drawable/edittext_style_1"
-                android:text="Add"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/btnBookManagement"
-                app:layout_constraintTop_toBottomOf="@+id/textViewBookManage" />
-
-            <Button
                 android:id="@+id/btnBookManagement"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

@@ -57,8 +57,13 @@ public class InfoBookFragment extends Fragment {
         String tacGia = this.getArguments().getString("tacGia", " ");
         tenDM = this.getArguments().getString("danhMuc", " ");
         String ngonNgu = this.getArguments().getString("ngonNgu", " ");
-
+        String ngayUpload = this.getArguments().getString("ngayUpload");
+        String idDM = this.getArguments().getString("idDM");
         View view = inflater.inflate(R.layout.fragment_info_book, null);
+
+//        db.collection("DanhMucCollection").document(idDM)
+//                .collection()
+
 
         addControls(view);
 
@@ -66,6 +71,7 @@ public class InfoBookFragment extends Fragment {
         txtInfoAuthor.setText(tacGia);
         txtInfoCate.setText(tenDM);
         txtInfoLanguage.setText(ngonNgu);
+        txtInfoDate.setText(ngayUpload);
 
         // Inflate the layout for this fragment
         return view;

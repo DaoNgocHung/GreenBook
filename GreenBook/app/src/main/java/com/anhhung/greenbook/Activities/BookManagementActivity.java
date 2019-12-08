@@ -1,6 +1,7 @@
 package com.anhhung.greenbook.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -30,6 +31,7 @@ public class BookManagementActivity extends AppCompatActivity {
     private RecyclerView rViewBookManage;
     private Spinner spDMBookManage;
     private LinearLayoutManager layoutManager;
+    private Toolbar actionToolbarBookManagement;
 
     private FirebaseFirestore db;
     private ArrayList<String> listCategory = new ArrayList<>();
@@ -51,6 +53,8 @@ public class BookManagementActivity extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(this);
         rViewBookManage.setLayoutManager(layoutManager);
         spDMBookManage = findViewById(R.id.spDMBookManage);
+        actionToolbarBookManagement = findViewById(R.id.actionToolbarBookManagement);
+        actionToolbarBookManagement.setTitle("Book Management");
         db = FirebaseFirestore.getInstance();
         listCategory = addCategoryData(listCategory);
         ArrayAdapter<String> adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item,listCategory);
@@ -91,6 +95,11 @@ public class BookManagementActivity extends AppCompatActivity {
 
             }
         });
+
+        //Back toolbar
+        setSupportActionBar(actionToolbarBookManagement);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
 
     // Lấy sách từ danh mục
@@ -119,5 +128,11 @@ public class BookManagementActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         bookManageAdapter.stopListening();
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 }

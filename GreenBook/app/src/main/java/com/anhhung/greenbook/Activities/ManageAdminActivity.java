@@ -2,6 +2,7 @@ package com.anhhung.greenbook.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.content.Context;
 import android.content.Intent;
@@ -31,6 +32,7 @@ public class ManageAdminActivity extends AppCompatActivity {
     private String emailUser;
     private FirebaseFirestore db;
     private UsersModel usersModel;
+    private Toolbar actionToolbarAdmin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,11 +70,12 @@ public class ManageAdminActivity extends AppCompatActivity {
     private void addControls() {
         txtNameAdmin = findViewById(R.id.txtNameAdmin);
         txtPermissionAdmin = findViewById(R.id.txtPermissionAdmin);
-        btnAddBook = findViewById(R.id.btnAddBook);
         btnBookManagement = findViewById(R.id.btnBookManagement);
         btnUserManagement = findViewById(R.id.btnUserManagement);
         imgAvatarAdmin = findViewById(R.id.imgAvatarAdmin);
         btnManageCollectionMap = findViewById(R.id.btnManageCollectionMap);
+        actionToolbarAdmin = findViewById(R.id.actionToolbarAdmin);
+        actionToolbarAdmin.setTitle("Admin Board");
         db = FirebaseFirestore.getInstance();
     }
 
@@ -96,6 +99,16 @@ public class ManageAdminActivity extends AppCompatActivity {
                 startActivity(new Intent(ManageAdminActivity.this,UserManagementActivity.class));
             }
         });
+        //Back toolbar
+        setSupportActionBar(actionToolbarAdmin);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
 }
