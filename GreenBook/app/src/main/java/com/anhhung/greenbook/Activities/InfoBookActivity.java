@@ -499,22 +499,22 @@ public class InfoBookActivity extends AppCompatActivity {
         return f;
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.book_menu, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        getMenuInflater().inflate(R.menu.book_menu, menu);
+//        return super.onCreateOptionsMenu(menu);
+//    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.mnuShare) {
-            Toast.makeText(InfoBookActivity.this, "SHARE", Toast.LENGTH_SHORT).show();
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
+    //@Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        int id = item.getItemId();
+//
+//        if (id == R.id.mnuShare) {
+//            Toast.makeText(InfoBookActivity.this, "SHARE", Toast.LENGTH_SHORT).show();
+//        }
+//
+//        return super.onOptionsItemSelected(item);
+//    }
     public void displayAlertDialog() {
         Log.d("INFO","Show Dialog");
         LayoutInflater inflater = getLayoutInflater();
