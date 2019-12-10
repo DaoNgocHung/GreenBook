@@ -25,11 +25,11 @@ public class BooksModel {
     private String tacGia;
     private long luotDanhGia;
     private String idDM;
+    private boolean trangThai;
 
-    public BooksModel(String idSach, String tenSach, float danhGia, String biaSach,
-                      String danhMuc, int giamGia, String gioiThieuSach, String noiDung,
-                      String NXB, Timestamp ngayUpload, String ngonNgu,
-                      long soNguoiMua, String tacGia, double giaTien, long luotDanhGia, String idDM) {
+    public BooksModel(String tenSach, float danhGia, String biaSach, String danhMuc, int giamGia, String gioiThieuSach,
+                      String noiDung, double giaTien, String NXB, Timestamp ngayUpload, String ngonNgu, long soNguoiMua,
+                      String tacGia, long luotDanhGia, String idDM, boolean trangThai) {
         this.tenSach = tenSach;
         this.danhGia = danhGia;
         this.biaSach = biaSach;
@@ -37,14 +37,15 @@ public class BooksModel {
         this.giamGia = giamGia;
         this.gioiThieuSach = gioiThieuSach;
         this.noiDung = noiDung;
+        this.giaTien = giaTien;
         this.NXB = NXB;
         this.ngayUpload = ngayUpload;
         this.ngonNgu = ngonNgu;
         this.soNguoiMua = soNguoiMua;
         this.tacGia = tacGia;
-        this.giaTien = giaTien;
         this.luotDanhGia = luotDanhGia;
         this.idDM = idDM;
+        this.trangThai = trangThai;
     }
 
     public BooksModel() {
@@ -168,5 +169,13 @@ public class BooksModel {
 
     public void setIdDM(String idDM) {
         this.idDM = idDM;
+    }
+
+    public boolean isTrangThai() {
+        return trangThai;
+    }
+
+    public void setTrangThai(boolean trangThai) {
+        this.trangThai = trangThai;
     }
 }

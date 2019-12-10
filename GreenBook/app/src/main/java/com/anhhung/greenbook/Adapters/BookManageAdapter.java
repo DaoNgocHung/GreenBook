@@ -85,7 +85,7 @@ public class BookManageAdapter extends FirestoreRecyclerAdapter<BooksModel, Book
                                     public void onClick(final View view) {
                                         db.collection("DanhMucCollection").document(model.getIdDM())
                                                 .collection("SachColection").document(model.getTenSach())
-                                                .delete()
+                                                .update("trangThai",false)
                                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                     @Override
                                                     public void onComplete(@NonNull Task<Void> task) {
