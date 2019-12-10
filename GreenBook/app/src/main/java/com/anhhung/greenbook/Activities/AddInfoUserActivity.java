@@ -186,7 +186,7 @@ public class AddInfoUserActivity extends AppCompatActivity implements DatePicker
     }
 
     private void addControls() {
-
+        Calendar calendar = Calendar.getInstance();
         intent = getIntent();
         urlImage = intent.getStringExtra("hinhDaiDien");
 
@@ -199,7 +199,7 @@ public class AddInfoUserActivity extends AppCompatActivity implements DatePicker
             txtAddInfoBirth.setText(strDate);
         }
         else{
-            txtAddInfoBirth.setText(Calendar.DAY_OF_MONTH+"/"+Calendar.MONTH+"/"+Calendar.YEAR);
+            txtAddInfoBirth.setText(calendar.get(Calendar.DAY_OF_MONTH)+"/"+calendar.get(Calendar.MONTH)+"/"+calendar.get(Calendar.YEAR));
         }
         txtAddInfoName = findViewById(R.id.txtAddInfoName);
         txtAddInfoName.setText(intent.getStringExtra("userName"));

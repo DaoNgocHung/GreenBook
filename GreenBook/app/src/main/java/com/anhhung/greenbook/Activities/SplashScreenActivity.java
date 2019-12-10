@@ -2,7 +2,9 @@ package com.anhhung.greenbook.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.Image;
 import android.os.Bundle;
 import android.view.animation.Animation;
@@ -25,6 +27,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     }
 
     private void addControls() {
+        final SharedPreferences sharedPreferences = this.getSharedPreferences("infoUser", Context.MODE_PRIVATE);
         imgSplashLogo = findViewById(R.id.imgSplashLogo);
         imgSplashTitle = findViewById(R.id.imgSplashTitle);
         Animation myAnimation = AnimationUtils.loadAnimation(this,R.anim.splash_transition);
@@ -33,7 +36,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         imgSplashTitle.setAnimation(myAnimation);
 
         final Intent intent = new Intent(this, IntroActivity.class);
-
+        final Intent intent2 = new Intent(this, MainActivity.class);
         Thread timer = new Thread(){
             public void run(){
                 try {
@@ -42,7 +45,12 @@ public class SplashScreenActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 finally {
-                    startActivity(intent);
+                    if(sharedPreferences.getString("emailUser",null)!= null && sharedPreferences.getString("emailUser",null)!=""){
+                        startActivity(intent2);
+                    }
+                    else{
+                        startActivity(intent);
+                    }
                     finish();
                 }
             }

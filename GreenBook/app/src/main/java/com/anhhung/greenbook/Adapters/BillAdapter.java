@@ -36,8 +36,8 @@ public class BillAdapter extends FirestoreRecyclerAdapter<BillDetailModel, BillA
         holder.txtTimePurchaseBill.setText(model.getTimePurchase().toString());
         holder.txtStatusBill.setText(model.getStatus());
         if(holder.txtStatusBill.getText().equals("Transaction Successful")){
-            holder.backgroundBill.setBackgroundColor(Color.parseColor("#67F967"));
-            holder.cardViewBill.setBackgroundColor(Color.parseColor("#67F967"));
+            holder.backgroundBill.setBackgroundColor(Color.parseColor("#B3DE81"));
+            holder.cardViewBill.setBackgroundColor(Color.parseColor("#B3DE81"));
         } else {
             holder.backgroundBill.setBackgroundColor(Color.parseColor("#ff4646"));
             holder.cardViewBill.setBackgroundColor(Color.parseColor("#ff4646"));

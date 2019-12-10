@@ -191,7 +191,7 @@ public class InfoBookActivity extends AppCompatActivity {
                                             if (task.isSuccessful()) {
                                                 for (QueryDocumentSnapshot document : task.getResult()) {
                                                     usersModel = document.toObject(UsersModel.class);
-                                                    if (booksModel.getGiaTien() >= usersModel.getTien()) {
+                                                    if (booksModel.getGiaTien() > usersModel.getTien()) {
                                                         Toast.makeText(InfoBookActivity.this, "Tài khoản của bạn không đủ tiền", Toast.LENGTH_SHORT).show();
                                                     } else {
                                                         //Thêm sách vào thư viện của user
@@ -204,7 +204,6 @@ public class InfoBookActivity extends AppCompatActivity {
                                                                     public void onSuccess(Void aVoid) {
                                                                         double tien = usersModel.getTien() - booksModel.getGiaTien();
                                                                         long soSachDaMua = usersModel.getSoSachDaMua() + 1;
-
                                                                         //Trừ tiền của người dùng
                                                                         db.collection("UserModel").document(emailUser)
                                                                                 .update("tien", tien,
@@ -326,6 +325,133 @@ public class InfoBookActivity extends AppCompatActivity {
 
                                             @Override
                                             public void onUserEarnedReward(@NonNull com.google.android.gms.ads.rewarded.RewardItem rewardItem) {
+                                                // Kiểm tra tiền của khách hàng so với giá tiền cuốn sách
+                                                db.collection("UserModel")
+                                                        .whereEqualTo("email", emailUser)
+                                                        .limit(1)
+                                                        .get()
+                                                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                                if (task.isSuccessful()) {
+                                                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                                                        usersModel = document.toObject(UsersModel.class);
+                                                                        if (booksModel.getGiaTien() > usersModel.getTien()) {
+                                                                            Toast.makeText(InfoBookActivity.this, "Tài khoản của bạn không đủ tiền", Toast.LENGTH_SHORT).show();
+                                                                        } else {
+                                                                            //Thêm sách vào thư viện của user
+                                                                            db.collection("UserModel").document(emailUser)
+                                                                                    .collection("LibraryCollection").document(booksModel.getTenSach())
+                                                                                    .set(booksModel)
+                                                                                    //Thêm sách vào thư viện thành công
+                                                                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                                        @Override
+                                                                                        public void onSuccess(Void aVoid) {
+                                                                                            double tien = usersModel.getTien() - booksModel.getGiaTien();
+                                                                                            long soSachDaMua = usersModel.getSoSachDaMua() + 1;
+                                                                                            //Trừ tiền của người dùng
+                                                                                            db.collection("UserModel").document(emailUser)
+                                                                                                    .update("tien", tien,
+                                                                                                            "soSachDaMua", soSachDaMua)
+                                                                                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                                                        @Override
+                                                                                                        public void onSuccess(Void aVoid) {
+                                                                                                            //Cập nhật thống kê
+                                                                                                            db.collection("CollectionMap").document((year)).collection(month)
+                                                                                                                    .limit(1)
+                                                                                                                    .whereEqualTo("collectionMapName", booksModel.getTenSach())
+                                                                                                                    .get()
+                                                                                                                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                                                                                                        @Override
+                                                                                                                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                                                                                                            if (queryDocumentSnapshots.getDocuments().isEmpty()) {
+                                                                                                                                Calendar ca = Calendar.getInstance();
+                                                                                                                                CollectionMapModel collectionMapModel = new CollectionMapModel(1, booksModel.getGiaTien(), booksModel.getTenSach(), ca.MONTH);
+                                                                                                                                db.collection("CollectionMap").document((year)).collection(month).document(booksModel.getTenSach())
+                                                                                                                                        .set(collectionMapModel);
+                                                                                                                            } else {
+                                                                                                                                db.collection("CollectionMap").document((year)).collection(month)
+                                                                                                                                        .limit(1)
+                                                                                                                                        .whereEqualTo("collectionMapName", booksModel.getTenSach())
+                                                                                                                                        .get()
+                                                                                                                                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                                                                                                            @Override
+                                                                                                                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                                                                                                                if (task.isSuccessful()) {
+                                                                                                                                                    for (DocumentSnapshot documentSnapshot : task.getResult().getDocuments()) {
+                                                                                                                                                        CollectionMapModel collectionMapModel = documentSnapshot.toObject(CollectionMapModel.class);
+                                                                                                                                                        double tien = collectionMapModel.getTongDoanhThuTien() + booksModel.getGiaTien();
+                                                                                                                                                        db.collection("CollectionMap").document((year + "")).collection(month + "").document(booksModel.getTenSach())
+                                                                                                                                                                .update("tongDoanhThuTien", tien, "tongSachBan", collectionMapModel.getTongSachBan()+1);
+                                                                                                                                                    }
+                                                                                                                                                }
+                                                                                                                                            }
+                                                                                                                                        });
+                                                                                                                            }
+                                                                                                                        }
+                                                                                                                    });
+
+                                                                                                            //Tạo hoá đơn
+                                                                                                            BillDetailModel billDetailModel =
+                                                                                                                    new BillDetailModel(emailUser, Timestamp.now(), booksModel.getTenSach(), booksModel.getGiaTien(), "Transaction Successful");
+                                                                                                            db.collection("UserModel").document(emailUser)
+                                                                                                                    .collection("BillCollection").document()
+                                                                                                                    .set(billDetailModel);
+
+                                                                                                            //Update thuộc tính soNguoiMua của sách
+                                                                                                            db.collection("DanhMucCollection").document(booksModel.getIdDM()).collection("SachColection")
+                                                                                                                    .whereEqualTo("tenSach",booksModel.getTenSach())
+                                                                                                                    .limit(1)
+                                                                                                                    .get()
+                                                                                                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                                                                                        @Override
+                                                                                                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                                                                                            if(task.isSuccessful()){
+                                                                                                                                for (DocumentSnapshot documentSnapshot : task.getResult().getDocuments()) {
+                                                                                                                                    // here you can get the id.
+                                                                                                                                    String id = documentSnapshot.getId();
+                                                                                                                                    db.collection("DanhMucCollection").document(booksModel.getIdDM()).collection("SachColection").document(id)
+                                                                                                                                            .update("soNguoiMua", booksModel.getSoNguoiMua()+1);
+                                                                                                                                }
+                                                                                                                            }
+                                                                                                                        }
+                                                                                                                    });
+                                                                                                            Toast.makeText(InfoBookActivity.this, "Transaction Successful", Toast.LENGTH_SHORT).show();
+                                                                                                        }
+                                                                                                    })
+                                                                                                    .addOnFailureListener(new OnFailureListener() {
+                                                                                                        @Override
+                                                                                                        public void onFailure(@NonNull Exception e) {
+
+                                                                                                            //Tạo hoá đơn
+                                                                                                            BillDetailModel billDetailModel =
+                                                                                                                    new BillDetailModel(emailUser, Timestamp.now(), booksModel.getTenSach(), booksModel.getGiaTien(), "Transaction Error");
+                                                                                                            db.collection("UserModel").document(emailUser)
+                                                                                                                    .collection("BillCollection").document()
+                                                                                                                    .set(billDetailModel);
+                                                                                                        }
+                                                                                                    });
+                                                                                        }
+                                                                                    })
+
+                                                                                    // Sách không thêm vào thư viện được
+                                                                                    .addOnFailureListener(new OnFailureListener() {
+                                                                                        @Override
+                                                                                        public void onFailure(@NonNull Exception e) {
+                                                                                            BillDetailModel billDetailModel =
+                                                                                                    new BillDetailModel(emailUser, Timestamp.now(), booksModel.getTenSach(), booksModel.getGiaTien(), "Book not added to library");
+                                                                                            db.collection("UserModel").document(emailUser)
+                                                                                                    .collection("BillCollection").document()
+                                                                                                    .set(billDetailModel);
+                                                                                        }
+                                                                                    });
+                                                                        }
+                                                                    }
+                                                                } else {
+                                                                    Log.d(TAG, "Error getting documents: ", task.getException());
+                                                                }
+                                                            }
+                                                        });
 
                                             }
 

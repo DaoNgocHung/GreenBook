@@ -38,9 +38,9 @@ public class SliderAdvertiseAdapter extends SliderViewAdapter<SliderAdvertiseAda
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, "This is item in position " + position, Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(context, AdMob.class);
-                context.startActivity(intent);
+                //Toast.makeText(context, "This is item in position " + position, Toast.LENGTH_SHORT).show();
+                //Intent intent = new Intent(context, AdMob.class);
+                //context.startActivity(intent);
             }
         });
 
