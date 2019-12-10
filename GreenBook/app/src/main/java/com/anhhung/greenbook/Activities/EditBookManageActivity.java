@@ -80,7 +80,8 @@ public class EditBookManageActivity extends AppCompatActivity {
                 && checkNull(edtEditIntroBook.getText().toString())
                 && checkNull(edtEditLanguageBook.getText().toString())
                 && checkNull(edtEditNXBBook.getText().toString())
-                && checkNull(edtEditPriceBook.getText().toString())){
+                && checkNull(edtEditPriceBook.getText().toString())
+                && checkPrice(edtEditPriceBook.getText().toString())){
                     db.collection("DanhMucCollection").document(idDM)
                             .collection("SachColection").document(edtEditTitleBook.getText().toString())
                             .update("tacGia",edtEditAuthorBook.getText().toString(),
@@ -103,7 +104,7 @@ public class EditBookManageActivity extends AppCompatActivity {
                             });
                 }
                 else {
-                    Toast.makeText(EditBookManageActivity.this,"Please fill out all data",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EditBookManageActivity.this,"Please check all data",Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -112,6 +113,25 @@ public class EditBookManageActivity extends AppCompatActivity {
     public boolean checkNull(String s){
         if(s.equals("") || s.equals(" "))
             return false;
+        return true;
+    }
+    //Kiểm tra giá tiền hợp lệ và không âm
+    public boolean checkPrice(String s){
+        if(!checkNumber(s)){
+            return false;
+        }
+        if(Double.parseDouble(s) < 0){
+            return false;
+        }
+        return true;
+    }
+    //Kiểm tra chuỗi toàn số
+    private boolean checkNumber(String s){
+        for (int i = 0; i < s.length(); i++) {
+            if (Character.isLetter(s.charAt(i))) {
+                return false;
+            }
+        }
         return true;
     }
 

@@ -41,6 +41,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Random;
 
 public class AddInfoUserActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener{
@@ -107,9 +108,9 @@ public class AddInfoUserActivity extends AppCompatActivity implements DatePicker
                         UsersModel usersModel = new UsersModel(userName, gender, doiNgay(birthDay), urlImage,
                                 email,"member",phone,0.0, 0);
                         db.collection("UserModel").document(email).set(usersModel);
-                        Intent intentCategory = new Intent(AddInfoUserActivity.this,MainActivity.class);
-                        intentCategory.putExtra("email", email);
-                        startActivity(intentCategory);
+                        Intent intentMain = new Intent(AddInfoUserActivity.this,MainActivity.class);
+                        intentMain.putExtra("email", email);
+                        startActivity(intentMain);
                     }
                     else{
                         avatarStorageReference = avatarStorageReference.child("image" + imgUri.getLastPathSegment());
@@ -144,9 +145,9 @@ public class AddInfoUserActivity extends AppCompatActivity implements DatePicker
                                                 UsersModel usersModel = new UsersModel(userName, gender, doiNgay(birthDay), downloadUri.toString(),
                                                         email,"member",phone,0.0, 0);
                                                 db.collection("UserModel").document(email).set(usersModel);
-                                                Intent intentCategory = new Intent(AddInfoUserActivity.this,LoginActivity.class);
-                                                intentCategory.putExtra("email", email);
-                                                startActivity(intentCategory);
+                                                Intent intentMain = new Intent(AddInfoUserActivity.this,LoginActivity.class);
+                                                intentMain.putExtra("email", email);
+                                                startActivity(intentMain);
                                             } else {
                                                 Toast.makeText(AddInfoUserActivity.this,"Get Image URL Fail.", Toast.LENGTH_SHORT).show();
                                             }
@@ -233,19 +234,49 @@ public class AddInfoUserActivity extends AppCompatActivity implements DatePicker
             isError = true;
         }
 
+        if(countWords(edtAddInfoPhone.getText().toString()) != 10){
+            Toast.makeText(AddInfoUserActivity.this,"Phone syntax error",Toast.LENGTH_SHORT).show();
+            edtAddInfoPhone.requestFocus();
+            isError = true;
+        }
+
+        if(getAge(yearNS,monthNS,dayNS) < 5){
+            isError = true;
+            Toast.makeText(AddInfoUserActivity.this,"You are under 5 years old",Toast.LENGTH_SHORT).show();
+        }
+
         if(isSelectImage == false){
             if(urlImage == null){
                 Toast.makeText(AddInfoUserActivity.this,"Select your image", Toast.LENGTH_SHORT).show();
                 isError = true;
             }
-
         }
+
+
+
+
         if(isError == false){
             return true;
         }
         return false;
     }
+    private int getAge(int year, int month, int day){
+        Calendar dob = Calendar.getInstance();
+        Calendar today = Calendar.getInstance();
 
+        dob.set(year, month, day);
+
+        int age = today.get(Calendar.YEAR) - dob.get(Calendar.YEAR);
+
+        if (today.get(Calendar.DAY_OF_YEAR) < dob.get(Calendar.DAY_OF_YEAR)){
+            age--;
+        }
+
+        Integer ageInt = new Integer(age);
+
+        return ageInt;
+    }
+    //Kiểm  tra chuỗi toàn só
     private boolean checkNumber(String s){
         for (int i = 0; i < s.length(); i++) {
             if (Character.isLetter(s.charAt(i))) {
@@ -254,6 +285,29 @@ public class AddInfoUserActivity extends AppCompatActivity implements DatePicker
         }
         return true;
     }
+    // Đếm ký tự
+    public static int countWords(String input) {
+        if (input == null) {
+            return -1;
+        }
+        int count = 0;
+        int size = input.length();
+        boolean notCounted = true;
+        for (int i = 0; i < size; i++) {
+            if (input.charAt(i) != ' ' && input.charAt(i) != '\t'
+                    && input.charAt(i) != '\n') {
+                if(notCounted) {
+                    count++;
+                    notCounted = false;
+                }
+            } else {
+                notCounted = true;
+            }
+        }
+        return count;
+    }
+
+    private int yearNS, monthNS, dayNS;
 
     // Hiển thị DatePicker
     private void showDatePickerDialog(){
@@ -271,6 +325,9 @@ public class AddInfoUserActivity extends AppCompatActivity implements DatePicker
     public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
         month += 1;
         String str_date = dayOfMonth +"/" + month + "/" + year;
+        yearNS = year;
+        monthNS = month;
+        dayNS = dayOfMonth;
         txtAddInfoBirth.setText(str_date);
     }
 
