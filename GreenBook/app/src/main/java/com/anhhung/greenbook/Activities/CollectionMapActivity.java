@@ -96,6 +96,7 @@ public class CollectionMapActivity extends AppCompatActivity implements OnChartV
                         }
                     });
                 }
+                txtMonthIncomeCM.setText("");
             }
 
             @Override
@@ -106,6 +107,7 @@ public class CollectionMapActivity extends AppCompatActivity implements OnChartV
     }
 
     private void addControls() {
+        collectionMapModels.clear();
         initListSachBan(listSachBan);
         txtYearIncomeCM = findViewById(R.id.txtYearIncomeCM);
         txtMonthIncomeCM = findViewById(R.id.txtMonthIncomeCM);
@@ -179,6 +181,7 @@ public class CollectionMapActivity extends AppCompatActivity implements OnChartV
 
     }
     private void getArraySachBan(){
+        collectionMapModels.clear();
         for(i = 1; i<=12; i++){
             db.collection("CollectionMap").document((year)).collection(i+"")
                     .get()

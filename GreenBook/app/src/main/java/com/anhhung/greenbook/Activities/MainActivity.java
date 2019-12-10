@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -105,8 +106,15 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     }
 
     private void addControls() {
+        SharedPreferences sharedPreferences = this.getSharedPreferences("infoUser", Context.MODE_PRIVATE);
         intent = getIntent();
-        emailUser = intent.getStringExtra("email");
+        if(intent.getStringExtra("email")!=null){
+            emailUser = intent.getStringExtra("email");
+        }
+        else {
+            emailUser = sharedPreferences.getString("emailUser",null);
+        }
+
         db = FirebaseFirestore.getInstance();
         recyclerView = findViewById(R.id.recyclerFindBook);
         navBottomFramelayout = findViewById(R.id.navBottomFramelayout);
