@@ -21,6 +21,7 @@ import com.anhhung.greenbook.Activities.BillActivity;
 import com.anhhung.greenbook.Activities.BookManagementActivity;
 import com.anhhung.greenbook.Activities.ChangePassActivity;
 import com.anhhung.greenbook.Activities.InfoUserActivity;
+import com.anhhung.greenbook.Activities.LoginActivity;
 import com.anhhung.greenbook.Activities.ManageAdminActivity;
 import com.anhhung.greenbook.Activities.RechargeActivity;
 import com.anhhung.greenbook.Activities.WelcomeActivity;
@@ -28,6 +29,9 @@ import com.anhhung.greenbook.Models.UsersModel;
 import com.anhhung.greenbook.R;
 import com.bumptech.glide.Glide;
 import com.facebook.login.LoginManager;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -52,9 +56,9 @@ public class ProfileFragment extends Fragment {
     private TextView txtProfileCoin, txtProfileNumberBook, txtNameProfile, txtPermissionProfile;
     private SharedPreferences sharedPreferences;
     private CardView cardViewManageAdmin, cardViewEditProfile, cardViewWalletProfile, cardViewBillProfile, cardViewChangePassProfile, cardViewLogoutProfile;
-
     private FirebaseFirestore db;
     private UsersModel usersModel;
+    private GoogleSignInClient googleSignInClient;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -84,15 +88,14 @@ public class ProfileFragment extends Fragment {
                 }
                 getActivity().finish();
                 startActivity(new Intent(getActivity(), WelcomeActivity.class));
-
-
-
             }
         });
         cardViewLogoutProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 FirebaseAuth.getInstance().signOut();
+                GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(getContext());
+
                 savePref("","");
                 if(loginManager.getInstance() != null){
                     loginManager.getInstance().logOut();

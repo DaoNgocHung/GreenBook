@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -206,13 +207,15 @@ public class LoginActivity extends AppCompatActivity {
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            try {
-                // Google Sign In was successful, authenticate with Firebase
-                GoogleSignInAccount account = task.getResult(ApiException.class);
-                firebaseAuthWithGoogle(account);
-            } catch (ApiException e) {
-                // Google Sign In failed, update UI appropriately
-                Log.w(TAG, "Google sign in failed", e);
+            if(task.isComplete()){
+                try {
+                    // Google Sign In was successful, authenticate with Firebase
+                    GoogleSignInAccount account = task.getResult(ApiException.class);
+                    firebaseAuthWithGoogle(account);
+                } catch (ApiException e) {
+                    // Google Sign In failed, update UI appropriately
+                    Log.w(TAG, "Google sign in failed", e);
+                }
             }
         }
     }
@@ -320,7 +323,6 @@ public class LoginActivity extends AppCompatActivity {
     }
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
-
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         auth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -329,7 +331,34 @@ public class LoginActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
+                            GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(LoginActivity.this);
+                            if (acct != null) {
+                                hoTenFB = acct.getDisplayName();
+                                userEmail = acct.getEmail();
+                                urlHinhDaiDienFB = acct.getPhotoUrl().toString();
+                            }
                             FirebaseUser user = auth.getCurrentUser();
+                            readData(new MyCallback() {
+                                @Override
+                                public void onCallBack(Boolean checkEC2) {
+                                    if (checkEC2 == true){
+                                        Intent intent = new Intent(LoginActivity.this, AddInfoUserActivity.class);
+                                        intent.putExtra("userName", hoTenFB);
+                                        intent.putExtra("email",userEmail);
+                                        intent.putExtra("hinhDaiDien", urlHinhDaiDienFB);
+                                        savePref(userEmail,"");
+                                        startActivity(intent);
+                                        finish();
+                                    }
+                                    else{
+                                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                        intent.putExtra("email", userEmail.trim());
+                                        savePref(userEmail,"");
+                                        startActivity(intent);
+                                        finish();
+                                    }
+                                }
+                            }, userEmail);
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
