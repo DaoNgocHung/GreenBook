@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/drawer_home" android:title="Home" android:icon="@drawable/ic_nav_home"/>
-    <item android:id="@+id/drawer_library" android:title="Library" android:icon="@drawable/ic_nav_library"/>
-    <item android:id="@+id/drawer_profile" android:title="Profile" android:icon="@drawable/ic_nav_profile"/>
+    <group android:checkableBehavior="single">
+        <item android:id="@+id/drawer_economy_manage" android:title="Economy - Manage" android:icon="@drawable/ic_drawer_category"/>
+        <item android:id="@+id/drawer_history_politic" android:title="History - Politic" android:icon="@drawable/ic_drawer_category"/>
+        <item android:id="@+id/drawer_foreign_language" android:title="Foreign Language" android:icon="@drawable/ic_drawer_category"/>
+        <item android:id="@+id/drawer_life_skill" android:title="Life Skill" android:icon="@drawable/ic_drawer_category"/>
+        <item android:id="@+id/drawer_myth_fairy" android:title="Myth - Fairy" android:icon="@drawable/ic_drawer_category"/>
+    </group>
+    <item android:title="Setting">
+        <menu>
+            <item
+                android:id="@+id/drawer_logout"
+                android:icon="@drawable/drawer_logout"
+                android:title="Logout" />
+        </menu>
+    </item>
 </menu>

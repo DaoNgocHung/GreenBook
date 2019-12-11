@@ -41,11 +41,15 @@ import com.anhhung.greenbook.Models.CategoriesModel;
 import com.anhhung.greenbook.Models.UsersModel;
 import com.anhhung.greenbook.R;
 import com.bumptech.glide.Glide;
+import com.facebook.login.LoginManager;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.tasks.OnCompleteListener;
 
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -81,7 +85,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private UsersModel user;
 
     private FirebaseFirestore db;
-    FirebaseUser firebaseUser;
+    private FirebaseUser firebaseUser;
+    private LoginManager loginManager;
     private RecyclerView recyclerView;
     private BookFindingAdapter bookFindingAdapter;
     private List<BooksModel> booksModelsFindBook = new ArrayList<>();
@@ -214,19 +219,62 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int id = item.getItemId();
+                Intent intentMore;
                 switch(id) {
-                    case R.id.drawer_home:
-                        Toast.makeText(MainActivity.this, "Open Home",Toast.LENGTH_SHORT).show();break;
-                    case R.id.drawer_library:
-                        Toast.makeText(MainActivity.this, "Open Library",Toast.LENGTH_SHORT).show();break;
-                    case R.id.drawer_profile:
-                        Toast.makeText(MainActivity.this, "Open Profile",Toast.LENGTH_SHORT).show();break;
+                    case R.id.drawer_economy_manage:
+                         intentMore = new Intent(MainActivity.this, MoreBookActivity.class);
+                        intentMore.putExtra("idDanhMuc", "dmEconomyManage");
+                        intentMore.putExtra("danhMuc","Economy - Manage");
+                        startActivity(intentMore);
+                        break;
+                    case R.id.drawer_foreign_language:
+                        intentMore = new Intent(MainActivity.this, MoreBookActivity.class);
+                        intentMore.putExtra("idDanhMuc", "dmForeignLanguage");
+                        intentMore.putExtra("danhMuc","Foreign Language");
+                        startActivity(intentMore);
+                        break;
+                    case R.id.drawer_history_politic:
+                        intentMore = new Intent(MainActivity.this, MoreBookActivity.class);
+                        intentMore.putExtra("idDanhMuc", "dmHistoryPolitic");
+                        intentMore.putExtra("danhMuc","History - Politic");
+                        startActivity(intentMore);
+                        break;
+                    case R.id.drawer_life_skill:
+                        intentMore = new Intent(MainActivity.this, MoreBookActivity.class);
+                        intentMore.putExtra("idDanhMuc", "dmLifeSkill");
+                        intentMore.putExtra("danhMuc","Life Skill");
+                        startActivity(intentMore);
+                        break;
+                    case R.id.drawer_myth_fairy:
+                        intentMore = new Intent(MainActivity.this, MoreBookActivity.class);
+                        intentMore.putExtra("idDanhMuc", "dmMythFairy");
+                        intentMore.putExtra("danhMuc","Myth - Fairy");
+                        startActivity(intentMore);
+                        break;
+                    case R.id.drawer_logout:
+                        FirebaseAuth.getInstance().signOut();
+                        GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(MainActivity.this);
+
+                        savePref("","");
+                        if(loginManager.getInstance() != null){
+                            loginManager.getInstance().logOut();
+                        }
+                        finish();
+                        startActivity(new Intent(MainActivity.this, WelcomeActivity.class));
                     default:
                         return true;
                 }
                 return true;
             }
         });
+    }
+
+    public void savePref(String userEmail, String pass){
+        SharedPreferences sharedPreferences= getSharedPreferences("infoUser", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("emailUser", userEmail);
+        editor.putString("passUser", pass);
+        editor.apply();
     }
 
     private void setFragment(Fragment fragment) {
