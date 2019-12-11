@@ -171,7 +171,7 @@ public class BooksModel {
         this.idDM = idDM;
     }
 
-    public boolean isTrangThai() {
+    public boolean getTrangThai() {
         return trangThai;
     }
 

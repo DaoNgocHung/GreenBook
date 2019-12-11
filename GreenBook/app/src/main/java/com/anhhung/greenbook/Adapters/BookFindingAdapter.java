@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -58,24 +59,30 @@ public class BookFindingAdapter extends RecyclerView.Adapter<BookFindingAdapter.
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), InfoBookActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("anhBia", booksModels.get(position).getBiaSach());
-                bundle.putString("tenSach", booksModels.get(position).getTenSach());
-                bundle.putLong("soNguoiMua", booksModels.get(position).getSoNguoiMua());
-                bundle.putFloat("danhGia", booksModels.get(position).getDanhGia());
-                bundle.putString("noiDung", booksModels.get(position).getNoiDung());
-                bundle.putString("gioiThieu", booksModels.get(position).getGioiThieuSach());
-                bundle.putDouble("giaTien", booksModels.get(position).getGiaTien());
-                bundle.putString("NXB", booksModels.get(position).getNXB());
-                bundle.putString("danhMuc", booksModels.get(position).getDanhMuc());
-                bundle.putString("tacGia", booksModels.get(position).getTacGia());
-                bundle.putString("ngonNgu", booksModels.get(position).getNgonNgu());
-                bundle.putLong("soNguoiMua", booksModels.get(position).getSoNguoiMua());
-                bundle.putLong("luotDanhGia",booksModels.get(position).getLuotDanhGia());
-                bundle.putString("idDM",booksModels.get(position).getIdDM());
-                intent.putExtras(bundle);
-                mContext.startActivity(intent);
+                if(booksModels.get(position).getTrangThai()==true){
+                    Intent intent = new Intent(v.getContext(), InfoBookActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("anhBia", booksModels.get(position).getBiaSach());
+                    bundle.putString("tenSach", booksModels.get(position).getTenSach());
+                    bundle.putLong("soNguoiMua", booksModels.get(position).getSoNguoiMua());
+                    bundle.putFloat("danhGia", booksModels.get(position).getDanhGia());
+                    bundle.putString("noiDung", booksModels.get(position).getNoiDung());
+                    bundle.putString("gioiThieu", booksModels.get(position).getGioiThieuSach());
+                    bundle.putDouble("giaTien", booksModels.get(position).getGiaTien());
+                    bundle.putString("NXB", booksModels.get(position).getNXB());
+                    bundle.putString("danhMuc", booksModels.get(position).getDanhMuc());
+                    bundle.putString("tacGia", booksModels.get(position).getTacGia());
+                    bundle.putString("ngonNgu", booksModels.get(position).getNgonNgu());
+                    bundle.putLong("soNguoiMua", booksModels.get(position).getSoNguoiMua());
+                    bundle.putLong("luotDanhGia",booksModels.get(position).getLuotDanhGia());
+                    bundle.putString("idDM",booksModels.get(position).getIdDM());
+                    intent.putExtras(bundle);
+                    mContext.startActivity(intent);
+                }
+                else{
+                    Toast.makeText(mContext, "Book does not exist.", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
     }

@@ -92,7 +92,9 @@ public class MoreBookActivity extends AppCompatActivity {
                                 for (QueryDocumentSnapshot document : task.getResult()) {
                                     BooksModel booksModel = document.toObject(BooksModel.class);
                                     Log.d("TEST - InfoBookFragment", document.getId() + " => " + document.getData());
-                                    booksModels.add(booksModel);
+                                    if(booksModel.getTrangThai()==true){
+                                        booksModels.add(booksModel);
+                                    }
                                 }
                                 myCallback.onCallback(booksModels);
                             } else {

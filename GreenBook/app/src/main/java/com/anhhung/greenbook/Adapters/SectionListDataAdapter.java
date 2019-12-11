@@ -67,25 +67,31 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
                 public void onClick(View v) {
                     int i = getAdapterPosition();
                     singleBook = itemsList.get(i);
-                    Toast.makeText(v.getContext(), tvTitle.getText(), Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(v.getContext(), InfoBookActivity.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putString("anhBia", singleBook.getBiaSach());
-                    bundle.putString("tenSach", singleBook.getTenSach());
-                    bundle.putLong("soNguoiMua", singleBook.getSoNguoiMua());
-                    bundle.putFloat("danhGia", singleBook.getDanhGia());
-                    bundle.putString("noiDung", singleBook.getNoiDung());
-                    bundle.putString("gioiThieu", singleBook.getGioiThieuSach());
-                    bundle.putDouble("giaTien", singleBook.getGiaTien());
-                    bundle.putString("NXB", singleBook.getNXB());
-                    bundle.putString("danhMuc", singleBook.getDanhMuc());
-                    bundle.putString("tacGia", singleBook.getTacGia());
-                    bundle.putString("ngonNgu", singleBook.getNgonNgu());
-                    bundle.putLong("soNguoiMua", singleBook.getSoNguoiMua());
-                    bundle.putLong("luotDanhGia",singleBook.getLuotDanhGia());
-                    bundle.putString("idDM",singleBook.getIdDM());
-                    intent.putExtras(bundle);
-                    mContext.startActivity(intent);
+                    if(singleBook.getTrangThai()==true){
+                        Toast.makeText(v.getContext(), tvTitle.getText(), Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(v.getContext(), InfoBookActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putString("anhBia", singleBook.getBiaSach());
+                        bundle.putString("tenSach", singleBook.getTenSach());
+                        bundle.putLong("soNguoiMua", singleBook.getSoNguoiMua());
+                        bundle.putFloat("danhGia", singleBook.getDanhGia());
+                        bundle.putString("noiDung", singleBook.getNoiDung());
+                        bundle.putString("gioiThieu", singleBook.getGioiThieuSach());
+                        bundle.putDouble("giaTien", singleBook.getGiaTien());
+                        bundle.putString("NXB", singleBook.getNXB());
+                        bundle.putString("danhMuc", singleBook.getDanhMuc());
+                        bundle.putString("tacGia", singleBook.getTacGia());
+                        bundle.putString("ngonNgu", singleBook.getNgonNgu());
+                        bundle.putLong("soNguoiMua", singleBook.getSoNguoiMua());
+                        bundle.putLong("luotDanhGia",singleBook.getLuotDanhGia());
+                        bundle.putString("idDM",singleBook.getIdDM());
+                        intent.putExtras(bundle);
+                        mContext.startActivity(intent);
+                    }
+                    else{
+                        Toast.makeText(mContext, "Book does not exist.", Toast.LENGTH_SHORT).show();
+                    }
+
                 }
             });
         }

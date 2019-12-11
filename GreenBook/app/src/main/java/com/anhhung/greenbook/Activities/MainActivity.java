@@ -403,7 +403,10 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                                         BooksModel booksModel;
                                         booksModel = document.toObject(BooksModel.class);
                                         Log.d(TAG, document.getId() + " => " + document.getData());
-                                        booksModels.add(booksModel);
+                                        if(booksModel.getTrangThai()==true){
+                                            booksModels.add(booksModel);
+                                        }
+
                                     }
                                     count++;
                                     if (count - 1 == categoriesModels.size() - 1) {
