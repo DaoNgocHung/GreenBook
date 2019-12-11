@@ -78,12 +78,12 @@ public class InfoBookActivity extends AppCompatActivity {
     private TabLayout tabLayoutInfoBook;
     private AppBarLayout appBarLayoutInfoBook;
     private ViewPager viewPagerInfoBook;
-    private TextView txtInfoNameBook, txtInfoBookDownload, txtInfoBookPrice, txtInfoVote, txtInfoRateButton;
+    private TextView txtInfoNameBook, txtInfoBookDownload, txtInfoBookPrice, txtInfoVote;
     private ImageView imgInFoBookCover;
     private ImageButton imgbtnInfoBookFavor;
     private Toolbar actionToolbarInfoBook;
     private RatingBar rateInfoBook;
-    private Button btnInfoBookBuy;
+    private Button btnInfoBookBuy, btnInfoBookRate;
     private Dialog dialogBuy;
     BooksModel booksModel = new BooksModel();
     UsersModel usersModel = new UsersModel();
@@ -122,11 +122,11 @@ public class InfoBookActivity extends AppCompatActivity {
     }
 
     private void addEvents() {
-        //RatingBar
-        txtInfoRateButton.setOnClickListener(new View.OnClickListener() {
+        btnInfoBookRate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 displayAlertDialog();
+
             }
         });
 
@@ -491,6 +491,7 @@ public class InfoBookActivity extends AppCompatActivity {
 
     private void addControls() {
         loadBundleData();
+        btnInfoBookRate = findViewById(R.id.btnInfoBookRate);
         linearLayout = findViewById(R.id.linearLayoutInfoBook);
         tabLayoutInfoBook = findViewById(R.id.tabLayoutInfoBook);
         appBarLayoutInfoBook = findViewById(R.id.appBarLayoutInfoBook);
@@ -503,7 +504,6 @@ public class InfoBookActivity extends AppCompatActivity {
         actionToolbarInfoBook = findViewById(R.id.actionToolbarInfoBook);
         txtInfoVote = findViewById(R.id.txtInfoVote);
         rateInfoBook = findViewById(R.id.rateInfoBook);
-        txtInfoRateButton = findViewById(R.id.txtRate);
         btnInfoBookBuy = findViewById(R.id.btnInfoBookBuy);
         rewardedAd = new RewardedAd(this,"ca-app-pub-3940256099942544/5224354917");
         Glide.with(InfoBookActivity.this)
@@ -564,7 +564,7 @@ public class InfoBookActivity extends AppCompatActivity {
             booksModel.setGioiThieuSach(bundle.getString("gioiThieu", " "));
             booksModel.setGiaTien(bundle.getDouble("giaTien", 0));
             booksModel.setDanhMuc(bundle.getString("danhMuc", ""));
-            //booksModel.setNgayUpload(bundle.get("ngayUpload",""));
+            //booksModel.setNgayUpload(bundle.getString("ngayUpload",""));
             booksModel.setTacGia(bundle.getString("tacGia", ""));
             booksModel.setNXB(bundle.getString("NXB", ""));
             booksModel.setNgonNgu(bundle.getString("ngonNgu", ""));

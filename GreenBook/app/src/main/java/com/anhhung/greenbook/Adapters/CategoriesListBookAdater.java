@@ -60,6 +60,7 @@ public class CategoriesListBookAdater extends RecyclerView.Adapter<CategoriesLis
                 bundle.putString("danhMuc", booksModels.get(position).getDanhMuc());
                 bundle.putString("tacGia", booksModels.get(position).getTacGia());
                 bundle.putString("ngonNgu", booksModels.get(position).getNgonNgu());
+                bundle.putString("idDM", booksModels.get(position).getIdDM());
                 bundle.putLong("soNguoiMua", booksModels.get(position).getSoNguoiMua());
                 bundle.putLong("luotDanhGia",booksModels.get(position).getLuotDanhGia());
                 intent.putExtras(bundle);

@@ -46,7 +46,7 @@
                 android:orientation="vertical">
 
                 <Button
-                    android:id="@+id/btnInfoBookBuy2"
+                    android:id="@+id/btnInfoBookRate"
                     android:layout_width="80dp"
                     android:layout_height="32dp"
                     android:layout_marginStart="4dp"
@@ -164,18 +164,6 @@
                     android:layout_marginTop="8dp"
                     android:text="votes"
                     app:layout_constraintStart_toEndOf="@+id/rateInfoBook"
-                    app:layout_constraintTop_toBottomOf="@+id/txtInfoBookDownloaded" />
-
-                <TextView
-                    android:id="@+id/txtRate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginTop="8dp"
-                    android:text="Rate"
-                    android:textSize="14sp"
-                    android:textStyle="bold"
-                    app:layout_constraintStart_toEndOf="@+id/txtInfoVote"
                     app:layout_constraintTop_toBottomOf="@+id/txtInfoBookDownloaded" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
