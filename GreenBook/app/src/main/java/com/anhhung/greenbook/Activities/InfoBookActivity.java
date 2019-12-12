@@ -102,6 +102,9 @@ public class InfoBookActivity extends AppCompatActivity {
     private int linearWidth = 0;
     private RewardedAd rewardedAd;
 
+    private MyCallback myCallback;
+    private boolean checkBook = false;
+
 
     private String emailUser;
     SharedPreferences sharedPreferences;
@@ -118,7 +121,48 @@ public class InfoBookActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info_book);
         addControls();
+        checkBookExist();
         addEvents();
+    }
+
+    private void getBookExist(){
+        db.collection("UserModel").document(emailUser)
+                .collection("LibraryCollection")
+                .whereEqualTo("tenSach", txtInfoNameBook.getText().toString()).limit(1)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        if(queryDocumentSnapshots.getDocuments().isEmpty()){
+                            checkBook = true;
+                            myCallback.onCallBack(checkBook);
+                        }
+                        else{
+                            checkBook = false;
+                            myCallback.onCallBack(checkBook);
+                        }
+                    }
+                });
+    }
+
+    public  boolean readData(MyCallback myCallback){
+        this.myCallback = myCallback;
+        getBookExist();
+        return checkBook;
+    }
+
+    public void checkBookExist(){
+        readData(new MyCallback() {
+            @Override
+            public void onCallBack(Boolean checkBook) {
+                if(checkBook == false){
+                    btnInfoBookBuy.setVisibility(View.GONE);
+                }
+                else {
+                    btnInfoBookBuy.setVisibility(View.VISIBLE);
+                }
+            }
+        });
     }
 
     private void addEvents() {
@@ -816,6 +860,11 @@ public class InfoBookActivity extends AppCompatActivity {
         Bitmap bitmapResized = Bitmap.createScaledBitmap(b, sizeX, sizeY, false);
         image = new BitmapDrawable(getResources(), bitmapResized);
         return image;
+
+    }
+
+    public interface MyCallback{
+        void onCallBack(Boolean checkBook);
 
     }
 }

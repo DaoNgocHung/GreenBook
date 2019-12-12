@@ -30,7 +30,6 @@ import java.util.Locale;
 
 public class UserManagementActivity extends AppCompatActivity {
 
-    private TextView txtUserManageNotice;
     private RecyclerView rViewUserManage;
     private Toolbar actionToolbarUserManagement;
     private MyCallback myCallback;
@@ -51,11 +50,12 @@ public class UserManagementActivity extends AppCompatActivity {
     }
 
     private void addControls() {
-        txtUserManageNotice = findViewById(R.id.txtUserManageNotice);
         rViewUserManage = findViewById(R.id.rViewUserManage);
         actionToolbarUserManagement = findViewById(R.id.actionToolbarUserManagement);
         db = FirebaseFirestore.getInstance();
-
+        usersModels.clear();
+        usersModelsFindBook.clear();
+        rViewUserManage.removeAllViews();
         readData(new MyCallback() {
             @Override
             public void onCallback(final List<UsersModel> aUsersModels) {
@@ -73,13 +73,27 @@ public class UserManagementActivity extends AppCompatActivity {
         menuInflater.inflate(R.menu.search_user_menu,menu);
         MenuItem item = menu.findItem(R.id.mnuSeachUser);
         SearchView searchView = (SearchView)item.getActionView();
-
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                usersModels.clear();
+                usersModelsFindBook.clear();
+                rViewUserManage.removeAllViews();
+                readData(new MyCallback() {
+                    @Override
+                    public void onCallback(final List<UsersModel> aUsersModels) {
+                        usersModels = aUsersModels;
+                        createDataListView(rViewUserManage,usersModels);
+                        usersModelsFindBook.addAll(usersModels);
+                        loadUserSuccess = true;
+                    }
+                });
+                return false;
+            }
+        });
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
-                rViewUserManage.removeAllViews();
-                rViewUserManage.setVisibility(View.INVISIBLE);
-                txtUserManageNotice.setVisibility(View.VISIBLE);
                 return false;
             }
 
@@ -97,8 +111,6 @@ public class UserManagementActivity extends AppCompatActivity {
                         }
                     }
                     userFindingAdapter.notifyDataSetChanged();
-                    rViewUserManage.setVisibility(View.VISIBLE);
-                    txtUserManageNotice.setVisibility(View.INVISIBLE);
                 }
                 return false;
             }
@@ -125,8 +137,9 @@ public class UserManagementActivity extends AppCompatActivity {
                                     UsersModel usersModel;
                                     usersModel  = document.toObject(UsersModel.class);
                                     usersModels.add(usersModel);
-                                    myCallback.onCallback(usersModels);
+
                                 }
+                                myCallback.onCallback(usersModels);
                             }
                         }
                     });

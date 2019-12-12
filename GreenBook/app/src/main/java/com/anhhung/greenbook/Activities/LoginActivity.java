@@ -66,18 +66,18 @@ public class LoginActivity extends AppCompatActivity {
     private CheckBox chkLoginRemember;
     private TextView txtLoginForgot, txtLoginSignUp;
     private FirebaseAuth auth;
-    Dialog loadingDialog;
+    private Dialog loadingDialog;
     private boolean errorLogin = false;
-    CallbackManager mCallbackManager;
+    private CallbackManager mCallbackManager;
     private String TAG = "LOG: ";
-    LoginButton loginButton;
-    GoogleSignInOptions gso;
+    private LoginButton loginButton;
+    private GoogleSignInOptions gso;
     private GoogleSignInClient mGoogleSignInClient;
     private static final int RC_SIGN_IN = 9001;
     private String userEmail = "";
     private FirebaseFirestore db;
     private boolean checkEC = false;
-    MyCallback myCallback;
+    private MyCallback myCallback;
     private String hoTenFB="";
     private Date ngayThangNSFB;
     private String urlHinhDaiDienFB = "";
@@ -417,7 +417,6 @@ public class LoginActivity extends AppCompatActivity {
         this.myCallback = myCallback;
         checkUserExist(userEmail);
         return checkEC;
-
     }
     //Lưu thông tin người dùng vào sharedPreference
     public void savePref(String userEmail, String pass){

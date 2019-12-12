@@ -1,7 +1,9 @@
 package com.anhhung.greenbook.Adapters;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,30 +29,43 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class BookManageAdapter extends FirestoreRecyclerAdapter<BooksModel, BookManageAdapter.BookManageHolder> {
-    private FirebaseFirestore db;
+public class BookManageAdapter extends RecyclerView.Adapter<BookManageAdapter.BookManageHolder> {
+    private List<BooksModel> booksModels;
+    private Context mContext;
     private Dialog dialogDelete;
-    /**
-     * Create a new RecyclerView adapter that listens to a Firestore Query.  See {@link
-     * FirestoreRecyclerOptions} for configuration options.
-     *
-     * @param options
-     */
-    public BookManageAdapter(@NonNull FirestoreRecyclerOptions<BooksModel> options) {
-        super(options);
+    private FirebaseFirestore db;
+
+    public BookManageAdapter(Context mContext, List<BooksModel> booksModels) {
+        this.booksModels = booksModels;
+        this.mContext = mContext;
+    }
+
+    @NonNull
+    @Override
+    public BookManageHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_book_manage,parent,false);
+        return new BookManageHolder(view);
     }
 
     @Override
-    protected void onBindViewHolder(@NonNull final BookManageHolder holder, int position, @NonNull final BooksModel model) {
+    public int getItemCount() {
+        return booksModels.size();
+    }
+
+    @Override
+    public void onBindViewHolder(final BookManageHolder holder, final int i) {
         Glide.with(holder.itemView)
-                .load(model.getBiaSach())
+                .load(booksModels.get(i).getBiaSach())
                 .into(holder.imgCoverBookManage);
-        holder.txtTitleBookManage.setText(model.getTenSach());
-        holder.txtTacGiaBookManage.setText(model.getTacGia());
-        holder.txtCateBookManage.setText(model.getDanhMuc());
+        holder.txtTitleBookManage.setText(booksModels.get(i).getTenSach());
+        holder.txtTacGiaBookManage.setText(booksModels.get(i).getTacGia());
+        holder.txtCateBookManage.setText(booksModels.get(i).getDanhMuc());
         holder.txtMenuOptionBookManage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
@@ -62,14 +77,14 @@ public class BookManageAdapter extends FirestoreRecyclerAdapter<BooksModel, Book
                         switch (menuItem.getItemId()){
                             case R.id.mnu_book_manage_edit:
                                 Intent intent = new Intent(view.getContext(), EditBookManageActivity.class);
-                                intent.putExtra("title",model.getTenSach());
-                                intent.putExtra("cover",model.getBiaSach());
-                                intent.putExtra("nxb",model.getNXB());
-                                intent.putExtra("price",model.getGiaTien());
-                                intent.putExtra("language",model.getNgonNgu());
-                                intent.putExtra("intro",model.getGioiThieuSach());
-                                intent.putExtra("author",model.getTacGia());
-                                intent.putExtra("iddm",model.getIdDM());
+                                intent.putExtra("title",booksModels.get(i).getTenSach());
+                                intent.putExtra("cover",booksModels.get(i).getBiaSach());
+                                intent.putExtra("nxb",booksModels.get(i).getNXB());
+                                intent.putExtra("price",booksModels.get(i).getGiaTien());
+                                intent.putExtra("language",booksModels.get(i).getNgonNgu());
+                                intent.putExtra("intro",booksModels.get(i).getGioiThieuSach());
+                                intent.putExtra("author",booksModels.get(i).getTacGia());
+                                intent.putExtra("iddm",booksModels.get(i).getIdDM());
                                 view.getContext().startActivity(intent);
                                 break;
                             case R.id.mnu_book_manage_delete:
@@ -83,8 +98,8 @@ public class BookManageAdapter extends FirestoreRecyclerAdapter<BooksModel, Book
                                 btnYesDelete.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(final View view) {
-                                        db.collection("DanhMucCollection").document(model.getIdDM())
-                                                .collection("SachColection").document(model.getTenSach())
+                                        db.collection("DanhMucCollection").document(booksModels.get(i).getIdDM())
+                                                .collection("SachColection").document(booksModels.get(i).getTenSach())
                                                 .update("trangThai",false)
                                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                     @Override
@@ -120,13 +135,6 @@ public class BookManageAdapter extends FirestoreRecyclerAdapter<BooksModel, Book
         });
     }
 
-    @NonNull
-    @Override
-    public BookManageHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_book_manage,parent,false);
-        return new BookManageHolder(view);
-    }
-
     public class BookManageHolder extends RecyclerView.ViewHolder{
         private ImageView imgCoverBookManage;
         private TextView txtTitleBookManage, txtCateBookManage, txtTacGiaBookManage, txtMenuOptionBookManage;
@@ -140,4 +148,5 @@ public class BookManageAdapter extends FirestoreRecyclerAdapter<BooksModel, Book
             db = FirebaseFirestore.getInstance();
         }
     }
+
 }
