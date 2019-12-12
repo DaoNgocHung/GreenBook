@@ -822,7 +822,7 @@ public class InfoBookActivity extends AppCompatActivity {
                     public void onCallBack(long userRateNums) {
                         txtInfoVote.setText("("+userRateNums+")");
                         if(userRateNums!=0){
-                            starAverage = round((starRateNums/userRateNums)*10)/10;
+                            starAverage = starRateNums/userRateNums;
                         }
                         else{
                             starAverage = 0;
