@@ -55,9 +55,9 @@ public class IntroActivity extends AppCompatActivity {
 
     private void addDataIntro() {
         //fill list screen
-        mList.add(new IntroItemModel("FaceBook","Facebook",R.drawable.ic_logo_facebook));
-        mList.add(new IntroItemModel("Twitter","Twitter",R.drawable.ic_logo_twitter));
-        mList.add(new IntroItemModel("Google","Google",R.drawable.ic_logo_google));
+        mList.add(new IntroItemModel("Easy to sign in","Login with Facebook or Google",R.drawable.pic_intro_fb_google));
+        mList.add(new IntroItemModel("Diverse books","We have many types of books",R.drawable.pic_intro_book));
+        mList.add(new IntroItemModel("Thanks","Wish you have the best experience",R.drawable.pic_intro_satisfied));
     }
 
     private void addControls() {

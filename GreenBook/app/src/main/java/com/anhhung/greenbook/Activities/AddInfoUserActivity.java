@@ -228,17 +228,17 @@ public class AddInfoUserActivity extends AppCompatActivity implements DatePicker
             edtAddInfoPhone.requestFocus();
             isError = true;
         }
-        if(checkNumber(edtAddInfoPhone.getText().toString().trim())==false){
-            Toast.makeText(AddInfoUserActivity.this,"Phone syntax error",Toast.LENGTH_SHORT).show();
+        if(checkNumber(edtAddInfoPhone.getText().toString())==false){
+            Toast.makeText(AddInfoUserActivity.this,"Your phone syntax error",Toast.LENGTH_SHORT).show();
             edtAddInfoPhone.requestFocus();
             isError = true;
         }
 
-        if(countWords(edtAddInfoPhone.getText().toString()) != 10){
-            Toast.makeText(AddInfoUserActivity.this,"Phone syntax error",Toast.LENGTH_SHORT).show();
-            edtAddInfoPhone.requestFocus();
-            isError = true;
-        }
+//        if(countWords(edtAddInfoPhone.getText().toString()) != 10){
+//            Toast.makeText(AddInfoUserActivity.this,"Phone syntax error",Toast.LENGTH_SHORT).show();
+//            edtAddInfoPhone.requestFocus();
+//            isError = true;
+//        }
 
         if(getAge(yearNS,monthNS,dayNS) < 5){
             isError = true;
